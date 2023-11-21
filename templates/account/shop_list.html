@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Shops Under Route</title>
+</head>
+<body>
+    <h1>Shops Under {{ route.route_name }}</h1>
+    {{shops}}
+    <ul>
+        {% for shop in shops %}
+            <li>{{ shop.shop_name }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="content container-fluid">
+   <div class="page-header">
+      
+      <div class="row">
+         <div class="col-sm-12">
+            <h3 class="page-title">Welcome Admin!</h3>
+            <ul class="breadcrumb">
+               <li class="breadcrumb-item active">Dashboard</li>
+            </ul>
+         </div>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-xl-3 col-sm-6 col-12 d-flex">
+         <div class="card bg-one w-100">
+            <div class="card-body">
+               <div class="db-widgets d-flex justify-content-between align-items-center">
+                  <div class="db-icon">
+                     <i class="fa-solid fa-road"></i>
+                  </div>
+                  <div class="db-info">
+                     <h3>{{routesCounts}}</h3>
+                     <h6>Routes</h6>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="col-xl-3 col-sm-6 col-12 d-flex">
+         <div class="card bg-two w-100">
+            <div class="card-body">
+               <div class="db-widgets d-flex justify-content-between align-items-center">
+                  <div class="db-icon">
+                     <i class="fa-solid fa-shop"></i>
+                  </div>
+                  <div class="db-info">
+                     <h3>{{shopsCounts}}</h3>
+                     <h6>Shops</h6>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="col-xl-3 col-sm-6 col-12 d-flex">
+         <div class="card bg-three w-100">
+            <div class="card-body">
+               <div class="db-widgets d-flex justify-content-between align-items-center">
+                  <div class="db-icon">
+                     <i class="fa-solid fa-people-roof"></i>
+                  </div>
+                  <div class="db-info">
+                     <h3>{{shopsOwnersCounts}}</h3>
+                     <h6>Shop Owner</h6>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="col-xl-3 col-sm-6 col-12 d-flex">
+         <div class="card bg-four w-100">
+            <div class="card-body">
+               <div class="db-widgets d-flex justify-content-between align-items-center">
+                  <div class="db-icon">
+                     <i class="fas fa-book-reader"></i>
+                  </div>
+                  <div class="db-info">
+                     <h3>{{subjectsCount}}</h3>
+                     <h6>Subjects</h6>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-md-12 col-lg-6">
+         <div class="card card-chart">
+            <div class="card-header">
+               <div class="row align-items-center">
+                  <div class="col-6">
+                     <h5 class="card-title">All Data</h5>
+                  </div>
+               </div>
+            </div>
+            <div class="card-body">
+               <div id="allDetails"></div>
+            </div>
+         </div>
+      </div>
+      <div class="col-md-12 col-lg-6">
+         <div class="card card-chart">
+            <div class="card-header">
+               <div class="row align-items-center">
+                  <div class="col-6">
+                     <h5 class="card-title">Number of Students</h5>
+                  </div>
+               </div>
+            </div>
+            <div class="card-body">
+               <div id="studentGender"></div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-md-12 col-lg-6">
+         <div class="card card-chart">
+            <div class="card-header">
+               <div class="row align-items-center">
+                  <div class="col-6">
+                     <h5 class="card-title">Students and Teachers</h5>
+                  </div>
+               </div>
+            </div>
+            <div class="card-body">
+               <div id="stu_tea"></div>
+            </div>
+         </div>
+      </div>
+      <div class="col-md-12 col-lg-6">
+         <div class="card card-chart">
+            <div class="card-header">
+               <div class="row align-items-center">
+                  <div class="col-6">
+                     <h5 class="card-title">Subjects and Courses</h5>
+                  </div>
+               </div>
+            </div>
+            <div class="card-body">
+               <div id="sub_cou"></div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-xl-3 col-sm-6 col-12">
+         <div class="card flex-fill fb sm-box">
+            <i class="fab fa-facebook"></i>
+            <h6>50,095</h6>
+            <p>Likes</p>
+         </div>
+      </div>
+      <div class="col-xl-3 col-sm-6 col-12">
+         <div class="card flex-fill twitter sm-box">
+            <i class="fab fa-twitter"></i>
+            <h6>48,596</h6>
+            <p>Follows</p>
+         </div>
+      </div>
+      <div class="col-xl-3 col-sm-6 col-12">
+         <div class="card flex-fill insta sm-box">
+            <i class="fab fa-instagram"></i>
+            <h6>52,085</h6>
+            <p>Follows</p>
+         </div>
+      </div>
+      <div class="col-xl-3 col-sm-6 col-12">
+         <div class="card flex-fill linkedin sm-box">
+            <i class="fab fa-linkedin-in"></i>
+            <h6>69,050</h6>
+            <p>Follows</p>
+         </div>
+      </div>
+   </div>
+</div>
+{% include "includes/chart.html" %}
+{% endblock content %}
