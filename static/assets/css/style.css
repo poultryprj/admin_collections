@@ -1904,7 +1904,7 @@ footer p {
 }
 .login-wrapper .loginbox .login-right .forgotpass a:hover {
 	color: #333;
-	text-decoration: underline;
+	text-decoration: none;
 }
 .login-wrapper .loginbox .login-right .dont-have {
 	color: #a0a0a0;
@@ -1914,7 +1914,7 @@ footer p {
 	color: #333;
 }
 .login-wrapper .loginbox .login-right .dont-have a:hover {
-	text-decoration: underline;
+	text-decoration: none;
 }
 .social-login {
 	text-align: center;
@@ -1958,6 +1958,10 @@ footer p {
 	margin-bottom: 0;
 	margin-top: 0;
 	display: block;
+}
+
+a{
+	text-decoration: none !important;  /* add this attribute*/
 }
 .span-or {
 	background-color: #fff;

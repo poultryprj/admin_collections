@@ -1,10 +1,11 @@
 from django.http import JsonResponse
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .models import  ShopModel, ShopOwner, ShopRoute
+from .models import  Associations, ShopModel, ShopOwner, ShopProductRates, ShopRoute, ProductTypes, ProductCategories, ProductMaster
 from routes.models import RouteModel
+from django.core.exceptions import ValidationError
 
 # Create your views here.
 
@@ -54,7 +55,6 @@ def ShopAdd(request):
 
         shopAdd.shop_ownerId = ownerId1
         shopAdd.save()
-
 
         messages.success(request, "Shop Name {} Add in the database.".format(shopName))
         return redirect('shop_list')
@@ -196,17 +196,10 @@ def ShopOwnerDelete(request,id):
     shopOwnerDelete.save()
     return redirect('shop_owner_list')
 
-# *******************
-def AllShopList(request):
-    # selected_shops = ShopModel.objects.filter(pk__in=selected_shop_ids)
-    # print(selected_shops)
-    return render(request, 'shop_routes/all_shop_list.html')
-# **********************
-from django.http import JsonResponse
-from django.shortcuts import render
-from .models import RouteModel, ShopModel, ShopRoute
 
-def RouteList(request):
+# *************************************** Shop Route **************************************
+
+def ShopRouteList(request):
     routes = RouteModel.objects.all()
     shopsList = ShopModel.objects.all()
     selected_route = None
@@ -250,10 +243,319 @@ def RouteList(request):
 #     if request.method == "POST":
 #         selected_shop_ids = request.POST.getlist("selected_shops")
 #         print(selected_shop_ids)
-        
-       
-        
-        
 #         return render(request, 'shop_routes/shop_route.html',{'selected_shops': selected_shops})  
 
 #     return render(request, 'shop_routes/shop_route.html')  
+
+
+
+# *************************************** Product Type *************************************************
+
+def ProductTypeList(request):
+
+    productTypeList = ProductTypes.objects.all()
+
+    context = {
+        'productTypeList' : productTypeList
+    }
+
+    return render(request, 'product/product_type.html', context)
+
+
+
+
+def ProductTypeAdd(request):
+    if request.method == "POST":
+        productTypeName = request.POST['product_type_name'].capitalize().strip()
+
+        if not productTypeName:
+            messages.error(request, "Product type name cannot be empty.")
+        else:
+            try:
+                productTypeData, created = ProductTypes.objects.get_or_create(product_type=productTypeName)
+                
+                if created:
+                    messages.success(request, "Product Type '{}' added to the database.".format(productTypeName))
+                else:
+                    messages.error(request, "Product Type '{}' already exists in the database.".format(productTypeName))
+                
+            except ValidationError:
+                messages.error(request, "Invalid product type name.")
+
+        return redirect('product_type')
+
+
+
+
+
+def ProductTypeEdit(request,id):
+    if request.method == "POST":
+        productTypeName=request.POST['product_type_name']
+
+        productTypeId = ProductTypes.objects.get(product_type_id=id)
+        productTypeId.product_type = productTypeName
+        productTypeId.save()
+
+        messages.success(request, "Product Type :  {} Update in the database.".format(productTypeName))
+        return redirect('product_type')
+
+
+# *************************************** Product Category *************************************************
+
+
+def ProductCategoriesList(request):
+    productCategories = ProductCategories.objects.all()
+
+    context = {
+        'productCategories' : productCategories
+    }
+    return render(request, 'product/product_categories.html', context)
+
+
+
+def ProductCategoriesAdd(request):
+    if request.method == "POST":
+        categoryname = request.POST['product_category_name']
+
+        productCategoryData = ProductCategories(product_category = categoryname)
+        productCategoryData.save()
+
+        messages.success(request, "Product Category :  {} Add in the database.".format(categoryname))
+        return redirect('product_categories')
+    
+
+
+def ProductTypeUpdate(request,id):
+    if request.method == "POST":
+        productCategoryName=request.POST['product_category_name']
+
+        productTypeId = ProductCategories.objects.get(product_category_id=id)
+        productTypeId.product_category = productCategoryName
+        productTypeId.save()
+
+        messages.success(request, "Product Category :  {} Update in the database.".format(productCategoryName))
+        return redirect('product_categories')
+    
+
+
+
+# *************************************** Product Master **************************
+
+def ProductList(request):
+     
+    productData = ProductMaster.objects.filter(is_deleted = False)
+
+    context = {
+        'productData': productData,
+    }
+
+    return render(request, 'product/product_list.html', context) 
+
+
+
+
+def ProductAdd(request):
+    productTypeData = ProductTypes.objects.all()
+    ProductCategoriesData = ProductCategories.objects.all()
+
+    if request.method == "POST":
+        productName = request.POST['product_name']
+        productTypeId = request.POST['product_typeId']
+        productCategoryId = request.POST['product_categoryId']
+        productValue = request.POST['product_value']
+
+        productAdd = ProductMaster(
+            product_name=productName,
+            product_value_on=productValue,
+            created_by=request.user
+        )
+
+        productType = ProductTypes.objects.get(product_type_id=productTypeId)
+        productCategory = ProductCategories.objects.get(product_category_id=productCategoryId)
+
+        productAdd.product_typeId = productType
+        productAdd.product_categoryId = productCategory
+
+        productAdd.save()
+
+        messages.success(request, "Product Name: {} added to the database.".format(productName))
+        return redirect('product_list')
+
+    context = {
+        'productTypeData': productTypeData,
+        'ProductCategoriesData': ProductCategoriesData
+    }
+
+    return render(request, 'product/product_add.html', context)
+
+
+
+
+def ProductEdit(request,id):
+
+    productTypeList = ProductTypes.objects.all()
+    productCategoryList = ProductCategories.objects.all()
+    productDataEdit = ProductMaster.objects.get(product_id=id)
+
+    context = {
+        'productTypeList': productTypeList,
+        'productCategoryList' : productCategoryList,
+        'productDataEdit' : productDataEdit
+    }
+    return render(request, 'product/product_edit.html', context)
+
+
+
+def ProductUpdate(request):
+    if request.method == "POST":
+        productId = request.POST['product_id']
+        productName = request.POST['product_name']
+        productTypeId = request.POST['product_typeId']
+        productCategoryId = request.POST['product_categoryId']   
+        productValue = request.POST['product_value'] 
+        user = request.user
+
+        productUpdate = ProductMaster.objects.get(product_id=productId)
+
+        productUpdate.product_name = productName
+        productUpdate.product_value_on = productValue
+        productUpdate.last_modified_by = user
+
+        productType = ProductTypes.objects.get(product_type_id=productTypeId)
+        productCategory = ProductCategories.objects.get(product_category_id=productCategoryId)
+
+        productUpdate.product_typeId = productType
+        productUpdate.product_categoryId = productCategory
+
+        productUpdate.save()
+
+        messages.success(request, "Product Name:  {} Update in the database.".format(productName))
+        return redirect('product_list')
+    
+
+def ProductDelete(request,id):
+    productDelete = ProductMaster.objects.get(product_id=id)
+    productDelete.delete()
+
+    productDelete.is_deleted = True
+    productDelete.deleted_by = request.user
+    productDelete.save()
+    
+    return redirect('product_list')
+
+
+
+
+def ProductRateList(request):
+    productRateList = ShopProductRates.objects.filter(is_deleted = False)
+    context = {
+        "productRateList" : productRateList
+    }
+    return render(request, "product_rate/product_rate_list.html", context)
+
+
+
+
+def ProductRateAdd(request):
+    shopModelData = ShopModel.objects.all()
+    associationData = Associations.objects.all()
+    productMasterData = ProductMaster.objects.all()
+
+
+    if request.method=="POST":
+        shopCodeId = request.POST['shop_codeId']
+        associationId = request.POST['associationId']
+        productId = request.POST['productId']
+        rateMargin = request.POST['rate_margin']
+        flexibleRate = request.POST['flexible_rate']
+        flexibleFormula = request.POST['flexible_formula']  
+
+        shopCode = ShopModel.objects.get(shop_id=shopCodeId)
+
+        association = Associations.objects.get(association_id=associationId)
+        productMaster = ProductMaster.objects.get(product_id=productId)
+        
+
+        shopProductRateAdd = ShopProductRates(
+            shopId = shopCode,
+            associationId = association,
+            ProductId = productMaster,
+            rate_margin = rateMargin,
+            flexible_yn = flexibleRate,
+            flexible_formula = flexibleFormula,
+            created_by = request.user,
+            last_modified_by = request.user
+        )
+        shopProductRateAdd.save()
+
+        messages.success(request, "Product Rate:  {} Added in the database.".format(rateMargin))
+        return redirect('product_rate_list')
+
+
+
+
+    context = {
+        "shopModelData" : shopModelData,
+        "associationData" : associationData,
+        "productMasterData" : productMasterData
+    }
+    return render(request, 'product_rate/product_rate_add.html', context)
+
+
+
+def ProductRateEdit(request,id):
+
+    shopModalData = ShopModel.objects.all()
+    associationsData  =Associations.objects.all()
+    productData = ProductMaster.objects.all()
+    productRateEdit = ShopProductRates.objects.get(shop_product_rates_id=id)
+
+    context ={
+        'shopModalData' : shopModalData,
+        'associationsData' : associationsData,
+        'productData' : productData,
+        'productRateEdit' : productRateEdit,
+    }
+    return render(request, 'product_rate/product_rate_edit.html', context)
+
+
+
+def ProductRateUpdate(request):
+    if request.method=="POST":
+        productRateId = request.POST['product_rate']
+        shopCodeId = request.POST['shop_codeId']
+        associationId = request.POST['associationId']
+        productId = request.POST['productId']
+        rateMargin = request.POST['rate_margin']
+        flexibleRate = request.POST['flexible_rate']
+        flexibleFormula = request.POST['flexible_formula']  
+
+        shopCode = ShopModel.objects.get(shop_id = shopCodeId)
+        associations = Associations.objects.get(association_id = associationId)
+        product  =ProductMaster.objects.get(product_id = productId)
+
+        shopProductRateUpdate = ShopProductRates.objects.get(shop_product_rates_id = productRateId)
+        shopProductRateUpdate.shopId = shopCode
+        shopProductRateUpdate.associationId = associations
+        shopProductRateUpdate.ProductId = product
+        shopProductRateUpdate.rate_margin = rateMargin
+        shopProductRateUpdate.flexible_yn = flexibleRate
+        shopProductRateUpdate.flexible_formula = flexibleFormula
+        shopProductRateUpdate.last_modified_by = request.user
+        shopProductRateUpdate.save()
+
+        messages.success(request, "Product Rate Updated Succesfully.")
+        return redirect('product_rate_list')
+    
+
+
+def ProductRateDelete(request,id):
+    productRateDelete = ShopProductRates.objects.get(shop_product_rates_id = id)
+    productRateDelete.delete()
+
+    productRateDelete.is_deleted = True
+    productRateDelete.deleted_by = request.user
+    productRateDelete.save()
+
+    return redirect('product_rate_list')
+

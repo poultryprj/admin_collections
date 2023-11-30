@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="content container-fluid">
+
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title">Product Edit </h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="">Product</a></li>
+                    <li class="breadcrumb-item active">Add </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+{% include "includes/message.html" %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <form action="{% url 'product_update' %}" method="POST" >
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-12">
+                                <h5 class="form-title"><span>Product Details</span></h5>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Product Id</label>
+                                    <input type="text" class="form-control" name="product_id" value="{{productDataEdit.product_id}}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Product Name</label>
+                                    <input type="text" class="form-control" name="product_name" placeholder="Enter Product Name" value="{{productDataEdit.product_name}}" required>
+                                </div>
+                            </div>
+
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Product Type</label>
+                                    <select class="form-control form-select" placeholder="Enter Product Type" name="product_typeId"  required>
+                                        <option disabled>------- Select Product Type -------</option>
+                                        <option value="{{productDataEdit.product_typeId.product_type_id}}">{{productDataEdit.product_typeId}}</option>
+                                        {% for i in productTypeList %}
+                                        <option value="{{i.product_type_id}}" {% if productDataEdit.product_typeId.product_type_id == i.product_type_id %} style="display:none" {% endif %}>{{i.product_type}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                           
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Product Category</label>
+                                    <select class="form-control form-select" name="product_categoryId" required>
+                                        <option disabled>------- Select Product Category -------</option>
+                                        <option value="{{productDataEdit.product_categoryId.product_category_id}}">{{productDataEdit.product_categoryId}}</option>
+                                        {% for i in productCategoryList %}
+                                            <option value="{{i.product_category_id}}" {% if productDataEdit.product_categoryId.product_category_id == i.product_category_id %} style="display:none" {% endif %}>{{i.product_category}}</option>
+                                            {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Product Value</label>
+                                    <select class="form-control form-select" placeholder="Enter Product Value" name="product_value" required>
+                                        <option disabled>------- Select Product value -------</option>
+                                        <option value="{{productDataEdit.product_value_on}}">{{productDataEdit.product_value_on}}</option>
+                                        <option value="Weight" {% if productDataEdit.product_value_on == "Weight" %} style="display: none;" {% endif %}>Weight</option>
+                                        <option value="Quantity" {% if productDataEdit.product_value_on == "Quantity" %} style="display: none;" {% endif %}>Quantity</option>
+                                        <option value="Packets" {% if productDataEdit.product_value_on == "Packets" %} style="display: none;" {% endif %}>Packets</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">Edit Product</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

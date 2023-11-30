@@ -28,10 +28,50 @@ urlpatterns = [
     path('shop_owner_delete/<int:id>', views.ShopOwnerDelete, name='shop_owner_delete'),
 
 
-    path('shop_routes/', views.RouteList, name='shoproute_list'),
-    # path('shop_routes_list/', views.AllShopList, name='shop_routes_list'),
+    # Shop Routes Urls
+    path('shop_routes/', views.ShopRouteList, name='shoproute_list'),
 
-    # path('selected_shops/', views.selected_shops, name='selected_shops'),
+    
+
+    # Product Type Urls
+    path('product_types/', views.ProductTypeList, name='product_type'), 
+
+    path('product_type_add/', views.ProductTypeAdd, name='product_type_add'),
+
+    path('product_type_edit/<int:id>/', views.ProductTypeEdit, name='product_type_edit'),
 
 
+    # Product Category Urls
+    path('product_categories/', views.ProductCategoriesList, name='product_categories'),
+
+    path('product_category_add/', views.ProductCategoriesAdd, name='product_categories_add'),
+
+    path('product_category_edit/<int:id>/', views.ProductTypeUpdate, name='product_category_edit'),
+
+
+    # Product Master Urls
+    path('product_list/', views.ProductList, name='product_list'), 
+
+    path('product_add/', views.ProductAdd, name='product_add'),
+
+    path('product_edit/<int:id>', views.ProductEdit, name='product_edit'),
+
+    path('product_update/', views.ProductUpdate, name='product_update'),
+
+    path('product_delete/<int:id>', views.ProductDelete, name='product_delete'),
+
+
+
+    # Product Rate Urls
+    path('product_rate_list/', views.ProductRateList, name='product_rate_list'), 
+
+    path('product_rate_add/', views.ProductRateAdd, name='product_rate_add'),
+
+    path('product_rate_edit/<int:id>/', views.ProductRateEdit, name='product_rate_edit'),
+
+    path('product_rate_update/', views.ProductRateUpdate, name='product_rate_update'),
+
+    path('product_rate_delete/<int:id>/', views.ProductRateDelete, name='product_rate_delete'),
+
+    
 ]

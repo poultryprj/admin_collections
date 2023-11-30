@@ -86,7 +86,7 @@ STATICFILES_DIRS = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'shop_staff',
+        'NAME': 'db_erp_poultry',
         'HOST' : '3.110.255.77',
         'PORT' : '5432',
         'USER' : 'postgres',
@@ -141,3 +141,4 @@ MESSAGE_TAGS = {
     messages.INFO: "",
     messages.ERROR: "danger"
 }
+
