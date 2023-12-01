@@ -1,0 +1,263 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="content container-fluid">
+
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title">Add Vehical Detail</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="">Vehical</a></li>
+                    <li class="breadcrumb-item active">Add Detail</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    {% include "includes/message.html" %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <form action="{% url 'shop_add' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-12">
+                                <h5 class="form-title"><span>Vehical Details</span></h5>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Registration No</label>
+                                    <input type="text" class="form-control" name="registration_no" required>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Owner Name</label>
+                                    <input type="text" class="form-control" name="owner_name" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <label>Vehical Make By</label>
+                                <div class="input-group">
+                                    <select class="form-control form-select" placeholder="Enter Shop Area"
+                                        name="vehical_make_by" required>
+                                        <option>------- Select Vechicle Make By -------</option>
+                                        {% for i in vehicalMakeByData %}
+                                        <option value="{{i.vehical_make_by}}">{{ i.vehical_make_by }} </option>
+                                        {% endfor %}
+                                    </select>
+
+
+
+
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal" data-bs-whatever="@mdo"> <i
+                                            class="fa-solid fa-square-plus"></i></button>
+
+                                    <!-- Your existing HTML content -->
+
+                                    <div class="modal fade" id="exampleModal" tabindex="-1"
+                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">New message</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="mb-3">
+                                                        <label for="recipient-name"
+                                                            class="col-form-label">Recipient:</label>
+                                                        <input type="text" class="form-control" id="recipient-name">
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Close</button>
+                                                    <a onClick='addNewMake()'
+                                                        class="btn btn-primary">Send message</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Vehical Model</label>
+                                    <select class="form-control form-select" placeholder="Enter Shop Area"
+                                        name="vehical_model" required>
+                                        <option>------- Select Shop Area -------</option>
+                                        <option value="area 1">area 1</option>
+                                        <option value="area 2">area 2</option>
+                                        <option value="area 3">area 3</option>
+                                        <option value="area 4">area 4</option>
+                                        <option value="area 5">area 5</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Vehical Type</label>
+                                    <select class="form-control form-select" placeholder="Enter Shop Area"
+                                        name="vehical_type" required>
+                                        <option>------- Select Shop Area -------</option>
+                                        <option value="area 1">area 1</option>
+                                        <option value="area 2">area 2</option>
+                                        <option value="area 3">area 3</option>
+                                        <option value="area 4">area 4</option>
+                                        <option value="area 5">area 5</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group">
+                                    <label>Vehical Details</label>
+                                    <input type="text" class="form-control" name="vehical_details" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Fuel Type</label>
+                                    <select class="form-control form-select" placeholder="Enter Shop Area"
+                                        name="fuel_type" required>
+                                        <option>------- Select Shop Area -------</option>
+                                        <option value="area 1">area 1</option>
+                                        <option value="area 2">area 2</option>
+                                        <option value="area 3">area 3</option>
+                                        <option value="area 4">area 4</option>
+                                        <option value="area 5">area 5</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>No of Wheel</label>
+                                    <select class="form-control form-select" placeholder="Enter Shop Area"
+                                        name="no_of_wheel" required>
+                                        <option>------- Select Shop Area -------</option>
+                                        <option value="area 1">area 1</option>
+                                        <option value="area 2">area 2</option>
+                                        <option value="area 3">area 3</option>
+                                        <option value="area 4">area 4</option>
+                                        <option value="area 5">area 5</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Carrier Type</label>
+                                    <select class="form-control form-select" placeholder="Enter Shop Area"
+                                        name="carrier_ype" required>
+                                        <option>------- Select Shop Area -------</option>
+                                        <option value="area 1">area 1</option>
+                                        <option value="area 2">area 2</option>
+                                        <option value="area 3">area 3</option>
+                                        <option value="area 4">area 4</option>
+                                        <option value="area 5">area 5</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Registration Date</label>
+                                    <input type="date" class="form-control" name="registration_date" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">Add </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Your existing HTML content -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    function addNewMake() {
+        const newName = $('#recipient-name').val();
+
+        $.ajax({
+            url: '{% url "vehicle_make_by_add" %}',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            data: JSON.stringify({ new_name: newName }),
+            success: function(data) {
+                if (data.success) {
+                    const select = $('select[name="vehical_make_by"]');
+                    const option = $('<option></option>').attr('value', data.new_name).text(data.new_name);
+                    select.append(option);
+                    
+                    // Set the new option as selected
+                    select.val(data.new_name);
+                    
+                    // Hide the modal and clear input after successful addition
+                    $('#exampleModal').modal('hide');
+                    $('#recipient-name').val('');
+                    
+                    // Fetch updated data and populate the dropdown
+                    refreshData();
+                } else {
+                    // Handle error
+                    alert('Failed to add make');
+                }
+            },
+            error: function(error) {
+                console.error('Error:', error);
+                alert('An error occurred while adding make!');
+            }
+        });
+    }
+
+    function refreshData() {
+        // Perform an AJAX request to fetch updated data
+        $.ajax({
+            url: '{% url "vehicle_make_by_add" %}', // Replace with your endpoint to fetch updated data
+            method: 'GET',
+            success: function(response) {
+                var select = $('select[name="vehical_make_by"]');
+                select.empty(); // Clear all existing options
+
+                // Add default option
+                select.append($('<option>------- Select Vechicle Make By -------</option>'));
+
+                // Add new options based on the fetched data
+                response.forEach(function(item) {
+                    var option = $('<option></option>').attr('value', item.vehical_make_by).text(item.vehical_make_by);
+                    select.append(option);
+                });
+            },
+            error: function(error) {
+                console.error('Error fetching updated data:', error);
+            }
+        });
+    }
+</script>
+
+
+
+{% endblock content %}

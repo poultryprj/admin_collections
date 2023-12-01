@@ -128,3 +128,4 @@ class ShopProductRates(models.Model):
    
 
 
+

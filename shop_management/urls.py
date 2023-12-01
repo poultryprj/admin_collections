@@ -30,5 +30,7 @@ urlpatterns = [
     path('shops/', include('shop.urls')),
 
     path('users/', include('user.urls')),
+
+    path('vehicle/', include('vehicle.urls')),
     
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

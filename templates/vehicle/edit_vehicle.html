@@ -1,0 +1,55 @@
+<!-- edit_vehicle.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Add necessary head content here -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('saveForm').addEventListener('click', function (event) {
+                event.preventDefault();
+
+                const selectedMake = document.getElementById('make').value;
+
+                fetch(window.location.href, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: `make=${selectedMake}`
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Vehicle make updated successfully!');
+                            // You can update the UI or perform other actions as needed
+                        } else {
+                            alert('Failed to update vehicle make!');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while updating vehicle make!');
+                    });
+            });
+        });
+    </script>
+</head>
+<body>
+    <form>
+        {% csrf_token %}
+        <label for="make">Vehicle Make:</label>
+        <select id="make" name="make">
+            {% for make in makes %}
+            <option value="{{ make }}" {% if vehicle.vehical_make_by == make %}selected{% endif %}>{{ make }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <!-- Other form fields -->
+
+        <button id="saveForm">Save</button>
+    </form>
+</body>
+</html>

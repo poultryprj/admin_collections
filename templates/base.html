@@ -20,11 +20,18 @@
     <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
     <link rel="stylesheet" href="{% static 'assets/plugins/datatables/datatables.min.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        .custom-margin-style {
+            /* You can add additional custom styles here if needed */
+            /* Apply margin-left using Bootstrap ml class */
+            margin-left: 321px; /* Or any other specific value */
+        }
+    </style  >
 </head>
 
-<body>
+<body class="d-flex flex-column h-100">
+    <div class="main-wrapper flex-grow-1">
 
-    <div class="main-wrapper">
         {% include "includes/header.html" %}
         {% include "includes/sidebar.html" %}
         <div class="page-wrapper">
@@ -32,11 +39,15 @@
             {% block content %}
 
             {% endblock content %}
-
-            {% include "includes/footer.html" %}
+            
+            <footer class="fixed-bottom bg-light">
+                <div class="text-center ">
+                    <p class="mb-0">Copyright © 2023 AppWelt Technologies</p>
+                </div>
+            </footer>
         </div>
-
     </div>
+  
 
     <!-- <script src="{% static 'assets/js/jquery-3.6.0.min.js' %}"></script> -->
     <script src="{% static 'assets/js/popper.min.js' %}"></script>
