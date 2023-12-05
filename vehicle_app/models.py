@@ -5,9 +5,32 @@ from user.models import UserModel
 from django.contrib.auth.models import User
 
 # Create your models here.
-class VehicalMakeBy(models.Model):
-    vehical_make_id = models.AutoField(primary_key=True)
-    vehical_make_by = models.CharField(max_length=50)
+class VehicleMakeBy(models.Model):
+    vehicle_make_id = models.AutoField(primary_key=True)
+    vehicle_make_by = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.vehicle_make_by
+
+
+# Create your models here.
+class VehicleModel(models.Model):
+    vehicle_model_id = models.AutoField(primary_key=True)
+    vehicle_model = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.vehicle_model
+
+
+
+# Create your models here.
+class VehicleType(models.Model):
+    vehicle_type_id = models.AutoField(primary_key=True)
+    vehicle_type = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.vehicle_type
+
 
 
 
@@ -15,9 +38,9 @@ class Vehicle(models.Model):
     vehicle_id  = models.AutoField(primary_key=True)
     registration_no = models.CharField(max_length=50)
     owner_name = models.CharField(max_length=100)
-    vehicle_make_Id = models.ForeignKey(VehicalMakeBy, on_delete=models.SET_NULL, null=True)
-    vehicle_model = models.CharField(max_length=100)
-    vehicle_type = models.CharField(max_length=100)
+    vehicle_make_Id = models.ForeignKey(VehicleMakeBy, on_delete=models.SET_NULL, null=True)
+    vehicle_model = models.ForeignKey(VehicleModel, on_delete=models.SET_NULL, null=True)
+    vehicle_type = models.ForeignKey(VehicleType, on_delete=models.SET_NULL, null=True)
     vehicle_details = models.CharField(max_length=200)
     fuel_type = models.CharField(max_length=50)
     no_of_wheel = models.IntegerField()

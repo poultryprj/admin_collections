@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Vehicle, Vendor, ProductRecieve, VehicalMakeBy
+from .models import Vehicle, Vendor, ProductRecieve, VehicleMakeBy, VehicleModel, VehicleType
 # Register your models here.
 
 
@@ -32,15 +32,36 @@ class ProductRecieveModelAdmin(admin.ModelAdmin):
 
 
 
-class VehicalMakeByModelAdmin(admin.ModelAdmin):
-    list_display = ('vehical_make_id', 'vehical_make_by' )
+class VehicleMakeByModelAdmin(admin.ModelAdmin):
+    list_display = ('vehicle_make_id', 'vehicle_make_by' )
 
-    search_fields = ('vehical_make_id', 'vehical_make_by')
+    search_fields = ('vehicle_make_id', 'vehicle_make_by')
 
-    list_display_links = ('vehical_make_id', 'vehical_make_by')
+    list_display_links = ('vehicle_make_id', 'vehicle_make_by')
 
 
-admin.site.register(VehicalMakeBy,VehicalMakeByModelAdmin)
+
+class VehicleModelAdmin(admin.ModelAdmin):
+    list_display = ('vehicle_model_id', 'vehicle_model' )
+
+    search_fields = ('vehicle_model_id', 'vehicle_model' )
+
+    list_display_links = ('vehicle_model_id', 'vehicle_model' )
+
+
+
+
+class VehicleTypeModelAdmin(admin.ModelAdmin):
+    list_display = ('vehicle_type_id', 'vehicle_type' )
+
+    search_fields = ('vehicle_type_id', 'vehicle_type' )
+
+    list_display_links = ('vehicle_type_id', 'vehicle_type' )
+
+
+admin.site.register(VehicleMakeBy,VehicleMakeByModelAdmin)
+admin.site.register(VehicleModel,VehicleModelAdmin)
+admin.site.register(VehicleType,VehicleTypeModelAdmin)
 admin.site.register(Vehicle,VehicleModelAdmin)
 admin.site.register(Vendor,VendorModelAdmin)
 admin.site.register(ProductRecieve,ProductRecieveModelAdmin)
