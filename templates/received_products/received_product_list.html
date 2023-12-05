@@ -1,0 +1,272 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="content container-fluid">
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title">Received Product</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'Index' %}">Dashboard</a></li>
+                    <li class="breadcrumb-item active">List</li>
+                </ul>
+            </div>
+            <div class="col-auto text-right float-right ml-auto">
+
+                <a href="{% url 'shop_add' %}" class="btn btn-primary"><i class="fas fa-plus"></i></a>
+            </div>
+        </div>
+    </div>
+
+    {% include "includes/message.html" %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card card-table mb-5">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table id="table_id" class="table table-hover table-center mb-0  no-footer"
+                                        id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
+                                        <thead>
+                                            <tr role="row">
+                                                <th class="sorting_asc" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1" aria-sort="ascending"
+                                                    aria-label="ID: activate to sort column descending"
+                                                    style="width: 50.5px;">Sr.No</th>
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Name: activate to sort column ascending"
+                                                    style="width: 13.4px;">Recieved Date</th>
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Class: activate to sort column ascending"
+                                                    style="width: 140.7px;">Vendor Name</th>
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Gender: activate to sort column ascending"
+                                                    style="width: 100.025px;">Product Type Name</th>
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Gender: activate to sort column ascending"
+                                                    style="width: 56.025px;">Product Name</th>
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Gender: activate to sort column ascending"
+                                                    style="width: 36.025px;">Paper Rate</th>
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Gender: activate to sort column ascending"
+                                                    style="width: 56.025px;">Recieved Quantity</th>
+                                                
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Gender: activate to sort column ascending"
+                                                    style="width: 20.025px;">Recieved Weight</th>
+
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Gender: activate to sort column ascending"
+                                                    style="width: 20.025px;">Daily Rate</th>
+                                                
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Gender: activate to sort column ascending"
+                                                    style="width: 20.025px;">Tcs Rate</th>
+                                                
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Gender: activate to sort column ascending"
+                                                    style="width: 20.025px;">Tcs Value</th>
+
+
+                                                    <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Gender: activate to sort column ascending"
+                                                    style="width: 20.025px;">Amount</th>
+                                                    <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Gender: activate to sort column ascending"
+                                                    style="width: 20.025px;">Recieved Amount</th>
+                                                    <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Gender: activate to sort column ascending"
+                                                    style="width: 20.025px;">Vehicle Name</th>
+                                                    <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Gender: activate to sort column ascending"
+                                                    style="width: 20.025px;">Driver Name</th>
+
+
+                                                    <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Gender: activate to sort column ascending"
+                                                    style="width: 20.025px;">Source Vehicle Id</th>
+                                                    <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Gender: activate to sort column ascending"
+                                                    style="width: 20.025px;">Source Driver Id</th>
+                                                    <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Gender: activate to sort column ascending"
+                                                    style="width: 20.025px;">Challan No</th>
+                                                    <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Gender: activate to sort column ascending"
+                                                    style="width: 20.025px;">Entry Source</th>
+
+
+                                                    <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Gender: activate to sort column ascending"
+                                                    style="width: 56.025px;">Location</th>
+
+                                                <th class="text-right sorting" tabindex="0"
+                                                    aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+                                                    aria-label="Action: activate to sort column ascending"
+                                                    style="width: 54.7px;">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            {% for productRecieve in productRecieveList %}
+
+                                            <tr role="row" class="odd">
+                                                <td class="sorting_1">{{forloop.counter}}</td>
+
+                                                <td>{{productRecieve.recieved_date}}</td>
+                                                <td>{{productRecieve.vendorId}}</td>
+                                                <td>{{productRecieve.product_typeId}}</td>
+                                                <td>{{productRecieve.productId}}</td>
+                                                <td>{{productRecieve.paper_rate}}</td>
+                                                <td>{{productRecieve.recieved_quantity}}</td>
+                                                <td>{{productRecieve.recieved_weight}}</td>
+                                                <td>{{productRecieve.daily_rate}}</td>
+                                                <td>{{productRecieve.tcs_rate}}</td>
+                                                <td>{{productRecieve.tcs_value}}</td>
+                                                <td>{{productRecieve.amount}}</td>
+                                                <td>{{productRecieve.recieved_amount}}</td>
+                                                <td>{{productRecieve.vehicleId}}</td>
+                                                <td>{{productRecieve.driverId}}</td>
+                                                <td>{{productRecieve.source_vehicle_id}}</td>
+                                                <td>{{productRecieve.source_driver_id}}</td>
+                                                <td>{{productRecieve.challan_no}}</td>
+                                                <td>{{productRecieve.entry_source}}</td>
+                                               
+                                                <td><button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-location-dot"></i></button></td>
+
+                                                <td class="text-right">
+                                                    <div class="actions">
+                                                        <a href="{% url 'product_received_edit' productRecieve.product_record_id %}"
+                                                            class="btn btn-warning btn-sm mr-2">
+                                                            <i class="fas fa-pen"></i>
+                                                        </a>
+
+                                                   
+
+
+                                                       <!-- Your button and modal -->
+                                                     
+                                                       <button onclick="openDeleteModal('{{ productRecieve.product_record_id }}')"  class="btn btn-danger btn-sm mr-2"><i class="fas fa-trash"></i></button>
+
+
+                                                       <div class="modal fade" id="exampleModal_{{ productRecieve.product_record_id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  
+  
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Message:</h1>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="mb-3">
+                                                                    <label for="recipient-name_{{ productRecieve.product_record_id }}" class="col-form-label text-start"></label>
+                                                                    <h6 class='text-start'>Delete Reason :</h6>
+                                                                    <input type="text" class="form-control" id="recipient-name_{{ productRecieve.product_record_id }}">
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        <button onclick="addNewMake('{{ productRecieve.product_record_id }}')" class="btn btn-primary">Delete</button>
+                                                    </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function openDeleteModal(itemId) {
+        $(`#exampleModal_${itemId}`).modal('show');
+    }
+
+    function addNewMake(itemId) {
+        const newName = $(`#recipient-name_${itemId}`).val();
+        $.ajax({
+            url: `/vehicle/product_received_delete/${itemId}/`,
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            data: JSON.stringify({ delete_reason: newName }),
+            success: function (data) {
+                if (data.success) {
+                    alert('Item deleted successfully!');
+                    $(`#exampleModal_${itemId}`).modal('hide');
+                    refreshMakeData();
+                } else {
+                    alert('Failed to delete item');
+                }
+            },
+            error: function (error) {
+                console.error('Error:', error);
+                alert('An error occurred while deleting');
+            }
+        });
+    }
+
+    function refreshMakeData() {
+        // Perform an AJAX request to fetch updated data
+        $.ajax({
+            url: '{% url "product_received_list" %}', // Replace with your endpoint to fetch updated data
+            method: 'GET',
+            success: function(response) {
+                // Assuming the response contains updated HTML content for the data table
+                $('#DataTables_Table_0').html(response);
+                window.location.reload();
+            },
+            error: function(error) {
+                console.error('Error fetching updated data:', error);
+            }
+        });
+    }
+</script>
+
+                                                                                                        
+
+                                                        
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}    
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% endblock content %}

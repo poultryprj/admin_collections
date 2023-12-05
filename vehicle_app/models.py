@@ -1,5 +1,5 @@
 from django.db import models
-
+import pytz
 from shop.models import ProductMaster, ProductTypes
 from user.models import UserModel
 from django.contrib.auth.models import User
@@ -48,7 +48,7 @@ class Vehicle(models.Model):
     registration_date = models.DateField()
 
     def __str__(self):
-        return self.registration_no
+        return self.owner_name
     
 
 
@@ -82,8 +82,8 @@ class ProductRecieve(models.Model):
     source_driver_id = models.IntegerField()
     challan_no = models.CharField(max_length=150)
     entry_source = models.IntegerField()
-    latitude = models.DecimalField(max_digits=10, decimal_places=5,null=True)
-    longtitude = models.DecimalField(max_digits=10, decimal_places=5,null=True)
+    latitude = models.DecimalField(max_digits=20, decimal_places=5,null=True)
+    longtitude = models.DecimalField(max_digits=20, decimal_places=5,null=True)
     created_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='product_received_created_by')
     last_modified_on = models.DateTimeField(auto_now=True)
@@ -94,3 +94,4 @@ class ProductRecieve(models.Model):
 
     def __str__(self):
         return str(self.product_record_id)
+
