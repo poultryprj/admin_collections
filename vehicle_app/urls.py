@@ -24,4 +24,20 @@ urlpatterns = [
     path('product_received_update/', views.ProductReceivedUpdate, name='product_received_update'),
     
     path('product_received_delete/<int:id>/', views.product_received_delete, name='product_received_delete'),
+
+# ==================================================================================
+    path('vehicle_fitness_add', views.VehicleFitnessAdd, name='vehicle_fitness_add'),
+    path('vehicle_fitness_list/', views.VehicleFitnessList, name='vehicle_fitness_list'),
+    path('vehicle_fitness_edit/<int:id>/', views.VehicleFitnessEdit, name='vehicle_fitness_edit'),
+
+    path('vehicle_fitness_detail_update/', views.VehicleFitnessDetailsUpdate, name='vehicle_fitness_detail_update'),
+    
+    # path('vehicle_fitness_detail_delete/<int:id>/', views.VehicleFitnessDetailsdelete, name='vehicle_fitness_detail_delete'),
+
+
+    
+
 ]
+
+
+

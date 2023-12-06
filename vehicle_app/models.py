@@ -94,3 +94,16 @@ class ProductRecieve(models.Model):
     def __str__(self):
         return str(self.product_record_id)
 
+class Fitness(models.Model):
+    fitness_id = models.AutoField(primary_key=True)
+    vehicle_id = models.ForeignKey(Vehicle, on_delete=models.SET_NULL, null=True)  #vehicle number FK of Vehicle
+    registration_no = models.CharField(max_length=50)
+    vehicle_fitness_from_date = models.DateField()
+    vehicle_fitness_to_date = models.DateField()
+    created_by_id = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='vehicle_fitness_created_by')          #FK of User take select user
+    last_modified_by_id = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='vehicle_fitness_modify_by')     #FK of User update
+    created_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    last_modified_on = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.vehicle_id)

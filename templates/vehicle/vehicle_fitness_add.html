@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="content container-fluid">
+
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title">Add Vehicle Fitness Detail</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="">Vehicle Fitness</a></li>
+                    <li class="breadcrumb-item active">Add Fitness Detail</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    {% include "includes/message.html" %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <form action="{% url 'vehicle_fitness_add' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-12">
+                                <h5 class="form-title"><span>Vehicle Fitness Details</span></h5>
+                            </div>
+
+
+                            <div class="col-12 col-sm-6">
+                                <label>Vehicle No.</label>
+                                <div class="input-group">
+                                    <select class="form-control form-select" placeholder="Enter Shop Area"
+                                        name="vehicle_id" required>
+                                        <option>------- Select Vehicle No. -------</option>
+                                        {% for i in vehicleData %}
+                                        <option value="{{i.vehicle_id}}">{{ i.vehicle_id }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Fitness Registration No</label>
+                                    <input type="text" class="form-control" name="registration_no" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Vehicle Fitness From Date</label>
+                                    <input type="date" class="form-control" name="vehicle_fitness_from_date" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Vehicle Fitness To Date</label>
+                                    <input type="date" class="form-control" name="vehicle_fitness_to_date" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12"> 
+                                <button type="submit" class="btn btn-primary"> Add Details </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}
