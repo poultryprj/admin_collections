@@ -1,5 +1,4 @@
 from django.db import models
-import pytz
 from shop.models import ProductMaster, ProductTypes
 from user.models import UserModel
 from django.contrib.auth.models import User
