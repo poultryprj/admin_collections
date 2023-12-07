@@ -1,14 +1,12 @@
 import json
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from shop.models import ProductMaster, ProductTypes
 from user.models import UserModel
-from vehicle_app.models import ProductRecieve, Vehicle, VehicleMakeBy, VehicleModel, VehicleType, Vendor
+from vehicles.models import ProductRecieve, Vehicle, VehicleMakeBy, VehicleModel, VehicleType, Vendor
 from django.contrib import messages
-
-from django.shortcuts import get_object_or_404, redirect, render
-from .models import ProductRecieve
+from .models import Fitness, ProductRecieve
 
 
 def vehicle(request):
@@ -165,7 +163,6 @@ def VehicleDetailsUpdate(request):
 
 
 def ProductReceivedList(request):
-    print("ghhvhvhbv")
     productRecieveList = ProductRecieve.objects.filter(is_deleted = False)
 
     context ={
@@ -181,7 +178,6 @@ def ProductReceivedAdd(request):
     productMasterData = ProductMaster.objects.all()
     vehicleData = Vehicle.objects.all()
     userModelData = UserModel.objects.all()
-
 
     if request.method == "POST":
         receiveDate = request.POST['received_date']
@@ -259,7 +255,6 @@ def ProductReceivedAdd(request):
 def ProductReceivedEdit(request,id):
     productRecieveDataEdit = ProductRecieve.objects.get(product_record_id = id)
 
-
     vendorData = Vendor.objects.all()
     productTypesData = ProductTypes.objects.all()
     productMasterData = ProductMaster.objects.all()
@@ -275,6 +270,7 @@ def ProductReceivedEdit(request,id):
         "userModelData" : userModelData
     }
     return render(request, "received_products/received_product_edit.html", context) 
+
 
 
 def ProductReceivedUpdate(request):
@@ -300,7 +296,6 @@ def ProductReceivedUpdate(request):
         entrySource = request.POST['entry_source']
         latitude = request.POST['latitude']
         longitude = request.POST['longitude']
-
 
 
         vendorId = Vendor.objects.get(vendor_id=vendorId)
@@ -338,15 +333,13 @@ def ProductReceivedUpdate(request):
 
 
 
-from django.http import JsonResponse
+
 
 def product_received_delete(request, id):
     if request.method == 'POST':
-        print("HGJHGJHBVJHB")
-        print(id)
         try:
             data = json.loads(request.body.decode('utf-8'))
-            delete_reason = data.get('delete_reason')  # Assuming you're using POST method to send data
+            delete_reason = data.get('delete_reason')  
             print(delete_reason)
 
             productRecieveDataDelete = ProductRecieve.objects.get(product_record_id = id)
@@ -354,20 +347,107 @@ def product_received_delete(request, id):
             productRecieveDataDelete.deleted_by = request.user
             productRecieveDataDelete.delete_reason  = delete_reason
             productRecieveDataDelete.save()
-
-            # Perform necessary deletion logic
             
             return JsonResponse({'success': True})
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 
-# if request.method == "POST":
-#         data = json.loads(request.body.decode('utf-8'))  # Decode the JSON data
-#         addName = data.get('new_name')
-#         if addName:
-#             try:
-#                 return JsonResponse({'success': True, 'new_name': addName})
-    
-#             except Exception as e:
-#                 return JsonResponse({'success': False, 'error_message': str(e)}, status=500)
+
+######################## Vehicle Fitness ###########################
+
+def VehicleFitnessAdd(request):
+    vehicleData = Vehicle.objects.all()
+
+    if request.method == "POST":
+        vehicleId = request.POST['vehicle_id']
+        vehicleFitnessFromDate = request.POST['vehicle_fitness_from_date']
+        vehicleFitnessToDate = request.POST['vehicle_fitness_to_date']
+        
+        try:
+            vehicleId = Vehicle.objects.get(vehicle_id=vehicleId)
+        except Vehicle.DoesNotExist:
+            vehicleId = Vehicle.objects.create(vehicle_id=vehicleId)
+
+        try:
+            vehicleFitnessDetaildAdd = Fitness(
+            vehicle_id = vehicleId,
+            vehicle_fitness_from_date = vehicleFitnessFromDate,
+            vehicle_fitness_to_date = vehicleFitnessToDate,
+            created_by_id = request.user,
+            last_modified_by_id = request.user
+
+            )
+            vehicleFitnessDetaildAdd.save()
+
+            messages.success(request, "Vehicle Fitness Details Added...")
+            return redirect('vehicle_fitness_list')
+        
+        except IntegrityError as e:
+            messages.error(request, str(e))
+
+    context = {
+        'vehicleData': vehicleData
+    }
+
+    return render(request, 'vehicle/vehicle_fitness_add.html', context)
+
+
+
+def VehicleFitnessList(request):
+    fitnessDetailList = Fitness.objects.all()
+
+    context = {
+        'fitnessDetailList' : fitnessDetailList
+    }
+    return render(request, 'vehicle/vehicle_fitness_list.html', context)
+
+
+
+
+def VehicleFitnessEdit(request, id):
+    try:
+        vehicleFitnessData = get_object_or_404(Fitness, fitness_id=id)
+        vehicleDetailEdit = vehicleFitnessData.vehicle_id  
+
+        context = {
+            "vehicleDetailEdit": vehicleDetailEdit,
+            'vehicleFitnessData': vehicleFitnessData,
+        }
+        return render(request, "vehicle/vehicle_fitness_edit.html", context)
+    except Fitness.DoesNotExist:
+        messages.error(request, "Fitness record not found.")
+        return redirect('error_page')     
+
+
+def VehicleFitnessDetailsUpdate(request):
+    if request.method == "POST":
+        fitness_id = request.POST['fitness_id']
+        vehicleFitnessFromDate = request.POST['vehicle_fitness_from_date']
+        vehicleFitnessToDate = request.POST['vehicle_fitness_to_date']
+
+        # Assuming the Fitness model has a field called 'fitness_id'
+        vehicleFitnessDetailsUpdate = get_object_or_404(Fitness, fitness_id=fitness_id)
+
+        # vehicleFitnessDetailsUpdate.registration_no = registrationNo
+        vehicleFitnessDetailsUpdate.vehicle_fitness_from_date = vehicleFitnessFromDate
+        vehicleFitnessDetailsUpdate.vehicle_fitness_to_date = vehicleFitnessToDate
+       
+        vehicleFitnessDetailsUpdate.last_modified_by_id = request.user
+
+        vehicleFitnessDetailsUpdate.save()
+
+        messages.success(request, "Vehicle Fitness Details Updated Successfully..!!")
+        return redirect('vehicle_fitness_list')
+
+
+
+#### For delete
+from django.shortcuts import get_object_or_404
+
+def VehicleFitnessDetailsdelete(request, id):
+    fitnessDetailData = get_object_or_404(Fitness, fitness_id=id)
+    fitnessDetailData.is_deleted = True
+    fitnessDetailData.deleted_by = request.user
+    fitnessDetailData.delete()
+    return redirect('vehicle_fitness_list')

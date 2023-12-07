@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="content container-fluid">
+
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title">Add Shop Flexible Rate</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="">Shops</a></li>
+                    <li class="breadcrumb-item active">Add Flexible Rate</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+{% include "includes/message.html" %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <form action="{% url 'shop_flexible_rate_add' %}" method="POST" >
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-12">
+                                <h5 class="form-title"><span>Add Flexible Rate Details</span></h5>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Flexible Rate Date</label>
+                                    <input type="date" class="form-control" name="shop_flexible_date" required>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Name</label>
+                                    <select class="form-control form-select" name="shop_id" required>
+                                        <option value="" disabled selected hidden>------- Select Shop Name -------</option>
+                                        {% for i in shopModelData %}
+                                            <option value="{{i.shop_id}}">{{ i.shop_name }} </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Product Type</label>
+                                    <select class="form-control form-select" name="product_type_id" required>
+                                        <option value="" disabled selected hidden>------- Select Shop Name -------</option>
+                                        {% for i in productTypeData %}
+                                            <option value="{{i.product_type_id}}">{{ i.product_type }} </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                           
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Flexible Rate</label>
+                                    <input type="text" class="form-control" name="flexible_rate" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Flexible Formula</label>
+                                    <input type="text" class="form-control" name="flexible_formula" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Sell Rate</label>
+                                    <input type="text" class="form-control" name="sell_rate" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>With Skin</label>
+                                    <input type="text" class="form-control" name="with_skin" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Without Skin</label>
+                                    <input type="text" class="form-control" name="without_skin" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>SMS Send (Y/N)</label>
+                                    <select class="form-control form-select" placeholder="Enter Status" name="sms_send_yn" required>
+                                        <option>Select...</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>SMS Reply Id</label>
+                                    <input type="text" class="form-control" name="sms_replyId" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">Add Flexiable Rate</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

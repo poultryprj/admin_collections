@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="content container-fluid">
+
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title">Edit Shop Balance</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="">Shops</a></li>
+                    <li class="breadcrumb-item active">Edit Shop Balance</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+{% include "includes/message.html" %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <form action="{% url 'shop_balance_edit'  id=shopBalanceEdit.shop_balance_id %}" method="POST" >
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-12">
+                                <h5 class="form-title"><span>Shop Balance Details</span></h5>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Name</label>
+                                    <select class="form-control form-select" name="shop_id" required>
+                                        <option disabled >------- Select Shop Name -------</option>
+                                        <option value="{{shopBalanceEdit.shopId.shop_id}}">{{ shopBalanceEdit.shopId }} </option>
+                                        {% for i in shopModelData %}
+                                            <option value="{{i.shop_id}}" {% if shopBalanceEdit.shopId.shop_id == i.shop_id %}
+                                            
+                                            style="display: none;"
+                                            {% endif %}>{{ i.shop_name }} </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Balance Date</label>
+                                    <input type="date" class="form-control" name="balance_date" value="{% if shopBalanceEdit.balance_date %}{{ shopBalanceEdit.balance_date|date:'Y-m-d' }}{% endif %}" required>
+                                     </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Balance</label>
+                                    <input type="text" class="form-control" name="balance" value="{{shopBalanceEdit.balance}}" required>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Active</label>
+                                    <select class="form-control form-select" placeholder="Enter Status" name="status" required>
+                                        <option disabled>Active...</option>
+                                        <option value="{{shopBalanceEdit.active}}" >{{shopBalanceEdit.active}}</option>
+                                        <option value="Yes" {% if shopBalanceEdit.active == "Yes"  %} style="display: none;" {% endif %}>Yes</option>
+                                        <option value="No" {% if shopBalanceEdit.active == "No"  %} style="display: none;" {% endif %}>No</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Adjustment Amount</label>
+                                    <input type="text" class="form-control" name="adjustment_amount" value="{{shopBalanceEdit.adjustment_amount}}" required>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Adjustment Remark</label>
+                                    <input type="text" class="form-control" name="adjustment_remark" value="{{shopBalanceEdit.adjustment_remark}}" required>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">Update Shop Balance</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

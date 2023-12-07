@@ -73,5 +73,29 @@ urlpatterns = [
 
     path('product_rate_delete/<int:id>/', views.ProductRateDelete, name='product_rate_delete'),
 
+
+
+    #  Shop Balance
+    path('shop_balance_list/', views.ShopBalanceList, name='shop_balance_list'),
+
+    path('shop_balance_add/', views.ShopBalanceAdd, name='shop_balance_add'),
+
+    path('shop_balance_edit/<int:id>', views.ShopBalanceEdit, name='shop_balance_edit'),
+
+    path('shop_balance_delete/<int:id>', views.ShopBalanceDelete, name='shop_balance_delete'),
+
+
+    path('shop_and_balance_detail/<int:id>', views.ShopAndBalanceDetail, name='shop_and_balance_detail'),
+
+
+
+    # Shop Flexible Rate
+    path('shop_flexible_rate_list/', views.ShopFlexibleRateList, name='shop_flexible_rate_list'),
+
+    path('shop_flexible_rate_add/', views.ShopFlexibleRateAdd, name='shop_flexible_rate_add'),
+
+    path('shop_flexible_rate_edit/<int:id>', views.ShopFlexibleRateEdit, name='shop_flexible_rate_edit'),
+
+
     
 ]

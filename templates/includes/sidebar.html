@@ -103,15 +103,27 @@
                         <li class=""><a href="{% url 'product_received_add' %}">Product Received Add</a></li>
                     </ul>
                 </li>
-                {% comment %}
+
                 <li class="submenu ">
-                    <a href="#"><i class="fas fa-clock"></i> <span> Session</span> <span class="menu-arrow"></span></a>
+                    <a href="#"><i class="fa-solid fa-shop"></i> <span>Shop Balance</span> <span
+                            class="menu-arrow"></span></a>
                     <ul>
-                        <li class=""><a href="">Session List</a>
-                        </li>
-                        <li class=""><a href="">Session Add</a></li>
+                        
+                        <li class=""><a href="{% url 'shop_balance_list' %}">Shop Balance List</a></li>
+                        <li class=""><a href="{% url 'shop_balance_add' %}">Shop Balance Add</a></li>
                     </ul>
                 </li>
+               
+                <li class="submenu ">
+                    <a href="#"><i class="fa-solid fa-shop"></i> <span>Shop Flexiable Rate</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li class=""><a href="{% url 'shop_flexible_rate_list' %}">Shop Flexiable Rate List</a>
+                        </li>
+                        <li class=""><a href="{% url 'shop_flexible_rate_add' %}">Shop Flexiable Rate Add</a></li>
+                    </ul>
+                </li>
+
+                 {% comment %}
                 <li class="">
                     <a href=""><i class="fa fa-bell"></i> <span></span></a>
                 </li>

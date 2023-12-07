@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Vehicle, Vendor, ProductRecieve, VehicleMakeBy, VehicleModel, VehicleType
+from .models import Vehicle, Vendor, ProductRecieve, VehicleMakeBy, VehicleModel, VehicleType, Fitness
 # Register your models here.
 
 
@@ -59,9 +59,18 @@ class VehicleTypeModelAdmin(admin.ModelAdmin):
     list_display_links = ('vehicle_type_id', 'vehicle_type' )
 
 
+class FitnessAdmin(admin.ModelAdmin):
+    list_display = ('fitness_id', 'vehicle_id', 'vehicle_fitness_from_date', 'vehicle_fitness_to_date', 'created_by_id', 'last_modified_by_id', 'created_on', 'last_modified_on')
+
+    search_fields = ('fitness_id', 'vehicle_id')
+
+    list_display_links = ('fitness_id', 'vehicle_id')
+
+
 admin.site.register(VehicleMakeBy,VehicleMakeByModelAdmin)
 admin.site.register(VehicleModel,VehicleModelAdmin)
 admin.site.register(VehicleType,VehicleTypeModelAdmin)
 admin.site.register(Vehicle,VehicleModelAdmin)
 admin.site.register(Vendor,VendorModelAdmin)
 admin.site.register(ProductRecieve,ProductRecieveModelAdmin)
+admin.site.register(Fitness,FitnessAdmin)

@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .models import  Associations, ShopModel, ShopOwner, ShopProductRates, ShopRoute, ProductTypes, ProductCategories, ProductMaster
+from .models import  Associations, ShopBalance, ShopFlexibleRate, ShopModel, ShopOwner, ShopProductRates, ShopRoute, ProductTypes, ProductCategories, ProductMaster
 from routes.models import RouteModel
 from django.core.exceptions import ValidationError
 
@@ -435,7 +435,7 @@ def ProductUpdate(request):
 
 def ProductDelete(request,id):
     productDelete = ProductMaster.objects.get(product_id=id)
-    productDelete.delete()
+    # productDelete.delete()
 
     productDelete.is_deleted = True
     productDelete.deleted_by = request.user
@@ -460,7 +460,6 @@ def ProductRateAdd(request):
     shopModelData = ShopModel.objects.all()
     associationData = Associations.objects.all()
     productMasterData = ProductMaster.objects.all()
-
 
     if request.method=="POST":
         shopCodeId = request.POST['shop_codeId']
@@ -490,8 +489,6 @@ def ProductRateAdd(request):
 
         messages.success(request, "Product Rate:  {} Added in the database.".format(rateMargin))
         return redirect('product_rate_list')
-
-
 
 
     context = {
@@ -551,7 +548,6 @@ def ProductRateUpdate(request):
 
 def ProductRateDelete(request,id):
     productRateDelete = ShopProductRates.objects.get(shop_product_rates_id = id)
-    productRateDelete.delete()
 
     productRateDelete.is_deleted = True
     productRateDelete.deleted_by = request.user
@@ -559,3 +555,190 @@ def ProductRateDelete(request,id):
 
     return redirect('product_rate_list')
 
+
+
+
+# ===================== Shop Balance ======================
+
+
+def ShopBalanceList(request):
+    shopBalanceList = ShopBalance.objects.filter(is_deleted = False)
+
+    context={
+        'shopBalanceList' : shopBalanceList
+    }
+    return render(request, 'shops/shop_balance_list.html', context)
+
+
+
+
+def ShopBalanceAdd(request):
+    shopModelData = ShopModel.objects.all()
+
+    if request.method == "POST":
+        shopId = request.POST['shop_id']
+        balanceDate = request.POST['balance_date']
+        balance = request.POST['balance']
+        status = request.POST['status']
+        adjustmentAmount = request.POST['adjustment_amount']
+        adjustmentRemark = request.POST['adjustment_remark']
+
+        print(shopId, balanceDate, balance, status, adjustmentAmount, adjustmentRemark)
+
+        shopId = ShopModel.objects.get(shop_id = shopId)
+
+        shopBalanceAdd = ShopBalance(
+            shopId = shopId,
+            balance_date = balanceDate,
+            balance = balance,
+            active = status,
+            adjustment_amount = adjustmentAmount,
+            adjustment_remark = adjustmentRemark,
+            created_by = request.user
+        )
+        shopBalanceAdd.save()
+
+        
+        messages.success(request, "Shop Balance Added Succesfully...!")
+        return redirect('shop_balance_list')
+
+    context = {
+        'shopModelData' : shopModelData
+    }
+    return render(request, 'shops/shop_balance_add.html', context)
+
+
+
+
+def ShopBalanceEdit(request,id =None):
+    shopModelData = ShopModel.objects.all()
+    shopBalanceEdit = ShopBalance.objects.get(shop_balance_id = id)
+
+    if request.method == "POST":
+        shopId = request.POST['shop_id']
+        balanceDate = request.POST['balance_date']
+        balance = request.POST['balance']
+        status = request.POST['status']
+        adjustmentAmount = request.POST['adjustment_amount']
+        adjustmentRemark = request.POST['adjustment_remark']
+
+        shopId = ShopModel.objects.get(shop_id = shopId)
+
+        shopBalanceEdit.shopId = shopId
+        shopBalanceEdit.balance_date = balanceDate
+        shopBalanceEdit.balance = balance
+        shopBalanceEdit.active = status
+        shopBalanceEdit.adjustment_amount = adjustmentAmount
+        shopBalanceEdit.adjustment_remark = adjustmentRemark
+        shopBalanceEdit.last_modified_by = request.user
+        shopBalanceEdit.save()
+
+        messages.success(request, "Shop Balance Updated Succesfully...!")
+        return redirect('shop_balance_list')
+
+    context = {
+        'shopModelData' : shopModelData,
+        'shopBalanceEdit' : shopBalanceEdit
+    }
+    return render(request, 'shops/shop_balance_edit.html', context)
+
+
+
+def ShopBalanceDelete(request,id):
+    shopBalanceDelete = ShopBalance.objects.get(shop_balance_id = id)
+
+    shopBalanceDelete.is_deleted = True
+    shopBalanceDelete.deleted_by = request.user
+    shopBalanceDelete.save()
+
+    messages.success(request, "Shop Balance Deleted Succesfully...!")
+    return redirect('shop_balance_list')
+
+
+
+def ShopAndBalanceDetail(request,id):
+    shopAndBalance = ShopBalance.objects.get(shop_balance_id = id)
+    context ={
+        'shopAndBalance' : shopAndBalance
+    }
+    return render(request, 'shops/shop_and_balance_detail.html', context) 
+
+ 
+
+
+# ==============  Shop Flexible Rate ========
+
+
+def ShopFlexibleRateList(request):
+    shopFlexibleRateList = ShopFlexibleRate.objects.filter(is_deleted = False)
+
+    context ={
+        'shopFlexibleRateList' : shopFlexibleRateList
+    }
+    return render(request, 'shops/shop_flexible_rate_list.html', context) 
+
+
+
+
+def ShopFlexibleRateAdd(request):
+    shopModelData = ShopModel.objects.all()
+    productTypeData = ProductTypes.objects.all()
+
+    if request.method == "POST":
+        rateDate = request.POST['shop_flexible_date']
+        shopId = request.POST['shop_id']
+        productTypeId = request.POST['product_type_id']
+        flexibleRate = request.POST['flexible_rate']
+        flexibleFormula = request.POST['flexible_formula']
+        sellRate = request.POST['sell_rate']
+        withSkin = request.POST['with_skin']
+        withoutSkin = request.POST['without_skin']
+        smsSendYN = request.POST['sms_send_yn']
+        smsReplyId = request.POST['sms_replyId']
+
+        print(rateDate, shopId, productTypeId,flexibleRate, flexibleFormula,  sellRate, withSkin, withoutSkin, smsSendYN,smsReplyId )
+
+        shopId = ShopModel.objects.get(shop_id=shopId)
+        productTypeId = ProductTypes.objects.get(product_type_id=productTypeId)
+
+        shopFlexibleRateAdd = ShopFlexibleRate(
+            flexible_rate_date = rateDate,
+            shopId = shopId,
+            product_typeId = productTypeId,
+            flexible_rate = flexibleRate,
+            flexible_formula = flexibleFormula,
+            sell_rate = sellRate,
+            with_skin = withSkin,
+            without_skin = withoutSkin,
+            sms_send_yn = smsSendYN,
+            sms_replyId = smsReplyId,
+            created_by = request.user
+        )
+        shopFlexibleRateAdd.save()
+
+        messages.success(request, "Shop Flexible Rate Added Succesfully...!")
+        return redirect('shop_flexible_rate_list')
+
+
+    context = {
+        'shopModelData' : shopModelData,
+        'productTypeData' : productTypeData
+    }
+
+    return render(request, 'shops/shop_flexible_rate_add.html', context) 
+
+
+
+def ShopFlexibleRateEdit(request,id):
+    shopModelData = ShopModel.objects.all()
+    productTypeData = ProductTypes.objects.all()
+    shopFlexibleRateEdit = ShopFlexibleRate.objects.get(shop_flexible_rate_id = id)
+
+
+    context = {
+        'shopModelData' : shopModelData,
+        'productTypeData' : productTypeData,
+        'shopFlexibleRateEdit' : shopFlexibleRateEdit
+    }
+
+    return render(request, 'shops/shop_flexible_rate_edit.html', context) 
