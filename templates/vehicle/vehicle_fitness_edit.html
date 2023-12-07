@@ -31,25 +31,17 @@
 
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
-                                    <label>Vehicle No.</label>
+                                    <label>Vehicle Id</label>
                                     <input type="text" class="form-control" name="vehicle_id" value="{{vehicleDetailEdit.vehicle_id}}" readonly>
                                 </div>
                             </div>
 
-
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
-                                    <label>fitness_id</label>
+                                    <label>Fitness Id</label>
                                     <input type="text" class="form-control" name="fitness_id" value="{{vehicleFitnessData.fitness_id}}" readonly>
                                 </div>
-                            </div>
-                            
-                            <div class="col-12 col-sm-6">
-                                <div class="form-group">
-                                    <label>Registration No.</label>
-                                    <input type="text" class="form-control" name="registration_no" value="{{vehicleFitnessData.registration_no}}" required>
-                                </div>
-                            </div>
+                            </div>                   
 
 
                             <div class="col-12 col-sm-6">
@@ -59,14 +51,14 @@
                                 </div>
                             </div>
 
-                            <div class="col-12 col-sm-6">
+                            <div class="col-12 col-sm-3">
                                 <div class="form-group">
                                     <label>Vehicle Fitness From Date</label>
                                     <input type="date" class="form-control" name="vehicle_fitness_from_date" value="{% if vehicleFitnessData.vehicle_fitness_from_date %}{{ vehicleFitnessData.vehicle_fitness_from_date|date:'Y-m-d' }}{% endif %}" required>
                                 </div>
                             </div>
 
-                            <div class="col-12 col-sm-6">
+                            <div class="col-12 col-sm-3">
                                 <div class="form-group">
                                     <label>Vehicle Fitness To Date</label>
                                     <input type="date" class="form-control" name="vehicle_fitness_to_date" value="{% if vehicleFitnessData.vehicle_fitness_to_date %}{{ vehicleFitnessData.vehicle_fitness_to_date|date:'Y-m-d' }}{% endif %}" required>
@@ -74,7 +66,7 @@
                             </div>
                             
                             <div class="col-12">
-                                <button type="submit" class="btn btn-primary">Update Shop</button>
+                                <button type="submit" class="btn btn-primary">Update Details</button>
                             </div>
                         </div>
                     </form>

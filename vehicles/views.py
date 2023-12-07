@@ -379,11 +379,9 @@ def VehicleFitnessAdd(request):
 
     if request.method == "POST":
         vehicleId = request.POST['vehicle_id']
-        registrationNo = request.POST['registration_no']
         vehicleFitnessFromDate = request.POST['vehicle_fitness_from_date']
         vehicleFitnessToDate = request.POST['vehicle_fitness_to_date']
         
-        # print(vehicleId, registrationNo, vehicleFitnessFromDate, vehicleFitnessToDate)
         try:
             vehicleId = Vehicle.objects.get(vehicle_id=vehicleId)
         except Vehicle.DoesNotExist:
@@ -392,7 +390,6 @@ def VehicleFitnessAdd(request):
         try:
             vehicleFitnessDetaildAdd = Fitness(
             vehicle_id = vehicleId,
-            registration_no = registrationNo,
             vehicle_fitness_from_date = vehicleFitnessFromDate,
             vehicle_fitness_to_date = vehicleFitnessToDate,
             created_by_id = request.user,
@@ -416,14 +413,11 @@ def VehicleFitnessAdd(request):
 
 def VehicleFitnessList(request):
     fitnessDetailList = Fitness.objects.all()
-    print(fitnessDetailList)
 
     context = {
         'fitnessDetailList' : fitnessDetailList
     }
     return render(request, 'vehicle/vehicle_fitness_list.html', context)
-
-
 
 
 
@@ -445,14 +439,13 @@ def VehicleFitnessEdit(request, id):
 def VehicleFitnessDetailsUpdate(request):
     if request.method == "POST":
         fitness_id = request.POST['fitness_id']
-        registrationNo = request.POST['registration_no']
         vehicleFitnessFromDate = request.POST['vehicle_fitness_from_date']
         vehicleFitnessToDate = request.POST['vehicle_fitness_to_date']
 
         # Assuming the Fitness model has a field called 'fitness_id'
         vehicleFitnessDetailsUpdate = get_object_or_404(Fitness, fitness_id=fitness_id)
 
-        vehicleFitnessDetailsUpdate.registration_no = registrationNo
+        # vehicleFitnessDetailsUpdate.registration_no = registrationNo
         vehicleFitnessDetailsUpdate.vehicle_fitness_from_date = vehicleFitnessFromDate
         vehicleFitnessDetailsUpdate.vehicle_fitness_to_date = vehicleFitnessToDate
        
@@ -466,11 +459,14 @@ def VehicleFitnessDetailsUpdate(request):
 
 
 #### For delete
-# from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
+from django.shortcuts import render, get_object_or_404
+from .models import Fitness  # Import your Fitness model here
 
-# def VehicleFitnessDetailsdelete(request, id):
-#     fitnessDetailData = get_object_or_404(Fitness, fitness_id=id)
-#     fitnessDetailData.is_deleted = True
-#     fitnessDetailData.deleted_by = request.user
-#     fitnessDetailData.delete()
-#     return redirect('vehicle_fitness_list')
+def VehicleFitnessDetailsdelete(request, id):
+    fitnessDetailData = get_object_or_404(Fitness, fitness_id=id)
+    fitnessDetailData.is_deleted = True
+    fitnessDetailData.deleted_by = request.user
+    fitnessDetailData.save()
+    fitnessDetailList = Fitness.objects.filter(is_deleted=False)  # Filter non-deleted items
+    return render(request, 'vehicle/vehicle_fitness_list.html', {'fitnessDetailList': fitnessDetailList})

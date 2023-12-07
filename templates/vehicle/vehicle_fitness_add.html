@@ -31,11 +31,11 @@
 
 
                             <div class="col-12 col-sm-6">
-                                <label>Vehicle No.</label>
+                                <label>Vehicle Id</label>
                                 <div class="input-group">
                                     <select class="form-control form-select" placeholder="Enter Shop Area"
                                         name="vehicle_id" required>
-                                        <option>------- Select Vehicle No. -------</option>
+                                        <option>------- Select Vehicle Id -------</option>
                                         {% for i in vehicleData %}
                                         <option value="{{i.vehicle_id}}">{{ i.vehicle_id }}</option>
                                         {% endfor %}
@@ -43,22 +43,14 @@
                                 </div>
                             </div>
 
-
-                            <div class="col-12 col-sm-6">
-                                <div class="form-group">
-                                    <label>Fitness Registration No</label>
-                                    <input type="text" class="form-control" name="registration_no" required>
-                                </div>
-                            </div>
-
-                            <div class="col-12 col-sm-6">
+                            <div class="col-12 col-sm-3">
                                 <div class="form-group">
                                     <label>Vehicle Fitness From Date</label>
                                     <input type="date" class="form-control" name="vehicle_fitness_from_date" required>
                                 </div>
                             </div>
 
-                            <div class="col-12 col-sm-6">
+                            <div class="col-12 col-sm-3">
                                 <div class="form-group">
                                     <label>Vehicle Fitness To Date</label>
                                     <input type="date" class="form-control" name="vehicle_fitness_to_date" required>

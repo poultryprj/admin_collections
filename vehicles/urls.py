@@ -32,7 +32,7 @@ urlpatterns = [
 
     path('vehicle_fitness_detail_update/', views.VehicleFitnessDetailsUpdate, name='vehicle_fitness_detail_update'),
     
-    # path('vehicle_fitness_detail_delete/<int:id>/', views.VehicleFitnessDetailsdelete, name='vehicle_fitness_detail_delete'),
+    path('vehicle_fitness_detail_delete/<int:id>/', views.VehicleFitnessDetailsdelete, name='vehicle_fitness_detail_delete'),
 
 
     
