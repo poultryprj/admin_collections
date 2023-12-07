@@ -107,4 +107,4 @@ class Fitness(models.Model):
     last_modified_on = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return str(self.vehicle_id)
+        return str(self.fitness_id)

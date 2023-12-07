@@ -34,9 +34,8 @@ urlpatterns = [
     
     path('vehicle_fitness_detail_delete/<int:id>/', views.VehicleFitnessDetailsdelete, name='vehicle_fitness_detail_delete'),
 
-
-    
-
+# ==================================================================================
+    path('show_vehicle_details/<int:id>/', views.ShowVehicleDetail, name='show_vehicle_details'),
 ]
 
 

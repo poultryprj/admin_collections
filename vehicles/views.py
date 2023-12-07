@@ -6,7 +6,7 @@ from shop.models import ProductMaster, ProductTypes
 from user.models import UserModel
 from vehicles.models import ProductRecieve, Vehicle, VehicleMakeBy, VehicleModel, VehicleType, Vendor
 from django.contrib import messages
-
+# Import your Fitness model here
 from .models import Fitness, ProductRecieve
 
 
@@ -374,6 +374,11 @@ def product_received_delete(request, id):
 
 ######################## Vehicle Fitness ###########################
 
+from django.db import IntegrityError
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from .models import Vehicle, Fitness
+
 def VehicleFitnessAdd(request):
     vehicleData = Vehicle.objects.all()
 
@@ -381,28 +386,45 @@ def VehicleFitnessAdd(request):
         vehicleId = request.POST['vehicle_id']
         vehicleFitnessFromDate = request.POST['vehicle_fitness_from_date']
         vehicleFitnessToDate = request.POST['vehicle_fitness_to_date']
-        
-        try:
-            vehicleId = Vehicle.objects.get(vehicle_id=vehicleId)
-        except Vehicle.DoesNotExist:
-            vehicleId = Vehicle.objects.create(vehicle_id=vehicleId)
 
-        try:
-            vehicleFitnessDetaildAdd = Fitness(
-            vehicle_id = vehicleId,
-            vehicle_fitness_from_date = vehicleFitnessFromDate,
-            vehicle_fitness_to_date = vehicleFitnessToDate,
-            created_by_id = request.user,
-            last_modified_by_id = request.user
+        # Check if the vehicle ID exists
+        existing_vehicle = Vehicle.objects.filter(vehicle_id=vehicleId).first()
 
-            )
-            vehicleFitnessDetaildAdd.save()
-
-            messages.success(request, "Vehicle Fitness Details Added...")
-            return redirect('vehicle_fitness_list')
-        
-        except IntegrityError as e:
-            messages.error(request, str(e))
+        if existing_vehicle:
+            try:
+                # Check if fitness details already exist for this vehicle
+                existing_fitness = Fitness.objects.filter(vehicle_id=existing_vehicle).exists()
+                if existing_fitness:
+                    messages.error(request, "Fitness details already exist for this vehicle.")
+                else:
+                    vehicleFitnessDetaildAdd = Fitness(
+                        vehicle_id=existing_vehicle,
+                        vehicle_fitness_from_date=vehicleFitnessFromDate,
+                        vehicle_fitness_to_date=vehicleFitnessToDate,
+                        created_by_id=request.user,
+                        last_modified_by_id=request.user
+                    )
+                    vehicleFitnessDetaildAdd.save()
+                    messages.success(request, "Vehicle Fitness Details Added...")
+                    return redirect('vehicle_fitness_list')
+            except IntegrityError as e:
+                messages.error(request, str(e))
+        else:
+            # If vehicle ID does not exist, create a new one
+            try:
+                new_vehicle = Vehicle.objects.create(vehicle_id=vehicleId)
+                vehicleFitnessDetaildAdd = Fitness(
+                    vehicle_id=new_vehicle,
+                    vehicle_fitness_from_date=vehicleFitnessFromDate,
+                    vehicle_fitness_to_date=vehicleFitnessToDate,
+                    created_by_id=request.user,
+                    last_modified_by_id=request.user
+                )
+                vehicleFitnessDetaildAdd.save()
+                messages.success(request, "Vehicle Fitness Details Added...")
+                return redirect('vehicle_fitness_list')
+            except IntegrityError as e:
+                messages.error(request, str(e))
 
     context = {
         'vehicleData': vehicleData
@@ -459,9 +481,7 @@ def VehicleFitnessDetailsUpdate(request):
 
 
 #### For delete
-from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404
-from .models import Fitness  # Import your Fitness model here
+
 
 def VehicleFitnessDetailsdelete(request, id):
     fitnessDetailData = get_object_or_404(Fitness, fitness_id=id)
@@ -470,3 +490,53 @@ def VehicleFitnessDetailsdelete(request, id):
     fitnessDetailData.save()
     fitnessDetailList = Fitness.objects.filter(is_deleted=False)  # Filter non-deleted items
     return render(request, 'vehicle/vehicle_fitness_list.html', {'fitnessDetailList': fitnessDetailList})
+
+
+######## Show Vehicle Details
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from .models import Vehicle, Fitness, VehicleMakeBy, VehicleModel, VehicleType
+
+def ShowVehicleDetail(request, id):
+    try:
+        vehicleDetailEdit = Vehicle.objects.get(vehicle_id=id)
+        vehicleMakeByData = VehicleMakeBy.objects.all()
+        vehicleModelyData = VehicleModel.objects.all()
+        vehicleTypeData = VehicleType.objects.all()
+        
+        # Fetch the Fitness object related to the Vehicle ID
+        try:
+            vehicleFitnessData = Fitness.objects.get(vehicle_id=vehicleDetailEdit)
+        except Fitness.DoesNotExist:
+            vehicleFitnessData = None
+        
+        context = {
+            "vehicleDetailEdit": vehicleDetailEdit,
+            'vehicleMakeByData': vehicleMakeByData,
+            'vehicleModelyData': vehicleModelyData,
+            'vehicleTypeData': vehicleTypeData,
+            'vehicleFitnessData': vehicleFitnessData,
+        }
+
+        return render(request, 'vehicle/show_vehicle_details.html', context)
+    
+    except Vehicle.DoesNotExist:
+        messages.error(request, "Vehicle record not found.")
+        return redirect('error_page')
+
+
+
+# def VehicleFitnessEdit(request, id):
+#     try:
+#         vehicleFitnessData = get_object_or_404(Fitness, fitness_id=id)
+#         vehicleDetailEdit = vehicleFitnessData.vehicle_id  
+
+#         context = {
+#             "vehicleDetailEdit": vehicleDetailEdit,
+#             'vehicleFitnessData': vehicleFitnessData,
+#         }
+#         return render(request, "vehicle/vehicle_fitness_edit.html", context)
+#     except Fitness.DoesNotExist:
+#         messages.error(request, "Fitness record not found.")
+#         return redirect('error_page')   
