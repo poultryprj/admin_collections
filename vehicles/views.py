@@ -434,10 +434,11 @@ def VehicleFitnessAdd(request):
 
 
 def VehicleFitnessList(request):
-    fitnessDetailList = Fitness.objects.all()
+    # Filter out deleted fitness details
+    fitnessDetailList = Fitness.objects.filter(is_deleted=False)
 
     context = {
-        'fitnessDetailList' : fitnessDetailList
+        'fitnessDetailList': fitnessDetailList
     }
     return render(request, 'vehicle/vehicle_fitness_list.html', context)
 
