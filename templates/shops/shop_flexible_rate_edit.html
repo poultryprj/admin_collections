@@ -23,8 +23,8 @@
             <div class="card">
                 <div class="card-body">
                     
-                    <form action="{% url 'shop_flexible_rate_edit' %}" method="POST" >
-                        {% comment %} {% url 'shop_flexible_rate_edit' id=shopFlexibleRateEdit.shop_flexible_rate_id %} {% endcomment %}
+                    <form action="{% url 'shop_flexible_rate_edit' id=shopFlexibleRateEdit.shop_flexible_rate_id %}" method="POST" >
+                   
                         {% csrf_token %}
                         <div class="row">
                             <div class="col-12">

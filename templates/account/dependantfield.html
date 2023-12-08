@@ -1,0 +1,150 @@
+{% comment %} 
+
+path('demo/', views.vehicle_form_view, name='demo'),
+path('get-models/', views.get_models, name='get_models'),
+path('save-vehicle/', views.save_vehicle, name='save_vehicle'),
+
+
+
+
+from django.shortcuts import render
+from django.http import JsonResponse
+from  vehicles.models import VehicleMakeBy, Vehicle
+
+def vehicle_form_view(request):
+    makes = VehicleMakeBy.objects.all()
+    return render(request, 'account/dependantfield.html', {'makes': makes})
+
+def get_models(request):
+    make_id = request.GET.get('make_id')
+    models = Vehicle.objects.filter(vehicle_make_Id=make_id).values('vehicle_id', 'owner_name')
+    return JsonResponse(list(models), safe=False)
+
+
+def save_vehicle(request):
+    print("HGGGGGGGGGGGG")
+    if request.method == 'POST':
+        make_id = request.POST.get('make')
+        model_id = request.POST.get('model')
+        print(make_id)
+        print(model_id)
+        
+        # Process the received data, perform save operation or other actions as needed
+        # Example: Create and save an instance of AnotherModel using make_id and model_id
+        try:
+            make = VehicleMakeBy.objects.get(vehicle_make_id=make_id)
+            model = Vehicle.objects.get(vehicle_id=model_id)
+            
+            # Create an instance of AnotherModel and save it
+            # another_model_instance = AnotherModel(field1=make.vehicle_make_by, field2=model.vehicle_model)
+            # another_model_instance.save()
+            
+            return JsonResponse({'message': 'Data received and saved successfully'})  # Response for success
+        except Exception as e:
+            return JsonResponse({'error': str(e)})  # Response for error during save operation
+    return JsonResponse({'error': 'Invalid request'})  # Response for other request methods
+
+
+
+
+
+
+<form id="vehicleForm" method="post" action="{% url 'save_vehicle' %}">
+    {% csrf_token %}
+    <select id="id_make" name="make">
+        <option value="">Select Make</option>
+        {% for make in makes %}
+            <option value="{{ make.vehicle_make_id }}">{{ make.vehicle_make_by }}</option>
+        {% endfor %}
+    </select>
+
+    <select id="id_model" name="model">
+        <option value="">Select Model</option>
+    </select>
+
+    <button type="submit">Save</button>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#id_make').change(function() {
+        var make_id = $(this).val();
+        $.ajax({
+            url: '/admin_collections/get-models/',
+            data: {
+                'make_id': make_id
+            },
+            success: function(data) {
+                $('#id_model').empty();
+                $.each(data, function(index, item) {
+                    $('#id_model').append('<option value="' + item.vehicle_id + '">' + item.owner_name + '</option>');
+                });
+            }
+        });
+    });
+
+    $('#vehicleForm').submit(function(event) {
+        event.preventDefault(); // Prevent the default form submission
+        var formData = $(this).serialize(); // Serialize form data
+
+        // Submit form data via AJAX
+        $.ajax({
+            type: 'POST',
+            url: '/admin_collections/save-vehicle/',
+            data: formData,
+            success: function(response) {
+                // Handle success response if needed
+                console.log(response);
+            },
+            error: function(xhr, status, error) {
+                // Handle errors if any
+                console.error(xhr.responseText);
+            }
+        });
+    });
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+{% comment %} <!-- your_template.html -->
+<select id="id_make">
+    <option value="">Select Make</option>
+    {% for make in makes %}
+        <option value="{{ make.vehicle_make_id }}">{{ make.vehicle_make_by }}</option>
+    {% endfor %}
+</select>
+
+<select id="id_model">
+    <option value="">Select Model</option>
+</select>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#id_make').change(function() {
+        var make_id = $(this).val();
+        $.ajax({
+            url: '/admin_collections/get-models/',
+            data: {
+                'make_id': make_id
+            },
+            success: function(data) {
+                $('#id_model').empty();
+                $.each(data, function(index, item) {
+                    $('#id_model').append('<option value="' + item.vehicle_id + '">' + item.owner_name + '</option>');
+                });
+            }
+        });
+    });
+});
+</script> {% endcomment %} {% endcomment %}

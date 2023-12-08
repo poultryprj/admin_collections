@@ -5,6 +5,7 @@ urlpatterns = [
 
     # Shops Urls
     path('shop_list/', views.ShopList, name='shop_list'),
+    path('ShopBalanceDetails/<int:id>', views.ShopBalanceDetails, name='ShopBalanceDetails'),
 
     path('shop_add/', views.ShopAdd, name='shop_add'),
 
@@ -95,6 +96,8 @@ urlpatterns = [
     path('shop_flexible_rate_add/', views.ShopFlexibleRateAdd, name='shop_flexible_rate_add'),
 
     path('shop_flexible_rate_edit/<int:id>', views.ShopFlexibleRateEdit, name='shop_flexible_rate_edit'),
+
+    path('shop_flexible_rate_delete/<int:id>', views.ShopFlexibleRateDelete, name='shop_flexible_rate_delete'),
 
 
     

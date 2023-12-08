@@ -12,9 +12,27 @@ from django.core.exceptions import ValidationError
 
 
 def ShopList(request):
+
     shopLists = ShopModel.objects.filter(is_deleted=False)
+ 
     return render(request, 'shops/shop_list.html', context={'shopLists': shopLists})
 
+
+
+
+def ShopBalanceDetails(request,id):
+    shopBalance  = None
+    shopModel = None
+    try:
+        shopBalance = ShopBalance.objects.get(shopId=id)
+    except ShopBalance.DoesNotExist:
+        shopModel = ShopModel.objects.get(shop_id=id)
+        print(shopModel)
+    context={
+        'shopAndBalance' : shopBalance,
+        'shopModel' : shopModel
+    } 
+    return render(request, 'shops/demo2.html', context)
 
 
 def ShopAdd(request):
@@ -392,7 +410,6 @@ def ProductAdd(request):
 
 
 def ProductEdit(request,id):
-
     productTypeList = ProductTypes.objects.all()
     productCategoryList = ProductCategories.objects.all()
     productDataEdit = ProductMaster.objects.get(product_id=id)
@@ -415,27 +432,24 @@ def ProductUpdate(request):
         productValue = request.POST['product_value'] 
         user = request.user
 
-        productUpdate = ProductMaster.objects.get(product_id=productId)
-
-        productUpdate.product_name = productName
-        productUpdate.product_value_on = productValue
-        productUpdate.last_modified_by = user
-
         productType = ProductTypes.objects.get(product_type_id=productTypeId)
         productCategory = ProductCategories.objects.get(product_category_id=productCategoryId)
 
+        productUpdate = ProductMaster.objects.get(product_id=productId)
+        productUpdate.product_name = productName
+        productUpdate.product_value_on = productValue
+        productUpdate.last_modified_by = user
         productUpdate.product_typeId = productType
         productUpdate.product_categoryId = productCategory
-
         productUpdate.save()
 
         messages.success(request, "Product Name:  {} Update in the database.".format(productName))
         return redirect('product_list')
     
 
+
 def ProductDelete(request,id):
     productDelete = ProductMaster.objects.get(product_id=id)
-    # productDelete.delete()
 
     productDelete.is_deleted = True
     productDelete.deleted_by = request.user
@@ -470,10 +484,8 @@ def ProductRateAdd(request):
         flexibleFormula = request.POST['flexible_formula']  
 
         shopCode = ShopModel.objects.get(shop_id=shopCodeId)
-
         association = Associations.objects.get(association_id=associationId)
         productMaster = ProductMaster.objects.get(product_id=productId)
-        
 
         shopProductRateAdd = ShopProductRates(
             shopId = shopCode,
@@ -489,7 +501,6 @@ def ProductRateAdd(request):
 
         messages.success(request, "Product Rate:  {} Added in the database.".format(rateMargin))
         return redirect('product_rate_list')
-
 
     context = {
         "shopModelData" : shopModelData,
@@ -558,7 +569,7 @@ def ProductRateDelete(request,id):
 
 
 
-# ===================== Shop Balance ======================
+# ========================== Shop Balance ===========================
 
 
 def ShopBalanceList(request):
@@ -598,7 +609,6 @@ def ShopBalanceAdd(request):
         )
         shopBalanceAdd.save()
 
-        
         messages.success(request, "Shop Balance Added Succesfully...!")
         return redirect('shop_balance_list')
 
@@ -666,7 +676,7 @@ def ShopAndBalanceDetail(request,id):
  
 
 
-# ==============  Shop Flexible Rate ========
+# ===========================  Shop Flexible Rate ==========================
 
 
 def ShopFlexibleRateList(request):
@@ -719,7 +729,6 @@ def ShopFlexibleRateAdd(request):
         messages.success(request, "Shop Flexible Rate Added Succesfully...!")
         return redirect('shop_flexible_rate_list')
 
-
     context = {
         'shopModelData' : shopModelData,
         'productTypeData' : productTypeData
@@ -732,8 +741,41 @@ def ShopFlexibleRateAdd(request):
 def ShopFlexibleRateEdit(request,id):
     shopModelData = ShopModel.objects.all()
     productTypeData = ProductTypes.objects.all()
+
     shopFlexibleRateEdit = ShopFlexibleRate.objects.get(shop_flexible_rate_id = id)
 
+    if request.method == "POST":
+        rateDate = request.POST['shop_flexible_date']
+        shopId = request.POST['shop_id']
+        productTypeId = request.POST['product_type_id']
+        flexibleRate = request.POST['flexible_rate']
+        flexibleFormula = request.POST['flexible_formula']
+        sellRate = request.POST['sell_rate']
+        withSkin = request.POST['with_skin']
+        withoutSkin = request.POST['without_skin']
+        smsSendYN = request.POST['sms_send_yn']
+        smsReplyId = request.POST['sms_replyId']
+
+        print(rateDate, shopId, productTypeId,flexibleRate, flexibleFormula,  sellRate, withSkin, withoutSkin, smsSendYN,smsReplyId )
+
+        shopId = ShopModel.objects.get(shop_id=shopId)
+        productTypeId = ProductTypes.objects.get(product_type_id=productTypeId)
+
+        shopFlexibleRateEdit.flexible_rate_date = rateDate
+        shopFlexibleRateEdit.shopId = shopId
+        shopFlexibleRateEdit.product_typeId = productTypeId
+        shopFlexibleRateEdit.flexible_rate = flexibleRate
+        shopFlexibleRateEdit.flexible_formula = flexibleFormula
+        shopFlexibleRateEdit.sell_rate = sellRate
+        shopFlexibleRateEdit.with_skin = withSkin
+        shopFlexibleRateEdit.without_skin = withoutSkin
+        shopFlexibleRateEdit.sms_send_yn = smsSendYN
+        shopFlexibleRateEdit.sms_replyId = smsReplyId
+        shopFlexibleRateEdit.last_modified_by = request.user
+        shopFlexibleRateEdit.save()
+
+        messages.success(request, "Shop Flexible Rate Updated Succesfully...!")
+        return redirect('shop_flexible_rate_list')
 
     context = {
         'shopModelData' : shopModelData,
@@ -741,4 +783,19 @@ def ShopFlexibleRateEdit(request,id):
         'shopFlexibleRateEdit' : shopFlexibleRateEdit
     }
 
-    return render(request, 'shops/shop_flexible_rate_edit.html', context) 
+    return render(request, 'shops/shop_flexible_rate_edit.html', context)
+
+
+
+def ShopFlexibleRateDelete(request,id):
+    shopFlexibleRateDelete = ShopFlexibleRate.objects.get(shop_flexible_rate_id = id)
+
+    shopFlexibleRateDelete.is_deleted = True
+    shopFlexibleRateDelete.deleted_by = request.user
+    shopFlexibleRateDelete.save()
+
+    messages.success(request, "Shop Flexible Rate Deleted Succesfully...!")
+    return redirect('shop_flexible_rate_list')
+
+
+
