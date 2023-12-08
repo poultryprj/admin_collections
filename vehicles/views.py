@@ -8,6 +8,8 @@ from vehicles.models import ProductRecieve, Vehicle, VehicleMakeBy, VehicleModel
 from django.contrib import messages
 # Import your Fitness model here
 from .models import Fitness, ProductRecieve
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
 
 
 def vehicle(request):
@@ -359,18 +361,7 @@ def product_received_delete(request, id):
             return JsonResponse({'success': True})
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
-
-
-# if request.method == "POST":
-#         data = json.loads(request.body.decode('utf-8'))  # Decode the JSON data
-#         addName = data.get('new_name')
-#         if addName:
-#             try:
-#                 return JsonResponse({'success': True, 'new_name': addName})
-    
-#             except Exception as e:
-#                 return JsonResponse({'success': False, 'error_message': str(e)}, status=500)
-
+        
 
 ######################## Vehicle Fitness ###########################
 
@@ -493,11 +484,9 @@ def VehicleFitnessDetailsdelete(request, id):
     return render(request, 'vehicle/vehicle_fitness_list.html', {'fitnessDetailList': fitnessDetailList})
 
 
-######## Show Vehicle Details
+######## Show Vehicle All Details in single form
 
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib import messages
-from .models import Vehicle, Fitness, VehicleMakeBy, VehicleModel, VehicleType
+from django.shortcuts import get_object_or_404
 
 def ShowVehicleDetail(request, id):
     try:
@@ -506,11 +495,9 @@ def ShowVehicleDetail(request, id):
         vehicleModelyData = VehicleModel.objects.all()
         vehicleTypeData = VehicleType.objects.all()
         
-        # Fetch the Fitness object related to the Vehicle ID
-        try:
-            vehicleFitnessData = Fitness.objects.get(vehicle_id=vehicleDetailEdit)
-        except Fitness.DoesNotExist:
-            vehicleFitnessData = None
+        # Fetch the Fitness object related to the Vehicle ID that is not deleted
+        fitnessDetailList = Fitness.objects.filter(is_deleted=False)
+        vehicleFitnessData = fitnessDetailList.filter(vehicle_id=vehicleDetailEdit).first()
         
         context = {
             "vehicleDetailEdit": vehicleDetailEdit,
@@ -525,19 +512,14 @@ def ShowVehicleDetail(request, id):
     except Vehicle.DoesNotExist:
         messages.error(request, "Vehicle record not found.")
         return redirect('error_page')
-
-
-
-# def VehicleFitnessEdit(request, id):
-#     try:
-#         vehicleFitnessData = get_object_or_404(Fitness, fitness_id=id)
-#         vehicleDetailEdit = vehicleFitnessData.vehicle_id  
-
-#         context = {
-#             "vehicleDetailEdit": vehicleDetailEdit,
-#             'vehicleFitnessData': vehicleFitnessData,
-#         }
-#         return render(request, "vehicle/vehicle_fitness_edit.html", context)
-#     except Fitness.DoesNotExist:
-#         messages.error(request, "Fitness record not found.")
-#         return redirect('error_page')   
+    except Fitness.DoesNotExist:
+        # If fitness data is not found or is deleted, set vehicleFitnessData to None
+        vehicleFitnessData = None
+        context = {
+            "vehicleDetailEdit": vehicleDetailEdit,
+            'vehicleMakeByData': vehicleMakeByData,
+            'vehicleModelyData': vehicleModelyData,
+            'vehicleTypeData': vehicleTypeData,
+            'vehicleFitnessData': vehicleFitnessData,
+        }
+        return render(request, 'vehicle/show_vehicle_details.html', context)
