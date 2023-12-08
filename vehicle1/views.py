@@ -2,14 +2,15 @@ import json
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
+from account import models
 from shop.models import ProductMaster, ProductTypes
 from user.models import UserModel
-from vehicles.models import ProductRecieve, Vehicle, VehicleMakeBy, VehicleModel, VehicleType, Vendor
+from vehicle1.models import ProductRecieve, Vehicle, VehicleMakeBy, VehicleModel, VehicleType, Vendor
 from django.contrib import messages
 # Import your Fitness model here
-from .models import Fitness, ProductRecieve
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib import messages
+from .models import Fitness, InsuranceCompany, ProductRecieve, VehicleInsurance
+from django.db import IntegrityError
+from datetime import datetime
 
 
 def vehicle(request):
@@ -365,11 +366,6 @@ def product_received_delete(request, id):
 
 ######################## Vehicle Fitness ###########################
 
-from django.db import IntegrityError
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from .models import Vehicle, Fitness
-
 def VehicleFitnessAdd(request):
     vehicleData = Vehicle.objects.all()
 
@@ -526,4 +522,77 @@ def ShowVehicleDetail(request, id):
 
 
 ##### Vehicle Insurance
+from django.shortcuts import get_object_or_404, render, redirect
+from django.http import JsonResponse
+from django.db import IntegrityError
+from django.contrib import messages  # Import messages for displaying success/error messages
+from .models import Vehicle, InsuranceCompany, VehicleInsurance
 
+def VehicleInsuranceAdd(request):
+    vehicleData = Vehicle.objects.all()
+
+    if request.method == "POST":
+        vehiclenewId = request.POST.get('vehicle_id')
+        insuranceCompanyId = request.POST.get('insurance_company_id')
+        insuranceFromDate = request.POST.get('insurance_from_date')
+        insuranceToDate = request.POST.get('insurance_to_date')
+        insuranceAmount = request.POST.get('insurance_amount')
+        insurancePaidAmount = request.POST.get('insurance_paid_amount')
+
+        vehicleId = get_object_or_404(Vehicle, vehicle_id=vehiclenewId)
+
+        try:
+            insuranceCompany = InsuranceCompany.objects.get(insurance_company_id=insuranceCompanyId)
+        except InsuranceCompany.DoesNotExist:
+            insuranceCompany = InsuranceCompany.objects.create(insurance_company_id=insuranceCompanyId)
+
+        try:
+            vehicleInsuranceDetailAdd = VehicleInsurance(
+                vehicle_id=vehicleId,
+                insurance_company=insuranceCompany,
+                insurance_from_date=insuranceFromDate,
+                insurance_to_date=insuranceToDate,
+                insurance_amount=insuranceAmount,
+                insurance_paid_amount=insurancePaidAmount,
+                # Add other fields here
+            )
+
+            # Save the new vehicle insurance detail to the database
+           
+            vehicleInsuranceDetailAdd.save()
+
+            messages.success(request, "Vehicle Insurance Detail Added.")
+            return redirect('vehicle_insurance_add')  # Redirect to a success page or the same page
+
+        except IntegrityError as e:
+            messages.error(request, str(e))
+
+    context = {
+        'vehicleData': vehicleData,
+        'insuranceCompanies': InsuranceCompany.objects.all()
+    }
+
+    return render(request, 'vehicle/vehicle_insurance_add.html', context)
+
+
+def VehicleInsuranceCompanyAdd(request):
+    if request.method == "POST":
+        data = json.loads(request.body.decode('utf-8'))
+        addName = data.get('new_name')
+        
+        if addName:
+            try:
+                new_company = InsuranceCompany.objects.create(insurance_company_name=addName)
+                return JsonResponse({'success': True, 'new_name': new_company.insurance_company_name})
+            
+            except Exception as e:
+                return JsonResponse({'success': False, 'error_message': str(e)}, status=500)
+        
+    return JsonResponse({'success': False})
+
+def VehicleInsuranceCompanyAddList(request):
+    vehicleInsuranceDetailList = Vehicle.objects.all()
+    context = {
+        'vehicleInsuranceDetailList': vehicleInsuranceDetailList
+    }
+    return render(request, 'vehicle/vehicle_insurance_add.html', context)

@@ -25,7 +25,7 @@ urlpatterns = [
     
     path('product_received_delete/<int:id>/', views.product_received_delete, name='product_received_delete'),
 
-# ==================================================================================
+# =====================================Fitness=============================================
     path('vehicle_fitness_add', views.VehicleFitnessAdd, name='vehicle_fitness_add'),
     path('vehicle_fitness_list/', views.VehicleFitnessList, name='vehicle_fitness_list'),
     path('vehicle_fitness_edit/<int:id>/', views.VehicleFitnessEdit, name='vehicle_fitness_edit'),
@@ -34,8 +34,17 @@ urlpatterns = [
     
     path('vehicle_fitness_detail_delete/<int:id>/', views.VehicleFitnessDetailsdelete, name='vehicle_fitness_detail_delete'),
 
-# ==================================================================================
+# =========================================Show vehicle all details=========================================
     path('show_vehicle_details/<int:id>/', views.ShowVehicleDetail, name='show_vehicle_details'),
+
+# =========================================Vehicle insurance================================================
+    path('vehicle_insurance_add', views.VehicleInsuranceAdd, name='vehicle_insurance_add'),
+
+    path('vehicle_insurance_company_add/', views.VehicleInsuranceCompanyAdd, name='vehicle_insurance_company_add'),
+    path('vehicle_insurance_company_list/', views.VehicleInsuranceCompanyAddList, name='vehicle_insurance_company_list'),
+
+
+
 ]
 
 

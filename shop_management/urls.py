@@ -31,6 +31,6 @@ urlpatterns = [
 
     path('users/', include('user.urls')),
 
-    path('vehicle/', include('vehicles.urls')),
+    path('vehicle/', include('vehicle1.urls')),
     
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -7,10 +7,10 @@
     <div class="page-header">
         <div class="row align-items-center">
             <div class="col">
-                <h3 class="page-title">Add Vehicle Fitness Detail</h3>
+                <h3 class="page-title">Add Vehicle Insurance Detail</h3>
                 <ul class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="">Vehicle Fitness</a></li>
-                    <li class="breadcrumb-item active">Add Fitness Detail</li>
+                    <li class="breadcrumb-item"><a href="">Vehicle Insurance</a></li>
+                    <li class="breadcrumb-item active">Add Insurance Detail</li>
                 </ul>
             </div>
         </div>
@@ -22,18 +22,18 @@
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-body">
-                    <form action="{% url 'vehicle_fitness_add' %}" method="POST">
+                    <form action="{% url 'vehicle_insurance_add' %}" method="POST">
                         {% csrf_token %}
                         <div class="row">
                             <div class="col-12">
-                                <h5 class="form-title"><span>Vehicle Fitness Details</span></h5>
+                                <h5 class="form-title"><span>Vehicle Insurance Details</span></h5>
                             </div>
 
 
                             <div class="col-12 col-sm-6">
                                 <label>Vehicle Id</label>
                                 <div class="input-group">
-                                    <select class="form-control form-select" placeholder="Enter Shop Area"
+                                    <select class="form-control form-select" placeholder=""
                                         name="vehicle_id" required>
                                         <option>------- Select Vehicle Id -------</option>
                                         {% for i in vehicleData %}
@@ -43,19 +43,88 @@
                                 </div>
                             </div>
 
-                            <div class="col-12 col-sm-3">
-                                <div class="form-group">
-                                    <label>Vehicle Fitness From Date</label>
-                                    <input type="date" class="form-control" name="vehicle_fitness_from_date" required>
+
+
+
+                            <div class="col-12 col-sm-6">
+                                <label>Insurance Company</label>
+                                <div class="input-group">
+                                    <select class="form-control form-select" placeholder=""
+                                        name="insurance_company_id" required>
+                                        <option>------- Select Insurance Company -------</option>
+                                        {% for company  in insuranceCompanies %}
+                                        <option value="{{company.insurance_company_id}}">{{ company.insurance_company_name }} </option>
+                                        {% endfor %}
+                                    </select>
+
+
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal" data-bs-whatever="@mdo"> <i
+                                            class="fa-solid fa-square-plus"></i></button>
+
+                                  
+
+                                    <div class="modal fade" id="exampleModal" tabindex="-1"
+                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add New Insurance Company</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="mb-3">
+                                                        <label for="recipient-name"
+                                                            class="col-form-label">Insurance Company:</label>
+                                                        <input type="text" class="form-control" id="recipient-name">
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Close</button>
+                                                    <a onClick='addInsuranceCompany()'
+                                                        class="btn btn-primary">Add</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+
+
+
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group mb-3"> <!-- Added mb-3 class for bottom margin -->
+                                    <label class="mb-2">Vehicle Insurance From Date</label> <!-- Added mb-2 class for bottom margin -->
+                                    <input type="date" class="form-control" name="insurance_from_date" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group mb-3"> <!-- Added mb-3 class for bottom margin -->
+                                    <label class="mb-2">Vehicle Insurance To Date</label> <!-- Added mb-2 class for bottom margin -->
+                                    <input type="date" class="form-control" name="insurance_to_date" required>
                                 </div>
                             </div>
 
-                            <div class="col-12 col-sm-3">
+                            <div class="col-12 col-sm-6">
                                 <div class="form-group">
-                                    <label>Vehicle Fitness To Date</label>
-                                    <input type="date" class="form-control" name="vehicle_fitness_to_date" required>
+                                    <label>Insurance Amount</label>
+                                    <input type="text" class="form-control" name="insurance_amount" placeholder="Enter Insurance Amount" required>
                                 </div>
                             </div>
+
+                            
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Insurance Paid Amount</label>
+                                    <input type="text" class="form-control" name="insurance_paid_amount" placeholder="Enter Insurance Paid Amount" required>
+                                </div>
+                            </div>
+                            
+                            
 
                             <div class="col-12"> 
                                 <button type="submit" class="btn btn-primary"> Add Details </button>
@@ -67,6 +136,71 @@
         </div>
     </div>
 </div>
+
+
+
+<script>
+    // Insurance Company
+    function addInsuranceCompany() {
+    const newName = $('#recipient-name').val();
+
+    $.ajax({
+        url: '{% url "vehicle_insurance_company_add" %}',
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        data: JSON.stringify({ new_name: newName }),
+        success: function(data) {
+            if (data.success) {
+                const select = $('select[name="insurance_company_id"]');
+                const option = $('<option></option>').attr('value', data.new_name).text(data.new_name);
+                select.append(option);
+
+                // Set the new option as selected
+                select.val(data.new_name);
+
+                // Hide the modal and clear input after successful addition
+                $('#exampleModal').modal('hide');
+                $('#recipient-name').val('');
+            } else {
+                // Handle error
+                alert('Failed to add insurance company');
+            }
+        },
+        error: function(error) {
+            console.error('Error:', error);
+            alert('An error occurred while adding insurance company!');
+        }
+    });
+}
+
+    
+    function refreshInsuranceCompanyNames() {
+        $.ajax({
+            url: '{% url "vehicle_insurance_add" %}', // Update with your endpoint to fetch updated data
+            method: 'GET',
+            success: function(response) {
+                var select = $('select[name="insurance_company_id"]');
+                select.empty(); // Clear all existing options
+    
+                // Add default option
+                select.append($('<option>------- Select Insurance Company -------</option>'));
+    
+                // Add new options based on the fetched data
+                response.forEach(function(item) {
+                    var option = $('<option></option>').attr('value', item.insurance_company_id).text(item.insurance_company_name);
+                    select.append(option);
+                });
+            },
+            error: function(error) {
+                console.error('Error fetching updated data:', error);
+            }
+        });
+    }
+    </script>
+
 
 
 {% endblock content %}

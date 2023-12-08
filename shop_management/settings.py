@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'shop',
     'routes',
     'user',
-    'vehicles'
+    'vehicle1'
 ]
 
 MIDDLEWARE = [
