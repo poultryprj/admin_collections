@@ -523,3 +523,7 @@ def ShowVehicleDetail(request, id):
             'vehicleFitnessData': vehicleFitnessData,
         }
         return render(request, 'vehicle/show_vehicle_details.html', context)
+
+
+##### Vehicle Insurance
+
