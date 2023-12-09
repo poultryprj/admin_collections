@@ -138,6 +138,7 @@ class VehicleInsurance(models.Model):
 
 class VehiclePermit(models.Model):
     permit_id = models.AutoField(primary_key=True)
+    vehicle_id = models.ForeignKey(Vehicle, on_delete=models.SET_NULL, null=True)  #vehicle number FK of Vehicle
     vehicle_permit_from_Date = models.DateField()
     vehicle_permit_to_Date = models.DateField()
     vehicle_permit_type = models.CharField(max_length=255)

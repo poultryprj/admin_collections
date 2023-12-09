@@ -48,6 +48,10 @@ urlpatterns = [
     path('vehicle_insurance_update/', views.vehicleInsuranceUpdate, name='vehicle_insurance_update'),
     path('vehicle_insurance_delete/<int:id>/', views.vehicleInsuranceDelete, name='vehicle_insurance_delete'),
 
+# ======================================= Vehicle Permit ===================================================
+
+    path('vehicle_permit_add/', views.VehiclePermitAdd, name='vehicle_permit_add'),
+
 ]
 
 
