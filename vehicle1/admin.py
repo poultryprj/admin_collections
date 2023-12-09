@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Vehicle, VehicleInsurance, Vendor, ProductRecieve, VehicleMakeBy, VehicleModel, VehicleType, Fitness
+from .models import InsuranceCompany, Vehicle, VehicleInsurance, Vendor, ProductRecieve, VehicleMakeBy, VehicleModel, VehicleType, Fitness
 # Register your models here.
 
 
@@ -69,12 +69,26 @@ class FitnessAdmin(admin.ModelAdmin):
 
 
 class VehicleInsuranceAdmin(admin.ModelAdmin):
-    list_display = ('insurance_id','insurance_company', 'insurance_from_date', 'insurance_to_date', 'insurance_amount', 'insurance_paid_amount', 'is_deleted', 'deleted_by',)
+    list_display = (
+        'insurance_id', 'vehicle_id', 'insurance_company', 'insurance_from_date',
+        'insurance_to_date', 'insurance_amount', 'insurance_paid_amount', 'created_by_id',
+        'last_modified_by_id', 'created_on', 'last_modified_on', 'is_deleted', 'deleted_by',
+    )
 
-    search_fields = ('insurance_id','insurance_company',)
+    search_fields = (
+        'insurance_id', 'vehicle_id__vehicle_id', 'insurance_company__insurance_company_name',
+        'insurance_from_date', 'insurance_to_date', 'insurance_amount', 'insurance_paid_amount',
+    )
 
-    list_display_links = ('insurance_id', 'insurance_company',)
+    list_display_links = ('insurance_id', 'vehicle_id', 'insurance_company', 'insurance_from_date',
+                          'insurance_to_date', 'insurance_amount', 'insurance_paid_amount',
+                          'created_by_id', 'last_modified_by_id', 'created_on', 'last_modified_on',
+                          'is_deleted', 'deleted_by',)
 
+class InsuranceCompanyAdmin(admin.ModelAdmin):
+    list_display = ('insurance_company_id', 'insurance_company_name')
+    search_fields = ('insurance_company_id', 'insurance_company_name')
+    list_display_links = ('insurance_company_id', 'insurance_company_name')
 
 admin.site.register(VehicleMakeBy,VehicleMakeByModelAdmin)
 admin.site.register(VehicleModel,VehicleModelAdmin)
@@ -84,3 +98,4 @@ admin.site.register(Vendor,VendorModelAdmin)
 admin.site.register(ProductRecieve,ProductRecieveModelAdmin)
 admin.site.register(Fitness,FitnessAdmin)
 admin.site.register(VehicleInsurance,VehicleInsuranceAdmin)
+admin.site.register(InsuranceCompany,InsuranceCompanyAdmin)

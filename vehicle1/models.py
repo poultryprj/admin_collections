@@ -114,7 +114,7 @@ class InsuranceCompany(models.Model):
     insurance_company_name = models.CharField(max_length=255)
 
     def __str__(self):
-        return self.insurance_company_id
+        return str(self.insurance_company_name)
 
     
 class VehicleInsurance(models.Model):

@@ -7,11 +7,9 @@ from shop.models import ProductMaster, ProductTypes
 from user.models import UserModel
 from vehicle1.models import ProductRecieve, Vehicle, VehicleMakeBy, VehicleModel, VehicleType, Vendor
 from django.contrib import messages
-# Import your Fitness model here
 from .models import Fitness, InsuranceCompany, ProductRecieve, VehicleInsurance
 from django.db import IntegrityError
-from datetime import datetime
-
+from .models import Vehicle, InsuranceCompany, VehicleInsurance
 
 def vehicle(request):
     if request.method == "POST":
@@ -419,7 +417,7 @@ def VehicleFitnessAdd(request):
 
     return render(request, 'vehicle/vehicle_fitness_add.html', context)
 
-
+###Vehicle Fitness List View
 def VehicleFitnessList(request):
     # Filter out deleted fitness details
     fitnessDetailList = Fitness.objects.filter(is_deleted=False)
@@ -468,8 +466,7 @@ def VehicleFitnessDetailsUpdate(request):
 
 
 
-#### For delete
-
+#### For delete vehicle fitness
 
 def VehicleFitnessDetailsdelete(request, id):
     fitnessDetailData = get_object_or_404(Fitness, fitness_id=id)
@@ -480,9 +477,8 @@ def VehicleFitnessDetailsdelete(request, id):
     return render(request, 'vehicle/vehicle_fitness_list.html', {'fitnessDetailList': fitnessDetailList})
 
 
-######## Show Vehicle All Details in single form
 
-from django.shortcuts import get_object_or_404
+######## Show Vehicle All Details in single form
 
 def ShowVehicleDetail(request, id):
     try:
@@ -522,31 +518,28 @@ def ShowVehicleDetail(request, id):
 
 
 ##### Vehicle Insurance
-from django.shortcuts import get_object_or_404, render, redirect
-from django.http import JsonResponse
-from django.db import IntegrityError
-from django.contrib import messages  # Import messages for displaying success/error messages
-from .models import Vehicle, InsuranceCompany, VehicleInsurance
+
 
 def VehicleInsuranceAdd(request):
     vehicleData = Vehicle.objects.all()
+    InsuranceCompanyData = InsuranceCompany.objects.all()
 
     if request.method == "POST":
-        vehiclenewId = request.POST.get('vehicle_id')
-        insuranceCompanyId = request.POST.get('insurance_company_id')
-        insuranceFromDate = request.POST.get('insurance_from_date')
-        insuranceToDate = request.POST.get('insurance_to_date')
-        insuranceAmount = request.POST.get('insurance_amount')
-        insurancePaidAmount = request.POST.get('insurance_paid_amount')
+        vehiclenewId = request.POST['vehicle_id']
+        insuranceCompanyName = request.POST.get('insurance_company_name')  # Use get() instead of indexing directly
+        insuranceFromDate = request.POST['insurance_from_date']
+        insuranceToDate = request.POST['insurance_to_date']
+        insuranceAmount = request.POST['insurance_amount']
+        insurancePaidAmount = request.POST['insurance_paid_amount']
 
         vehicleId = get_object_or_404(Vehicle, vehicle_id=vehiclenewId)
 
         try:
-            insuranceCompany = InsuranceCompany.objects.get(insurance_company_id=insuranceCompanyId)
-        except InsuranceCompany.DoesNotExist:
-            insuranceCompany = InsuranceCompany.objects.create(insurance_company_id=insuranceCompanyId)
+            # Get or create an instance of InsuranceCompany
+            insuranceCompany, created = InsuranceCompany.objects.get_or_create(
+                insurance_company_name=insuranceCompanyName
+            )
 
-        try:
             vehicleInsuranceDetailAdd = VehicleInsurance(
                 vehicle_id=vehicleId,
                 insurance_company=insuranceCompany,
@@ -554,27 +547,29 @@ def VehicleInsuranceAdd(request):
                 insurance_to_date=insuranceToDate,
                 insurance_amount=insuranceAmount,
                 insurance_paid_amount=insurancePaidAmount,
+                created_by_id=request.user,
+                last_modified_by_id=request.user,
                 # Add other fields here
             )
 
             # Save the new vehicle insurance detail to the database
-           
             vehicleInsuranceDetailAdd.save()
 
             messages.success(request, "Vehicle Insurance Detail Added.")
-            return redirect('vehicle_insurance_add')  # Redirect to a success page or the same page
+            return redirect('vehicle_insurance_list')  # Redirect to a success page or the same page
 
         except IntegrityError as e:
             messages.error(request, str(e))
 
     context = {
         'vehicleData': vehicleData,
-        'insuranceCompanies': InsuranceCompany.objects.all()
+        'insuranceCompanies': InsuranceCompanyData,
     }
 
     return render(request, 'vehicle/vehicle_insurance_add.html', context)
 
 
+##drop-down add
 def VehicleInsuranceCompanyAdd(request):
     if request.method == "POST":
         data = json.loads(request.body.decode('utf-8'))
@@ -590,9 +585,75 @@ def VehicleInsuranceCompanyAdd(request):
         
     return JsonResponse({'success': False})
 
+##drop-down list
 def VehicleInsuranceCompanyAddList(request):
     vehicleInsuranceDetailList = Vehicle.objects.all()
     context = {
         'vehicleInsuranceDetailList': vehicleInsuranceDetailList
     }
     return render(request, 'vehicle/vehicle_insurance_add.html', context)
+
+
+###Vehicle Insurance List View
+def VehicleInsuranceList(request):
+    # Filter out deleted fitness details
+    vehicleInsuranceList = VehicleInsurance.objects.filter(is_deleted=False)
+
+    context = {
+        'vehicleInsuranceList': vehicleInsuranceList
+    }
+    return render(request, 'vehicle/vehicle_insurance_list.html', context)
+
+## Insurance edit page
+
+def VehicleInsuranceEdit(request, id):
+    try:
+        vehicleInsuranceData = get_object_or_404(VehicleInsurance, insurance_id=id)
+        vehicleDetailEdit = vehicleInsuranceData.vehicle_id
+        insuranceCompanyData = InsuranceCompany.objects.all()
+
+        context = {
+            'vehicleDetailEdit': vehicleDetailEdit,
+            'vehicleInsuranceData': vehicleInsuranceData,
+            'insuranceCompanyData': insuranceCompanyData  # Make sure this variable is passed to the context
+        }
+        return render(request, "vehicle/vehicle_insurance_edit.html", context)
+    except VehicleInsurance.DoesNotExist:
+        messages.error(request, "Vehicle Insurance record not found.")
+        return redirect('error_page')
+
+
+from django.shortcuts import get_object_or_404
+from .models import InsuranceCompany, VehicleInsurance
+
+def vehicleInsuranceUpdate(request):
+    if request.method == "POST":
+        insuranceId = request.POST['insurance_id']
+        vehicleInsuranceUpdate = get_object_or_404(VehicleInsurance, insurance_id=insuranceId)
+
+        # Fetch the InsuranceCompany instance based on the name
+        insurance_company_name = request.POST['insurance_company_name']
+        insurance_company = get_object_or_404(InsuranceCompany, insurance_company_name=insurance_company_name)
+
+        # Update the fields with the fetched instance
+        vehicleInsuranceUpdate.insurance_company = insurance_company
+        vehicleInsuranceUpdate.insurance_from_date = request.POST['insurance_from_date']
+        vehicleInsuranceUpdate.insurance_to_date = request.POST['insurance_to_date']
+        vehicleInsuranceUpdate.insurance_amount = request.POST['insurance_amount']
+        vehicleInsuranceUpdate.insurance_paid_amount = request.POST['insurance_paid_amount']
+        vehicleInsuranceUpdate.last_modified_by_id = request.user
+
+        print(
+               vehicleInsuranceUpdate.insurance_company,
+               vehicleInsuranceUpdate.insurance_from_date,
+               vehicleInsuranceUpdate.insurance_to_date,
+               vehicleInsuranceUpdate.insurance_amount,
+               vehicleInsuranceUpdate.insurance_paid_amount,
+               vehicleInsuranceUpdate.last_modified_by_id
+
+               )
+
+        # vehicleFitnessDetailsUpdate.save()
+
+        messages.success(request, "Vehicle Insurance Details Updated Successfully..!!")
+        return redirect('vehicle_insurance_list')

@@ -35,7 +35,7 @@
                                 <div class="input-group">
                                     <select class="form-control form-select" placeholder=""
                                         name="vehicle_id" required>
-                                        <option>------- Select Vehicle Id -------</option>
+                                        <option value="" disabled selected>------- Select Vehicle Id -------</option>
                                         {% for i in vehicleData %}
                                         <option value="{{i.vehicle_id}}">{{ i.vehicle_id }}</option>
                                         {% endfor %}
@@ -50,12 +50,13 @@
                                 <label>Insurance Company</label>
                                 <div class="input-group">
                                     <select class="form-control form-select" placeholder=""
-                                        name="insurance_company_id" required>
-                                        <option>------- Select Insurance Company -------</option>
-                                        {% for company  in insuranceCompanies %}
-                                        <option value="{{company.insurance_company_id}}">{{ company.insurance_company_name }} </option>
-                                        {% endfor %}
-                                    </select>
+                                    name="insurance_company_name" required>
+                                    <option value="" disabled selected>------- Select Insurance Company -------</option>
+                                    {% for company in insuranceCompanies %}
+                                    <option value="{{company.insurance_company_name}}">{{ company.insurance_company_name }}</option>
+                                    {% endfor %}
+                                </select>
+                                
 
 
                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal"
@@ -138,68 +139,33 @@
 </div>
 
 
+<!-- Your existing form and script -->
 
 <script>
     // Insurance Company
     function addInsuranceCompany() {
-    const newName = $('#recipient-name').val();
+        const newName = $('#recipient-name').val();
+        
+        // Check if the option already exists in the dropdown
+        if (!$(`select[name="insurance_company_name"] option[value="${newName}"]`).length) {
+            const select = $('select[name="insurance_company_name"]');
+            const option = $('<option></option>').attr('value', newName).text(newName);
+            select.append(option);
 
-    $.ajax({
-        url: '{% url "vehicle_insurance_company_add" %}',
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': '{{ csrf_token }}'
-        },
-        data: JSON.stringify({ new_name: newName }),
-        success: function(data) {
-            if (data.success) {
-                const select = $('select[name="insurance_company_id"]');
-                const option = $('<option></option>').attr('value', data.new_name).text(data.new_name);
-                select.append(option);
+            // Set the new option as selected
+            select.val(newName);
 
-                // Set the new option as selected
-                select.val(data.new_name);
-
-                // Hide the modal and clear input after successful addition
-                $('#exampleModal').modal('hide');
-                $('#recipient-name').val('');
-            } else {
-                // Handle error
-                alert('Failed to add insurance company');
-            }
-        },
-        error: function(error) {
-            console.error('Error:', error);
-            alert('An error occurred while adding insurance company!');
+            // Hide the modal and clear input after successful addition
+            $('#exampleModal').modal('hide');
+            $('#recipient-name').val('');
+        } else {
+            // Handle case where the option already exists
+            alert('Insurance company already exists in the dropdown.');
         }
-    });
-}
-
-    
-    function refreshInsuranceCompanyNames() {
-        $.ajax({
-            url: '{% url "vehicle_insurance_add" %}', // Update with your endpoint to fetch updated data
-            method: 'GET',
-            success: function(response) {
-                var select = $('select[name="insurance_company_id"]');
-                select.empty(); // Clear all existing options
-    
-                // Add default option
-                select.append($('<option>------- Select Insurance Company -------</option>'));
-    
-                // Add new options based on the fetched data
-                response.forEach(function(item) {
-                    var option = $('<option></option>').attr('value', item.insurance_company_id).text(item.insurance_company_name);
-                    select.append(option);
-                });
-            },
-            error: function(error) {
-                console.error('Error fetching updated data:', error);
-            }
-        });
     }
-    </script>
+
+    // Rest of your script remains the same
+</script>
 
 
 
