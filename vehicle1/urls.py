@@ -54,6 +54,7 @@ urlpatterns = [
     path('vehicle_permit_list/', views.VehiclePermitList, name='vehicle_permit_list'),
     path('vehicle_permit_edit/<int:id>/', views.VehiclePermitEdit, name='vehicle_permit_edit'),
     path('vehicle_permit_update/', views.vehiclePermitUpdate, name='vehicle_permit_update'),
+    path('vehicle_permit_delete/<int:id>/', views.vehiclePermitdelete, name='vehicle_permit_delete'),
 
 ]
 

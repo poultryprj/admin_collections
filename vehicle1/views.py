@@ -466,6 +466,7 @@ def VehicleFitnessDetailsdelete(request, id):
     fitnessDetailData.deleted_by = request.user
     fitnessDetailData.save()
     fitnessDetailList = Fitness.objects.filter(is_deleted=False)  # Filter non-deleted items
+    messages.success(request, "Vehicle Fitness Details Deleted Successfully..!!")
     return render(request, 'vehicle/vehicle_fitness_list.html', {'fitnessDetailList': fitnessDetailList})
 
 
@@ -641,6 +642,7 @@ def vehicleInsuranceDelete(request, id):
     vehicleInsuranceData.deleted_by = request.user
     vehicleInsuranceData.save()
     vehicleInsuranceList = VehicleInsurance.objects.filter(is_deleted=False)  # Filter non-deleted items
+    messages.success(request, "Vehicle Insurance Details Deleted Successfully..!!")
     return render(request, 'vehicle/vehicle_insurance_list.html', {'vehicleInsuranceList': vehicleInsuranceList})
 
 
@@ -713,7 +715,7 @@ def VehiclePermitEdit(request, id):
         messages.error(request, "Vehicle Insurance record not found.")
         return redirect('error_page')
     
-
+################# Vehicle permit update
 def vehiclePermitUpdate(request):
     if request.method == "POST":
         permitId = request.POST.get('permit_id')
@@ -739,3 +741,14 @@ def vehiclePermitUpdate(request):
         return redirect('vehicle_permit_list')
     
     return render(request, 'vehicle/vehicle_permit_list.html',)
+
+################# Vehicle permit delete
+
+def vehiclePermitdelete(request, id):
+    vehiclePermitData = get_object_or_404(VehiclePermit, permit_id=id)
+    vehiclePermitData.is_deleted = True
+    vehiclePermitData.deleted_by = request.user
+    vehiclePermitData.save()
+    vehiclePermitList = VehiclePermit.objects.filter(is_deleted=False)  # Filter non-deleted items
+    messages.success(request, "Vehicle Permit Details Deleted Successfully..!!")
+    return render(request, 'vehicle/vehicle_permit_list.html', {'vehiclePermitList': vehiclePermitList})
