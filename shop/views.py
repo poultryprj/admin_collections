@@ -308,7 +308,7 @@ def ProductTypeAdd(request):
 
 def ProductTypeEdit(request,id):
     if request.method == "POST":
-        productTypeName=request.POST['product_type_name']
+        productTypeName=request.POST['product_type_name'].capitalize().strip()
 
         productTypeId = ProductTypes.objects.get(product_type_id=id)
         productTypeId.product_type = productTypeName
@@ -333,7 +333,7 @@ def ProductCategoriesList(request):
 
 def ProductCategoriesAdd(request):
     if request.method == "POST":
-        categoryname = request.POST['product_category_name']
+        categoryname = request.POST['product_category_name'].capitalize().strip()
 
         productCategoryData = ProductCategories(product_category = categoryname)
         productCategoryData.save()
@@ -345,7 +345,7 @@ def ProductCategoriesAdd(request):
 
 def ProductTypeUpdate(request,id):
     if request.method == "POST":
-        productCategoryName=request.POST['product_category_name']
+        productCategoryName=request.POST['product_category_name'].capitalize().strip()
 
         productTypeId = ProductCategories.objects.get(product_category_id=id)
         productTypeId.product_category = productCategoryName
@@ -377,7 +377,7 @@ def ProductAdd(request):
     ProductCategoriesData = ProductCategories.objects.all()
 
     if request.method == "POST":
-        productName = request.POST['product_name']
+        productName = request.POST['product_name'].capitalize().strip()
         productTypeId = request.POST['product_typeId']
         productCategoryId = request.POST['product_categoryId']
         productValue = request.POST['product_value']

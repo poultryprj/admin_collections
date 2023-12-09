@@ -20,13 +20,13 @@ urlpatterns = [
 
     path('product_received_add/', views.ProductReceivedAdd, name='product_received_add'),
     
-    path('product_received_edit/<int:id>', views.ProductReceivedEdit, name='product_received_edit'),
+    path('product_received_edit/<int:id>/', views.ProductReceivedEdit, name='product_received_edit'),
     path('product_received_update/', views.ProductReceivedUpdate, name='product_received_update'),
     
     path('product_received_delete/<int:id>/', views.product_received_delete, name='product_received_delete'),
 
-# ==================================================================================
-    path('vehicle_fitness_add', views.VehicleFitnessAdd, name='vehicle_fitness_add'),
+# =====================================Fitness=============================================
+    path('vehicle_fitness_add/', views.VehicleFitnessAdd, name='vehicle_fitness_add'),
     path('vehicle_fitness_list/', views.VehicleFitnessList, name='vehicle_fitness_list'),
     path('vehicle_fitness_edit/<int:id>/', views.VehicleFitnessEdit, name='vehicle_fitness_edit'),
 
@@ -34,8 +34,18 @@ urlpatterns = [
     
     path('vehicle_fitness_detail_delete/<int:id>/', views.VehicleFitnessDetailsdelete, name='vehicle_fitness_detail_delete'),
 
+# =========================================Show vehicle all details=========================================
+    path('show_vehicle_details/<int:id>/', views.ShowVehicleDetail, name='show_vehicle_details'),
 
-    
+# =========================================Vehicle insurance================================================
+    path('vehicle_insurance_add/', views.VehicleInsuranceAdd, name='vehicle_insurance_add'),
+
+    path('vehicle_insurance_company_add/', views.VehicleInsuranceCompanyAdd, name='vehicle_insurance_company_add'),  ##dropdown
+    path('vehicle_insurance_company_list/', views.VehicleInsuranceCompanyAddList, name='vehicle_insurance_company_list'), ##dropdown
+
+    path('vehicle_insurance_list/', views.VehicleInsuranceList, name='vehicle_insurance_list'),
+    path('vehicle_insurance_edit/<int:id>/', views.VehicleInsuranceEdit, name='vehicle_insurance_edit'),
+    path('vehicle_insurance_update/', views.vehicleInsuranceUpdate, name='vehicle_insurance_update'),
 
 ]
 

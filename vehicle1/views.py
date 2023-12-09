@@ -2,12 +2,14 @@ import json
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
+from account import models
 from shop.models import ProductMaster, ProductTypes
 from user.models import UserModel
-from vehicles.models import ProductRecieve, Vehicle, VehicleMakeBy, VehicleModel, VehicleType, Vendor
+from vehicle1.models import ProductRecieve, Vehicle, VehicleMakeBy, VehicleModel, VehicleType, Vendor
 from django.contrib import messages
-from .models import Fitness, ProductRecieve
-
+from .models import Fitness, InsuranceCompany, ProductRecieve, VehicleInsurance
+from django.db import IntegrityError
+from .models import Vehicle, InsuranceCompany, VehicleInsurance
 
 def vehicle(request):
     if request.method == "POST":
@@ -163,6 +165,7 @@ def VehicleDetailsUpdate(request):
 
 
 def ProductReceivedList(request):
+    print("ghhvhvhbv")
     productRecieveList = ProductRecieve.objects.filter(is_deleted = False)
 
     context ={
@@ -178,6 +181,7 @@ def ProductReceivedAdd(request):
     productMasterData = ProductMaster.objects.all()
     vehicleData = Vehicle.objects.all()
     userModelData = UserModel.objects.all()
+
 
     if request.method == "POST":
         receiveDate = request.POST['received_date']
@@ -255,6 +259,7 @@ def ProductReceivedAdd(request):
 def ProductReceivedEdit(request,id):
     productRecieveDataEdit = ProductRecieve.objects.get(product_record_id = id)
 
+
     vendorData = Vendor.objects.all()
     productTypesData = ProductTypes.objects.all()
     productMasterData = ProductMaster.objects.all()
@@ -270,7 +275,6 @@ def ProductReceivedEdit(request,id):
         "userModelData" : userModelData
     }
     return render(request, "received_products/received_product_edit.html", context) 
-
 
 
 def ProductReceivedUpdate(request):
@@ -296,6 +300,7 @@ def ProductReceivedUpdate(request):
         entrySource = request.POST['entry_source']
         latitude = request.POST['latitude']
         longitude = request.POST['longitude']
+
 
 
         vendorId = Vendor.objects.get(vendor_id=vendorId)
@@ -333,13 +338,15 @@ def ProductReceivedUpdate(request):
 
 
 
-
+from django.http import JsonResponse
 
 def product_received_delete(request, id):
     if request.method == 'POST':
+        print("HGJHGJHBVJHB")
+        print(id)
         try:
             data = json.loads(request.body.decode('utf-8'))
-            delete_reason = data.get('delete_reason')  
+            delete_reason = data.get('delete_reason')  # Assuming you're using POST method to send data
             print(delete_reason)
 
             productRecieveDataDelete = ProductRecieve.objects.get(product_record_id = id)
@@ -347,12 +354,13 @@ def product_received_delete(request, id):
             productRecieveDataDelete.deleted_by = request.user
             productRecieveDataDelete.delete_reason  = delete_reason
             productRecieveDataDelete.save()
+
+            # Perform necessary deletion logic
             
             return JsonResponse({'success': True})
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
-
-
+        
 
 ######################## Vehicle Fitness ###########################
 
@@ -363,28 +371,45 @@ def VehicleFitnessAdd(request):
         vehicleId = request.POST['vehicle_id']
         vehicleFitnessFromDate = request.POST['vehicle_fitness_from_date']
         vehicleFitnessToDate = request.POST['vehicle_fitness_to_date']
-        
-        try:
-            vehicleId = Vehicle.objects.get(vehicle_id=vehicleId)
-        except Vehicle.DoesNotExist:
-            vehicleId = Vehicle.objects.create(vehicle_id=vehicleId)
 
-        try:
-            vehicleFitnessDetaildAdd = Fitness(
-            vehicle_id = vehicleId,
-            vehicle_fitness_from_date = vehicleFitnessFromDate,
-            vehicle_fitness_to_date = vehicleFitnessToDate,
-            created_by_id = request.user,
-            last_modified_by_id = request.user
+        # Check if the vehicle ID exists
+        existing_vehicle = Vehicle.objects.filter(vehicle_id=vehicleId).first()
 
-            )
-            vehicleFitnessDetaildAdd.save()
-
-            messages.success(request, "Vehicle Fitness Details Added...")
-            return redirect('vehicle_fitness_list')
-        
-        except IntegrityError as e:
-            messages.error(request, str(e))
+        if existing_vehicle:
+            try:
+                # Check if fitness details already exist for this vehicle
+                existing_fitness = Fitness.objects.filter(vehicle_id=existing_vehicle).exists()
+                if existing_fitness:
+                    messages.error(request, "Fitness details already exist for this vehicle.")
+                else:
+                    vehicleFitnessDetaildAdd = Fitness(
+                        vehicle_id=existing_vehicle,
+                        vehicle_fitness_from_date=vehicleFitnessFromDate,
+                        vehicle_fitness_to_date=vehicleFitnessToDate,
+                        created_by_id=request.user,
+                        last_modified_by_id=request.user
+                    )
+                    vehicleFitnessDetaildAdd.save()
+                    messages.success(request, "Vehicle Fitness Details Added...")
+                    return redirect('vehicle_fitness_list')
+            except IntegrityError as e:
+                messages.error(request, str(e))
+        else:
+            # If vehicle ID does not exist, create a new one
+            try:
+                new_vehicle = Vehicle.objects.create(vehicle_id=vehicleId)
+                vehicleFitnessDetaildAdd = Fitness(
+                    vehicle_id=new_vehicle,
+                    vehicle_fitness_from_date=vehicleFitnessFromDate,
+                    vehicle_fitness_to_date=vehicleFitnessToDate,
+                    created_by_id=request.user,
+                    last_modified_by_id=request.user
+                )
+                vehicleFitnessDetaildAdd.save()
+                messages.success(request, "Vehicle Fitness Details Added...")
+                return redirect('vehicle_fitness_list')
+            except IntegrityError as e:
+                messages.error(request, str(e))
 
     context = {
         'vehicleData': vehicleData
@@ -392,16 +417,15 @@ def VehicleFitnessAdd(request):
 
     return render(request, 'vehicle/vehicle_fitness_add.html', context)
 
-
-
+###Vehicle Fitness List View
 def VehicleFitnessList(request):
-    fitnessDetailList = Fitness.objects.all()
+    # Filter out deleted fitness details
+    fitnessDetailList = Fitness.objects.filter(is_deleted=False)
 
     context = {
-        'fitnessDetailList' : fitnessDetailList
+        'fitnessDetailList': fitnessDetailList
     }
     return render(request, 'vehicle/vehicle_fitness_list.html', context)
-
 
 
 
@@ -442,12 +466,191 @@ def VehicleFitnessDetailsUpdate(request):
 
 
 
-#### For delete
-from django.shortcuts import get_object_or_404
+#### For delete vehicle fitness
 
 def VehicleFitnessDetailsdelete(request, id):
     fitnessDetailData = get_object_or_404(Fitness, fitness_id=id)
     fitnessDetailData.is_deleted = True
     fitnessDetailData.deleted_by = request.user
-    fitnessDetailData.delete()
-    return redirect('vehicle_fitness_list')
+    fitnessDetailData.save()
+    fitnessDetailList = Fitness.objects.filter(is_deleted=False)  # Filter non-deleted items
+    return render(request, 'vehicle/vehicle_fitness_list.html', {'fitnessDetailList': fitnessDetailList})
+
+
+
+######## Show Vehicle All Details in single form
+
+def ShowVehicleDetail(request, id):
+    try:
+        vehicleDetailEdit = Vehicle.objects.get(vehicle_id=id)
+        vehicleMakeByData = VehicleMakeBy.objects.all()
+        vehicleModelyData = VehicleModel.objects.all()
+        vehicleTypeData = VehicleType.objects.all()
+        
+        # Fetch the Fitness object related to the Vehicle ID that is not deleted
+        fitnessDetailList = Fitness.objects.filter(is_deleted=False)
+        vehicleFitnessData = fitnessDetailList.filter(vehicle_id=vehicleDetailEdit).first()
+        
+        context = {
+            "vehicleDetailEdit": vehicleDetailEdit,
+            'vehicleMakeByData': vehicleMakeByData,
+            'vehicleModelyData': vehicleModelyData,
+            'vehicleTypeData': vehicleTypeData,
+            'vehicleFitnessData': vehicleFitnessData,
+        }
+
+        return render(request, 'vehicle/show_vehicle_details.html', context)
+    
+    except Vehicle.DoesNotExist:
+        messages.error(request, "Vehicle record not found.")
+        return redirect('error_page')
+    except Fitness.DoesNotExist:
+        # If fitness data is not found or is deleted, set vehicleFitnessData to None
+        vehicleFitnessData = None
+        context = {
+            "vehicleDetailEdit": vehicleDetailEdit,
+            'vehicleMakeByData': vehicleMakeByData,
+            'vehicleModelyData': vehicleModelyData,
+            'vehicleTypeData': vehicleTypeData,
+            'vehicleFitnessData': vehicleFitnessData,
+        }
+        return render(request, 'vehicle/show_vehicle_details.html', context)
+
+
+##### Vehicle Insurance
+
+
+def VehicleInsuranceAdd(request):
+    vehicleData = Vehicle.objects.all()
+    InsuranceCompanyData = InsuranceCompany.objects.all()
+
+    if request.method == "POST":
+        vehiclenewId = request.POST['vehicle_id']
+        insuranceCompanyName = request.POST.get('insurance_company_name')  # Use get() instead of indexing directly
+        insuranceFromDate = request.POST['insurance_from_date']
+        insuranceToDate = request.POST['insurance_to_date']
+        insuranceAmount = request.POST['insurance_amount']
+        insurancePaidAmount = request.POST['insurance_paid_amount']
+
+        vehicleId = get_object_or_404(Vehicle, vehicle_id=vehiclenewId)
+
+        try:
+            # Get or create an instance of InsuranceCompany
+            insuranceCompany, created = InsuranceCompany.objects.get_or_create(
+                insurance_company_name=insuranceCompanyName
+            )
+
+            vehicleInsuranceDetailAdd = VehicleInsurance(
+                vehicle_id=vehicleId,
+                insurance_company=insuranceCompany,
+                insurance_from_date=insuranceFromDate,
+                insurance_to_date=insuranceToDate,
+                insurance_amount=insuranceAmount,
+                insurance_paid_amount=insurancePaidAmount,
+                created_by_id=request.user,
+                last_modified_by_id=request.user,
+                # Add other fields here
+            )
+
+            # Save the new vehicle insurance detail to the database
+            vehicleInsuranceDetailAdd.save()
+
+            messages.success(request, "Vehicle Insurance Detail Added.")
+            return redirect('vehicle_insurance_add')  # Redirect to a success page or the same page
+
+        except IntegrityError as e:
+            messages.error(request, str(e))
+
+    context = {
+        'vehicleData': vehicleData,
+        'insuranceCompanies': InsuranceCompanyData,
+    }
+
+    return render(request, 'vehicle/vehicle_insurance_add.html', context)
+
+
+##drop-down add
+def VehicleInsuranceCompanyAdd(request):
+    if request.method == "POST":
+        data = json.loads(request.body.decode('utf-8'))
+        addName = data.get('new_name')
+        
+        if addName:
+            try:
+                new_company = InsuranceCompany.objects.create(insurance_company_name=addName)
+                return JsonResponse({'success': True, 'new_name': new_company.insurance_company_name})
+            
+            except Exception as e:
+                return JsonResponse({'success': False, 'error_message': str(e)}, status=500)
+        
+    return JsonResponse({'success': False})
+
+##drop-down list
+def VehicleInsuranceCompanyAddList(request):
+    vehicleInsuranceDetailList = Vehicle.objects.all()
+    context = {
+        'vehicleInsuranceDetailList': vehicleInsuranceDetailList
+    }
+    return render(request, 'vehicle/vehicle_insurance_add.html', context)
+
+
+###Vehicle Insurance List View
+def VehicleInsuranceList(request):
+    # Filter out deleted fitness details
+    vehicleInsuranceList = VehicleInsurance.objects.filter(is_deleted=False)
+
+    context = {
+        'vehicleInsuranceList': vehicleInsuranceList
+    }
+    return render(request, 'vehicle/vehicle_insurance_list.html', context)
+
+## Insurance edit page
+
+def VehicleInsuranceEdit(request, id):
+    try:
+        vehicleInsuranceData = get_object_or_404(VehicleInsurance, insurance_id=id)
+        vehicleDetailEdit = vehicleInsuranceData.vehicle_id
+        insuranceCompanyData = InsuranceCompany.objects.all()
+
+        context = {
+            'vehicleDetailEdit': vehicleDetailEdit,
+            'vehicleInsuranceData': vehicleInsuranceData,
+            'insuranceCompanyData': insuranceCompanyData  # Make sure this variable is passed to the context
+        }
+        return render(request, "vehicle/vehicle_insurance_edit.html", context)
+    except VehicleInsurance.DoesNotExist:
+        messages.error(request, "Vehicle Insurance record not found.")
+        return redirect('error_page')
+
+
+def vehicleInsuranceUpdate(request):
+    if request.method == "POST":
+        insuranceId = request.POST['insurance_id']
+        insuranceCompanyID = request.POST['insurance_company_name']  # Use the company ID instead of the name
+
+        # Fetch the existing insurance record
+        vehicleInsuranceUpdate = get_object_or_404(VehicleInsurance, insurance_id=insuranceId)
+
+        # Update the fields
+        vehicleInsuranceUpdate.insurance_company_id = insuranceCompanyID
+        vehicleInsuranceUpdate.insurance_from_date = request.POST['insurance_from_date']
+        vehicleInsuranceUpdate.insurance_to_date = request.POST['insurance_to_date']
+        vehicleInsuranceUpdate.insurance_amount = request.POST['insurance_amount']
+        vehicleInsuranceUpdate.insurance_paid_amount = request.POST['insurance_paid_amount']
+        vehicleInsuranceUpdate.last_modified_by_id = request.user
+
+        print(
+               vehicleInsuranceUpdate.insurance_company_id,
+               vehicleInsuranceUpdate.insurance_company,
+               vehicleInsuranceUpdate.insurance_from_date,
+               vehicleInsuranceUpdate.insurance_to_date,
+               vehicleInsuranceUpdate.insurance_amount,
+               vehicleInsuranceUpdate.insurance_paid_amount,
+               vehicleInsuranceUpdate.last_modified_by_id
+
+               )
+
+        # vehicleFitnessDetailsUpdate.save()
+
+        messages.success(request, "Vehicle Insurance Details Updated Successfully..!!")
+        return redirect('vehicle_insurance_list')

@@ -1,6 +1,7 @@
 from django.db import models
 from shop.models import ProductMaster, ProductTypes
 from user.models import UserModel
+from vendor.models import Vendor
 from django.contrib.auth.models import User
 
 # Create your models here.
@@ -47,23 +48,23 @@ class Vehicle(models.Model):
     registration_date = models.DateField()
 
     def __str__(self):
-        return self.owner_name
+        return str(self.vehicle_id)
     
 
 
-class Vendor(models.Model):
-    vendor_id = models.AutoField(primary_key=True)
-    vendor_name = models.CharField(max_length=150)
-    vendor_type = models.CharField(max_length=150)
+# class Vendor(models.Model):
+#     vendor_id = models.AutoField(primary_key=True)
+#     vendor_name = models.CharField(max_length=150)
+#     vendor_type = models.CharField(max_length=150)
 
-    def __str__(self):
-        return self.vendor_name
+#     def __str__(self):
+#         return self.vendor_name
     
 
 
 class ProductRecieve(models.Model):
     product_record_id = models.AutoField(primary_key=True)
-    recieved_date = models.DateTimeField(null=True)
+    recieved_date = models.DateField(null=True)
     vendorId = models.ForeignKey(Vendor,on_delete=models.SET_NULL, null=True)
     product_typeId = models.ForeignKey(ProductTypes,on_delete=models.SET_NULL, null=True)
     productId = models.ForeignKey(ProductMaster,on_delete=models.SET_NULL, null=True)
@@ -94,6 +95,8 @@ class ProductRecieve(models.Model):
     def __str__(self):
         return str(self.product_record_id)
 
+
+
 class Fitness(models.Model):
     fitness_id = models.AutoField(primary_key=True)
     vehicle_id = models.ForeignKey(Vehicle, on_delete=models.SET_NULL, null=True)  #vehicle number FK of Vehicle
@@ -107,4 +110,49 @@ class Fitness(models.Model):
     last_modified_on = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return str(self.vehicle_id)
+        return str(self.fitness_id)
+    
+
+    
+class InsuranceCompany(models.Model):
+    insurance_company_id = models.AutoField(primary_key=True)
+    insurance_company_name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return str(self.insurance_company_name)
+
+    
+class VehicleInsurance(models.Model):
+    insurance_id = models.AutoField(primary_key=True)
+    vehicle_id = models.ForeignKey(Vehicle, on_delete=models.SET_NULL, null=True)  #vehicle number FK of Vehicle
+    insurance_company = models.ForeignKey(InsuranceCompany, on_delete=models.SET_NULL, null=True)   #FK company Type
+    insurance_from_date = models.DateField()
+    insurance_to_date = models.DateField()
+    insurance_amount = models.DecimalField(max_digits=30,decimal_places=2)
+    insurance_paid_amount = models.DecimalField(max_digits=30,decimal_places=2)
+    created_by_id = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='vehicle_insurance_created_by')          #FK of User take select user
+    last_modified_by_id = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='vehicle_insurance_modify_by')     #FK of User update
+    created_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    last_modified_on = models.DateTimeField(auto_now=True)
+    is_deleted = models.BooleanField(default=False)
+    deleted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='vehicle_insurance_details_deleted_by')
+
+    def __str__(self):
+        return str(self.insurance_id)
+    
+
+class VehiclePermit(models.Model):
+    permit_id = models.AutoField(primary_key=True)
+    vehicle_permit_from_Date = models.DateField()
+    vehicle_permit_to_Date = models.DateField()
+    vehicle_permit_type = models.CharField(max_length=255)
+    vehicle_permit_id = models.IntegerField()
+    created_by_id = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='vehicle_permit_created_by')          #FK of User take select user
+    last_modified_by_id = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='vehicle_permit_modify_by')     #FK of User update
+    created_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    lastModifiedOn = models.DateTimeField(auto_now=True)
+    is_deleted = models.BooleanField(default=False)
+    deleted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='vehicle_permit_deleted_by')
+    
+    def __str__(self):
+        return str(self.permit_id)

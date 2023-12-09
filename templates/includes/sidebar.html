@@ -123,28 +123,28 @@
                     </ul>
                 </li>
 
-                 {% comment %}
-                <li class="">
-                    <a href=""><i class="fa fa-bell"></i> <span></span></a>
-                </li>
-                <li class="">
-                    <a href=""><i class="fa fa-bell"></i> <span></span></a>
-                </li>
-                <li class="">
-                    <a href=""><i class="fa fa-calendar"></i> <span>View </span></a>
-                </li>
-                <li class="">
-                    <a href=""><i class="fa fa-comments"></i> <span>Teacher
-                            </span></a>
-                </li>
-                <li class="">
-                    <a href=""><i class="fa fa-comments"></i> <span>Student
-                            </span></a>
-                </li>
-               {% endcomment %}
-            </ul>
 
-            
+                <li class="submenu ">
+                    <a href="#"><i class="fa-solid fa-users"></i> <span>Vendor</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li class=""><a href="{% url 'vendor_list' %}">Vendor List</a>
+                        </li>
+                        <li class=""><a href="{% url 'vendor_add' %}">Vendor Add</a></li>
+                    </ul>
+                </li>
+
+                <li class="submenu ">
+                    <a href="#"><i class="fa-brands fa-product-hunt"></i> <span>Vendor Product</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li class=""><a href="">Vendor Product List</a>
+                        </li>
+                        <li class=""><a href="{% url 'vendor_product_add' %}">Vendor Product Add</a></li>
+                    </ul>
+                </li>
+
+
+
+            </ul>
               
         </div>
     </div>
