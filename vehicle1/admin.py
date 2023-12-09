@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import InsuranceCompany, Vehicle, VehicleInsurance, Vendor, ProductRecieve, VehicleMakeBy, VehicleModel, VehicleType, Fitness
+from .models import InsuranceCompany, Vehicle, VehicleInsurance, VehiclePermit, Vendor, ProductRecieve, VehicleMakeBy, VehicleModel, VehicleType, Fitness
 # Register your models here.
 
 
@@ -76,7 +76,7 @@ class VehicleInsuranceAdmin(admin.ModelAdmin):
     )
 
     search_fields = (
-        'insurance_id', 'vehicle_id__vehicle_id', 'insurance_company__insurance_company_name',
+        'insurance_id', 'vehicle_id', 'insurance_company',
         'insurance_from_date', 'insurance_to_date', 'insurance_amount', 'insurance_paid_amount',
     )
 
@@ -90,6 +90,25 @@ class InsuranceCompanyAdmin(admin.ModelAdmin):
     search_fields = ('insurance_company_id', 'insurance_company_name')
     list_display_links = ('insurance_company_id', 'insurance_company_name')
 
+
+class VehiclePermitAdmin(admin.ModelAdmin):
+    list_display = (
+        'permit_id', 'vehicle_id', 'vehicle_permit_from_Date', 'vehicle_permit_to_Date',
+        'vehicle_permit_type', 'vehicle_permit_id','created_by_id',
+        'last_modified_by_id', 'created_on', 'lastModifiedOn', 'is_deleted', 'deleted_by',
+    )
+
+    search_fields = (
+        'permit_id', 'vehicle_id', 'vehicle_permit_from_Date', 'vehicle_permit_to_Date',
+        'vehicle_permit_type', 'vehicle_permit_id',
+    )
+
+    list_display_links = (
+        'permit_id', 'vehicle_id', 'vehicle_permit_from_Date', 'vehicle_permit_to_Date',
+        'vehicle_permit_type', 'vehicle_permit_id','created_by_id',
+        'last_modified_by_id', 'created_on', 'lastModifiedOn', 'is_deleted', 'deleted_by',
+                          )
+
 admin.site.register(VehicleMakeBy,VehicleMakeByModelAdmin)
 admin.site.register(VehicleModel,VehicleModelAdmin)
 admin.site.register(VehicleType,VehicleTypeModelAdmin)
@@ -99,3 +118,4 @@ admin.site.register(ProductRecieve,ProductRecieveModelAdmin)
 admin.site.register(Fitness,FitnessAdmin)
 admin.site.register(VehicleInsurance,VehicleInsuranceAdmin)
 admin.site.register(InsuranceCompany,InsuranceCompanyAdmin)
+admin.site.register(VehiclePermit,VehiclePermitAdmin)

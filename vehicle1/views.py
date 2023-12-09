@@ -586,7 +586,6 @@ def VehicleInsuranceCompanyAddList(request):
 
 ###Vehicle Insurance List View
 def VehicleInsuranceList(request):
-    # Filter out deleted fitness details
     vehicleInsuranceList = VehicleInsurance.objects.filter(is_deleted=False)
 
     context = {
@@ -595,7 +594,6 @@ def VehicleInsuranceList(request):
     return render(request, 'vehicle/vehicle_insurance_list.html', context)
 
 ## Insurance edit page
-
 def VehicleInsuranceEdit(request, id):
     try:
         vehicleInsuranceData = get_object_or_404(VehicleInsurance, insurance_id=id)
@@ -614,7 +612,6 @@ def VehicleInsuranceEdit(request, id):
     
 
 ### Update Vehicle Insurance Details....
-
 def vehicleInsuranceUpdate(request):
     if request.method == "POST":
         insurance_id = request.POST.get('insurance_id')
@@ -638,7 +635,6 @@ def vehicleInsuranceUpdate(request):
     return render(request, 'vehicle/vehicle_insurance_list.html',)
 
 #### Vehicle Insurance Delete
-
 def vehicleInsuranceDelete(request, id):
     vehicleInsuranceData = get_object_or_404(VehicleInsurance, insurance_id=id)
     vehicleInsuranceData.is_deleted = True
@@ -649,17 +645,16 @@ def vehicleInsuranceDelete(request, id):
 
 
 ################# Vehicle Permit #########################################################################################################
-
-
+################# Vehicle Permit ADD
 def VehiclePermitAdd(request):
     vehicleData = Vehicle.objects.all()
 
     if request.method == "POST":
         vehiclenewId = request.POST['vehicle_id']
-        vehiclePermitFromDate = request.POST.get('insurance_company_name')  # Use get() instead of indexing directly
-        vehiclePermitToDate = request.POST['insurance_from_date']
-        vehiclePermitType = request.POST['insurance_to_date']
-        vehiclePermitId = request.POST['insurance_amount']
+        vehiclePermitFromDate = request.POST['permit_from_date']
+        vehiclePermitToDate = request.POST['permit_to_date']
+        vehiclePermitType = request.POST['permit_type']
+        vehiclePermitId = request.POST['vehicle_permit_id_no']
 
         vehicleId = get_object_or_404(Vehicle, vehicle_id=vehiclenewId)
 
@@ -672,23 +667,12 @@ def VehiclePermitAdd(request):
                 vehicle_permit_type=vehiclePermitType,
                 vehicle_permit_id=vehiclePermitId,
                 created_by_id=request.user,
-                created_on=request.user,
-                # Add other fields here
+                last_modified_by_id=request.user,
             )
-            print(vehicleInsuranceDetailAdd.vehicle_id,
-                  vehicleInsuranceDetailAdd.vehicle_permit_from_Date,
-                  vehicleInsuranceDetailAdd.vehicle_permit_to_Date,
-                  vehicleInsuranceDetailAdd.vehicle_permit_type,
-                  vehicleInsuranceDetailAdd.vehicle_permit_id,
-                  vehicleInsuranceDetailAdd.created_by_id,
-                  vehicleInsuranceDetailAdd.created_on,
+            
+            vehicleInsuranceDetailAdd.save()
 
-                  )
-
-            # Save the new vehicle insurance detail to the database
-            # vehicleInsuranceDetailAdd.save()
-
-            messages.success(request, "Vehicle Insurance Detail Added.")
+            messages.success(request, "Vehicle Permit Detail Added.")
             return redirect('vehicle_insurance_list')  # Redirect to a success page or the same page
 
         except IntegrityError as e:
@@ -700,4 +684,58 @@ def VehiclePermitAdd(request):
         'TypeOfPermit': TypeOfPermit,
     }
 
-    return render(request, 'vehicle/vehicle_insurance_add.html', context)
+    return render(request, 'vehicle/vehicle_permit_add.html', context)
+
+################# Vehicle Permit ADD
+def VehiclePermitList(request):
+    vehiclePermitList = VehiclePermit.objects.filter(is_deleted=False)
+
+    context = {
+        'vehiclePermitList': vehiclePermitList
+    }
+    return render(request, 'vehicle/vehicle_permit_list.html', context)
+
+################# Vehicle permit edit
+
+def VehiclePermitEdit(request, id):
+    try:
+        vehiclePermitData = get_object_or_404(VehiclePermit, permit_id=id)
+        vehicleDetailEdit = vehiclePermitData.vehicle_id
+
+        TypeOfPermit = ['Private', 'Transport']
+        context = {
+            'vehicleDetailEdit': vehicleDetailEdit,
+            'vehiclePermitData': vehiclePermitData,
+            'TypeOfPermit': TypeOfPermit,  # Make sure this variable is passed to the context
+        }
+        return render(request, "vehicle/vehicle_permit_edit.html", context)
+    except VehicleInsurance.DoesNotExist:
+        messages.error(request, "Vehicle Insurance record not found.")
+        return redirect('error_page')
+    
+
+def vehiclePermitUpdate(request):
+    if request.method == "POST":
+        permitId = request.POST.get('permit_id')
+
+        vehiclePermitData = get_object_or_404(VehiclePermit, permit_id=permitId)
+
+        vehiclePermitData.vehicle_permit_from_Date = request.POST.get('vehicle_permit_from_Date')
+        vehiclePermitData.vehicle_permit_to_Date = request.POST.get('vehicle_permit_to_Date')
+        vehiclePermitData.vehicle_permit_type = request.POST.get('permit_type')
+        vehiclePermitData.vehicle_permit_id = request.POST.get('vehicle_permit_id')
+        vehiclePermitData.last_modified_by_id = request.user
+
+        print( vehiclePermitData.vehicle_permit_from_Date,
+              vehiclePermitData.vehicle_permit_to_Date,
+               vehiclePermitData.vehicle_permit_type,
+               vehiclePermitData.vehicle_permit_id,
+              vehiclePermitData.last_modified_by_id,
+           )
+
+        vehiclePermitData.save()
+
+        messages.success(request, "Vehicle Permit Details Updated Successfully..!!")
+        return redirect('vehicle_permit_list')
+    
+    return render(request, 'vehicle/vehicle_permit_list.html',)
