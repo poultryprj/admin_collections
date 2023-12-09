@@ -46,6 +46,7 @@ urlpatterns = [
     path('vehicle_insurance_list/', views.VehicleInsuranceList, name='vehicle_insurance_list'),
     path('vehicle_insurance_edit/<int:id>/', views.VehicleInsuranceEdit, name='vehicle_insurance_edit'),
     path('vehicle_insurance_update/', views.vehicleInsuranceUpdate, name='vehicle_insurance_update'),
+    path('vehicle_insurance_delete/<int:id>/', views.vehicleInsuranceDelete, name='vehicle_insurance_delete'),
 
 ]
 

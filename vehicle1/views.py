@@ -10,6 +10,7 @@ from django.contrib import messages
 from .models import Fitness, InsuranceCompany, ProductRecieve, VehicleInsurance
 from django.db import IntegrityError
 from .models import Vehicle, InsuranceCompany, VehicleInsurance
+from .models import InsuranceCompany, VehicleInsurance, Vehicle
 
 def vehicle(request):
     if request.method == "POST":
@@ -623,9 +624,7 @@ def VehicleInsuranceEdit(request, id):
         return redirect('error_page')
     
 
-from django.shortcuts import get_object_or_404, redirect, render
-from django.contrib import messages
-from .models import InsuranceCompany, VehicleInsurance, Vehicle
+### Update Vehicle Insurance Details....
 
 def vehicleInsuranceUpdate(request):
     if request.method == "POST":
@@ -648,3 +647,14 @@ def vehicleInsuranceUpdate(request):
         return redirect('vehicle_insurance_list')
 
     return render(request, 'vehicle/vehicle_insurance_list.html',)
+
+
+#### Vehicle Insurance Delete
+
+def vehicleInsuranceDelete(request, id):
+    vehicleInsuranceData = get_object_or_404(VehicleInsurance, insurance_id=id)
+    vehicleInsuranceData.is_deleted = True
+    vehicleInsuranceData.deleted_by = request.user
+    vehicleInsuranceData.save()
+    vehicleInsuranceList = VehicleInsurance.objects.filter(is_deleted=False)  # Filter non-deleted items
+    return render(request, 'vehicle/vehicle_insurance_list.html', {'vehicleInsuranceList': vehicleInsuranceList})
