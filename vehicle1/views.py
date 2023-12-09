@@ -621,39 +621,30 @@ def VehicleInsuranceEdit(request, id):
     except VehicleInsurance.DoesNotExist:
         messages.error(request, "Vehicle Insurance record not found.")
         return redirect('error_page')
+    
 
-
-from django.shortcuts import get_object_or_404
-from .models import InsuranceCompany, VehicleInsurance
+from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib import messages
+from .models import InsuranceCompany, VehicleInsurance, Vehicle
 
 def vehicleInsuranceUpdate(request):
     if request.method == "POST":
-        insuranceId = request.POST['insurance_id']
-        vehicleInsuranceUpdate = get_object_or_404(VehicleInsurance, insurance_id=insuranceId)
+        insurance_id = request.POST.get('insurance_id')
+        vehicle_insurance = get_object_or_404(VehicleInsurance, insurance_id=insurance_id)
 
-        # Fetch the InsuranceCompany instance based on the name
-        insurance_company_name = request.POST['insurance_company_name']
+        insurance_company_name = request.POST.get('insurance_company_name')
         insurance_company = get_object_or_404(InsuranceCompany, insurance_company_name=insurance_company_name)
 
-        # Update the fields with the fetched instance
-        vehicleInsuranceUpdate.insurance_company = insurance_company
-        vehicleInsuranceUpdate.insurance_from_date = request.POST['insurance_from_date']
-        vehicleInsuranceUpdate.insurance_to_date = request.POST['insurance_to_date']
-        vehicleInsuranceUpdate.insurance_amount = request.POST['insurance_amount']
-        vehicleInsuranceUpdate.insurance_paid_amount = request.POST['insurance_paid_amount']
-        vehicleInsuranceUpdate.last_modified_by_id = request.user
+        vehicle_insurance.insurance_company = insurance_company
+        vehicle_insurance.insurance_from_date = request.POST.get('insurance_from_date')
+        vehicle_insurance.insurance_to_date = request.POST.get('insurance_to_date')
+        vehicle_insurance.insurance_amount = request.POST.get('insurance_amount')
+        vehicle_insurance.insurance_paid_amount = request.POST.get('insurance_paid_amount')
+        vehicle_insurance.last_modified_by_id = request.user
 
-        print(
-               vehicleInsuranceUpdate.insurance_company,
-               vehicleInsuranceUpdate.insurance_from_date,
-               vehicleInsuranceUpdate.insurance_to_date,
-               vehicleInsuranceUpdate.insurance_amount,
-               vehicleInsuranceUpdate.insurance_paid_amount,
-               vehicleInsuranceUpdate.last_modified_by_id
-
-               )
-
-        # vehicleFitnessDetailsUpdate.save()
+        vehicle_insurance.save()
 
         messages.success(request, "Vehicle Insurance Details Updated Successfully..!!")
         return redirect('vehicle_insurance_list')
+
+    return render(request, 'vehicle/vehicle_insurance_list.html',)
