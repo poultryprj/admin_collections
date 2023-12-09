@@ -675,7 +675,7 @@ def VehiclePermitAdd(request):
             vehicleInsuranceDetailAdd.save()
 
             messages.success(request, "Vehicle Permit Detail Added.")
-            return redirect('vehicle_insurance_list')  # Redirect to a success page or the same page
+            return redirect('vehicle_permit_list')  # Redirect to a success page or the same page
 
         except IntegrityError as e:
             messages.error(request, str(e))
