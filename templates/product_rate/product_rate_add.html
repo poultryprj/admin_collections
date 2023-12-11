@@ -25,6 +25,7 @@
                     <form action="{% url 'product_rate_add' %}" method="POST" >
                         {% csrf_token %}
                         <div class="row">
+
                             <div class="col-12">
                                 <h5 class="form-title"><span>Product Rate Details</span></h5>
                             </div>
@@ -64,12 +65,14 @@
                                     </select>
                                 </div>
                             </div>
+
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
                                     <label>Rate Margin</label>
                                     <input type="text" class="form-control" name="rate_margin" placeholder="Enter Rate Margin" required>
                                 </div>
                             </div>
+                            
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
                                     <label>Rate Flexible</label>
@@ -80,6 +83,7 @@
                                     </select>
                                 </div>
                             </div>
+                            
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
                                     <label>Flexible Formula</label>

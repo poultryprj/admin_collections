@@ -25,15 +25,18 @@
                     <form action="{% url 'product_received_add' %}" method="POST" >
                         {% csrf_token %}
                         <div class="row">
+
                             <div class="col-12">
                                 <h5 class="form-title"><span>Product Received Details</span></h5>
                             </div>
+
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
                                     <label>Received Date</label>
                                     <input type="date" class="form-control" name="received_date" required>
                                 </div>
                             </div>
+
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
                                     <label>Vender Name</label>
@@ -45,6 +48,7 @@
                                     </select>
                                 </div>
                             </div>
+
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
                                     <label>Product Type</label>
@@ -56,6 +60,7 @@
                                     </select>
                                 </div>
                             </div>
+
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
                                     <label>Products</label>
@@ -65,34 +70,37 @@
                                             <option value="{{ i.product_id }}">{{ i.product_name }}</option>
                                         {% endfor %}
                                     </select>
-                                    
                                 </div>
                             </div>
-                            
+
                             <div class="col-12 col-sm-3">
                                 <div class="form-group">
                                     <label>Paper Rate</label>
                                     <input type="text" class="form-control" name="paper_rate" required>
                                 </div>
                             </div>
+
                             <div class="col-12 col-sm-3">
                                 <div class="form-group">
                                     <label>Received Quantity</label>
                                     <input type="text" class="form-control" name="received_quantity" required>
                                 </div>
                             </div>
+
                             <div class="col-12 col-sm-3">
                                 <div class="form-group">
                                     <label>Received Weight</label>
                                     <input type="text" class="form-control" name="received_weight" required>
                                 </div>
                             </div>
+
                             <div class="col-12 col-sm-3">
                                 <div class="form-group">
                                     <label>Daily Rate</label>
                                     <input type="text" class="form-control" name="received_daily_rate" required>
                                 </div>
                             </div>
+
                             <div class="col-12 col-sm-3">
                                 <div class="form-group">
                                     <label>TCS Rate</label>
@@ -107,7 +115,6 @@
                                 </div>
                             </div>
 
-                            
                             <div class="col-12 col-sm-3">
                                 <div class="form-group">
                                     <label>Amount</label>
@@ -173,7 +180,6 @@
                                     <input type="text" class="form-control" name="entry_source" required>
                                 </div>
                             </div>
-
 
                             <div class="col-12 col-sm-3">
                                 <div class="form-group">

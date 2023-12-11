@@ -145,4 +145,3 @@ MESSAGE_TAGS = {
     messages.INFO: "",
     messages.ERROR: "danger"
 }
-

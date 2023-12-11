@@ -45,3 +45,24 @@ class VendorProduct(models.Model):
 
    
 
+
+
+class VendorOpeningBalance(models.Model):
+    vendor_opening_balance_id = models.AutoField(primary_key=True)
+    vendorId = models.ForeignKey(Vendor, on_delete=models.SET_NULL,null=True)
+    balance_date = models.DateField()
+    balance = models.FloatField()
+    active = models.CharField(max_length=100)
+    adjustment_amount = models.FloatField()
+    adjustment_remark = models.TextField()
+    balance_utc_date = models.DateField(auto_now_add=True)
+    created_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='VendorOpeningBalance_created_by')
+    last_modified_on = models.DateTimeField(auto_now=True)
+    last_modified_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='VendorOpeningBalance_last_modified')
+    is_deleted = models.BooleanField(default=False)
+    deleted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='VendorOpeningBalance_deleted')
+
+
+
+

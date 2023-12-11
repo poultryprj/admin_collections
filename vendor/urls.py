@@ -13,6 +13,21 @@ urlpatterns = [
 
     # ================= Vendor Product ==========
 
+    path('vendor_product_list/', views.VendorProductList, name='vendor_product_list'),
+
     path('vendor_product_add/', views.VendorProductAdd, name='vendor_product_add'),
+
+    path('vendor_product_edit/<int:id>', views.VendorProductEdit, name='vendor_product_edit'),
+
+    path('vendor_product_delete/<int:id>', views.VendorProductDelete, name='vendor_product_delete'),
+
+
+    # ============================= Vendor Opening Balance ================================
+
+    path('vendor_opening_balance_list/', views.VendorOpeningBalanceList, name='vendor_opening_balance_list'),
+
+    path('vendor_opening_balance_add/', views.VendorOpeningBalanceAdd, name='vendor_opening_balance_add'),
+
+    path('vendor_opening_balance_edit/<int:id>', views.VendorOpeningBalanceEdit, name='vendor_opening_balance_edit'),
 
 ]

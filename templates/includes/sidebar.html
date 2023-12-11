@@ -136,9 +136,18 @@
                 <li class="submenu ">
                     <a href="#"><i class="fa-brands fa-product-hunt"></i> <span>Vendor Product</span> <span class="menu-arrow"></span></a>
                     <ul>
-                        <li class=""><a href="">Vendor Product List</a>
+                        <li class=""><a href="{% url 'vendor_product_list' %}">Vendor Product List</a>
                         </li>
                         <li class=""><a href="{% url 'vendor_product_add' %}">Vendor Product Add</a></li>
+                    </ul>
+                </li>
+
+                <li class="submenu ">
+                    <a href="#"><i class="fa-brands fa-product-hunt"></i> <span>Vendor Opening Balance</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li class=""><a href="{% url 'vendor_opening_balance_list' %}">Opening Balance List</a>
+                        </li>
+                        <li class=""><a href="{% url 'vendor_opening_balance_add' %}">Opening Balance Add</a></li>
                     </ul>
                 </li>
 
