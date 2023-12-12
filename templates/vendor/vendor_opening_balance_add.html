@@ -33,7 +33,7 @@
                                 <div class="form-group">
                                     <label>Vendor Name</label>
                                     <select class="form-control form-select " name="vendor_id" required>
-                                        <option value="" disabled selected hidden>------- Select Product Type -------</option>
+                                        <option value="" disabled selected hidden>------- Select Vendor Name -------</option>
                                         {% for vendor in vendorData %}
                                             <option value="{{vendor.vendor_id}}">{{vendor.vendor_code}} -- {{vendor.vendor_name }} </option>
                                         {% endfor %}

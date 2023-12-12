@@ -66,3 +66,14 @@ class VendorOpeningBalance(models.Model):
 
 
 
+class VendorCreditBalance(models.Model):
+    vendor_credit_balance_id = models.AutoField(primary_key=True)
+    vendorId = models.ForeignKey(Vendor, on_delete=models.SET_NULL,null=True)
+    amount = models.FloatField()
+    reason = models.TextField()
+    credit_date = models.DateField()
+    is_deleted = models.BooleanField(default=False)
+
+
+
+

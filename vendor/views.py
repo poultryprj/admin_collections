@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
 from shop.models import ProductTypes
 from django.contrib import messages
-from .models import Vendor, VendorOpeningBalance, VendorProduct
+from .models import Vendor, VendorCreditBalance, VendorOpeningBalance, VendorProduct
 # Create your views here.
 
 
@@ -12,7 +12,6 @@ def VendorList(request):
         'vendorList' : vendorList
     }
     return render(request, 'vendor/vendor_list.html', context)
-
 
 
 
@@ -28,8 +27,6 @@ def VendorAdd(request):
         vendorAltContactNo = request.POST['alt_contactNo']
         vendorAddress = request.POST['address'].capitalize().strip()
         vendorStatus = request.POST['status']
-
-        print(vendorName, productType, vendorCompany, vendorContactNo, vendorAltContactNo, vendorAddress, vendorStatus)
 
         vendorAdd = Vendor(
             vendor_name = vendorName,
@@ -68,8 +65,6 @@ def VendorEdit(request, id):
         vendorAltContactNo = request.POST['alt_contactNo']
         vendorAddress = request.POST['address'].capitalize().strip()
         vendorStatus = request.POST['status']
-
-        print(vendorName, productType, vendorCompany, vendorContactNo, vendorAltContactNo, vendorAddress, vendorStatus)
 
         vendorEdit.vendor_name = vendorName
         vendorEdit.vendor_code = vendorCode
@@ -129,8 +124,6 @@ def VendorProductAdd(request):
         productTCS = request.POST['product_tcs']
         productTDS = request.POST['product_tds']
 
-        print(vendorId, productTypeId, productRate, productTCS, productTDS)
-
         vendorId = Vendor.objects.get(vendor_id = vendorId)
         productTypeId = ProductTypes.objects.get(product_type_id = productTypeId)
 
@@ -147,7 +140,6 @@ def VendorProductAdd(request):
         messages.success(request, "Added Successfully.")
         return redirect('vendor_product_list')
        
-
     context = {
         'vendorData' : vendorData,
         'productTypesData' : productTypesData
@@ -170,11 +162,8 @@ def VendorProductEdit(request,id):
         productTCS = request.POST['product_tcs']
         productTDS = request.POST['product_tds']
 
-        print(vendorId, productTypeId, productRate, productTCS, productTDS)
-
         vendorId = Vendor.objects.get(vendor_id = vendorId)
         productTypeId = ProductTypes.objects.get(product_type_id = productTypeId)
-
 
         vendorProductEdit.vendorId = vendorId
         vendorProductEdit.productId = productTypeId
@@ -232,8 +221,6 @@ def VendorOpeningBalanceAdd(request):
         adjustmentAmout = request.POST['adjustment_amount']
         adjustmentRemark = request.POST['adjustment_remark']
 
-        print(vendorId, balanceDate, balance, active, adjustmentAmout, adjustmentRemark)
-
         vendorId = Vendor.objects.get(vendor_id = vendorId)
 
         vendorOpeningBalanceAdd = VendorOpeningBalance(
@@ -261,12 +248,126 @@ def VendorOpeningBalanceAdd(request):
 def VendorOpeningBalanceEdit(request,id):
     vendorData = Vendor.objects.filter(is_deleted=False)
 
-    vendorOpeningBalanceEdit = VendorOpeningBalance.objects.filter(vendor_opening_balance_id = id)
+    vendorOpeningBalanceEdit = VendorOpeningBalance.objects.get(vendor_opening_balance_id = id)
+
+    if request.method == "POST":
+        vendorId = request.POST['vendor_id']
+        balanceDate = request.POST['balance_date']
+        balance = request.POST['balance']
+        active = request.POST['active']
+        adjustmentAmout = request.POST['adjustment_amount']
+        adjustmentRemark = request.POST['adjustment_remark']
+
+        vendorId = Vendor.objects.get(vendor_id = vendorId)
+
+        vendorOpeningBalanceEdit.vendorId = vendorId
+        vendorOpeningBalanceEdit.balance_date = balanceDate
+        vendorOpeningBalanceEdit.balance = balance
+        vendorOpeningBalanceEdit.active = active
+        vendorOpeningBalanceEdit.adjustment_amount = adjustmentAmout
+        vendorOpeningBalanceEdit.adjustment_remark = adjustmentRemark
+        vendorOpeningBalanceEdit.last_modified_by = request.user
+        vendorOpeningBalanceEdit.save()
+
+        messages.success(request, "Updated Successfully.")
+        return redirect('vendor_opening_balance_list')
 
     context = {
         'vendorData' : vendorData,
         'vendorOpeningBalanceEdit' : vendorOpeningBalanceEdit
     }
     return render(request, 'vendor/vendor_opening_balance_edit.html', context)
-    
+
+
+
+def VendorOpeningBalanceDelete(request,id):
+    vendorOpeningBalanceDelete = VendorOpeningBalance.objects.get(vendor_opening_balance_id = id)
+
+    vendorOpeningBalanceDelete.is_deleted = True
+    vendorOpeningBalanceDelete.deleted_by = request.user
+    vendorOpeningBalanceDelete.save()
+
+    messages.success(request, "Deleted Successfully..")
+    return redirect('vendor_opening_balance_list')
+
+
+
+# ================================== Vendor Credit Balance =====================================
+
+def VendorCreditBalanceList(request):
+
+    vendorCreditBalances = VendorCreditBalance.objects.filter(is_deleted = False)
+
+    context = {
+        'vendorCreditBalances' : vendorCreditBalances
+    }
+
+    return render(request, 'vendor/vendor_credit_balance_list.html', context)
+
+
+
+
+def VendorCreditBalanceAdd(request):
+    vendorData = Vendor.objects.filter(is_deleted=False)
+
+    if request.method == "POST":
+        vendorId = request.POST['vendor_id']
+        amount = request.POST['amount']
+        reason = request.POST['reason']
+        credit_date = request.POST['credit_date']
+
+        print(vendorId, amount, reason, credit_date)
+
+        vendorId = Vendor.objects.get(vendor_id = vendorId)
+
+        vendorCreditBalanceAdd = VendorCreditBalance(
+            vendorId = vendorId,
+            amount = amount,
+            reason = reason,
+            credit_date = credit_date
+        )
+        vendorCreditBalanceAdd.save()
+
+        messages.success(request, "Credit Balance Added Successfully..")
+        return redirect('vendor_credit_balance_list')
+
+
+    context = {
+        'vendorData' : vendorData,
+    }
+    return render(request, 'vendor/vendor_credit_balance_add.html', context)
+
+
+
+
+def VendorCreditBalanceEdit(request,id):
+    vendorData = Vendor.objects.filter(is_deleted=False)
+
+    vendorCreditBalanceEdit = VendorCreditBalance.objects.get(vendor_credit_balance_id = id)
+
+    if request.method == "POST":
+        vendorId = request.POST['vendor_id']
+        amount = request.POST['amount']
+        reason = request.POST['reason']
+        credit_date = request.POST['credit_date']
+
+        print(vendorId, amount, reason, credit_date)
+
+        vendorId = Vendor.objects.get(vendor_id = vendorId)
+
+        vendorCreditBalanceEdit.vendorId = vendorId
+        vendorCreditBalanceEdit.amount = amount
+        vendorCreditBalanceEdit.reason = reason
+        vendorCreditBalanceEdit.credit_date = credit_date
+        vendorCreditBalanceEdit.save()
+
+        messages.success(request, "Credit Balance Updated Successfully..")
+        return redirect('vendor_credit_balance_list')
+
+    context = {
+            'vendorData' : vendorData,
+            'vendorCreditBalanceEdit' : vendorCreditBalanceEdit
+        }
+
+    return render(request, 'vendor/vendor_credit_balance_edit.html', context)
 

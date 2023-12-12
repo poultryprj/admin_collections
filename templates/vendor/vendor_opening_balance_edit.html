@@ -22,7 +22,7 @@
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-body">
-                    <form action="{% url 'vendor_opening_balance_add' %}" method="POST" >
+                    <form action="{% url 'vendor_opening_balance_edit' vendorOpeningBalanceEdit.vendor_opening_balance_id  %}" method="POST" >
                         {% csrf_token %}
                         <div class="row">
                             <div class="col-12">
@@ -33,50 +33,51 @@
                                 <div class="form-group">
                                     <label>Vendor Name</label>
                                     <select class="form-control form-select " name="vendor_id" required>
-                                        <option value="" disabled selected hidden>------- Select Product Type -------</option>
+                                        <option  disabled >------- Select Vendor Name -------</option>
+                                        <option value="{{vendorOpeningBalanceEdit.vendorId.vendor_id}}">{{vendorOpeningBalanceEdit.vendorId.vendor_code}} -- {{vendorOpeningBalanceEdit.vendorId }} </option>
                                         {% for vendor in vendorData %}
-                                            <option value="{{vendor.vendor_id}}">{{vendor.vendor_code}} -- {{vendor.vendor_name }} </option>
+                                            <option value="{{vendor.vendor_id}}" {% if vendorOpeningBalanceEdit.vendorId.vendor_id ==  vendor.vendor_id %} style="display:none" {% endif %}>{{vendor.vendor_code}} -- {{vendor.vendor_name }} </option>
                                         {% endfor %}
                                     </select>
                                 </div>
                             </div>
-
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
                                     <label>Balance Date</label>
-                                    <input type="date" class="form-control" name="balance_date" required>
+                                    <input type="date" class="form-control" name="balance_date" value="{% if vendorOpeningBalanceEdit.balance_date %}{{ vendorOpeningBalanceEdit.balance_date|date:'Y-m-d' }}{% endif %}" required>
                                 </div>
                             </div>
 
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
                                     <label>Balance</label>
-                                    <input type="text" class="form-control" name="balance" required>
+                                    <input type="text" class="form-control" name="balance" value="{{vendorOpeningBalanceEdit.balance}}" required>
                                 </div>
                             </div>
 
+                           
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
                                     <label>Active (Y/N)</label>
                                     <select class="form-control form-select" placeholder="Select Active (Yes/No)" name="active" required>
-                                        <option>------- Select -------</option>
-                                        <option value="Yes">Yes</option>
-                                        <option value="No">No</option>
+                                        <option disabled>------- Select -------</option>
+                                        <option value="{{vendorOpeningBalanceEdit.active}}">{{vendorOpeningBalanceEdit.active}}</option>
+                                        <option value="Yes" {% if vendorOpeningBalanceEdit.active == "Yes" %} style="display:none" {% endif %}>Yes</option>
+                                        <option value="No" {% if vendorOpeningBalanceEdit.active == "No" %} style="display:none" {% endif %}>No</option>
                                     </select>
                                 </div>
                             </div>
-
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
                                     <label>Adjustment Amount</label>
-                                    <input type="text" class="form-control" name="adjustment_amount" required>
+                                    <input type="text" class="form-control" name="adjustment_amount" value="{{vendorOpeningBalanceEdit.adjustment_amount}}" required>
                                 </div>
                             </div>
 
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
                                     <label>Adjustment Remark</label>
-                                    <input type="text" class="form-control" name="adjustment_remark" required>
+                                    <input type="text" class="form-control" name="adjustment_remark" value="{{vendorOpeningBalanceEdit.adjustment_remark}}" required>
                                 </div>
                             </div>
 

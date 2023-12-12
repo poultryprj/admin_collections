@@ -7,10 +7,10 @@
     <div class="page-header">
         <div class="row align-items-center">
             <div class="col">
-                <h3 class="page-title">Vendor Product</h3>
+                <h3 class="page-title">Vendor Credit Balance</h3>
                 <ul class="breadcrumb">
                     <li class="breadcrumb-item"><a href="">Vendor</a></li>
-                    <li class="breadcrumb-item active">Vendor Product Add</li>
+                    <li class="breadcrumb-item active">Credit Balance Add</li>
                 </ul>
             </div>
         </div>
@@ -22,17 +22,18 @@
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-body">
-                    <form action="{% url 'vendor_product_add' %}" method="POST" >
+                    <form action="{% url 'vendor_credit_balance_add' %}" method="POST" >
                         {% csrf_token %}
                         <div class="row">
                             <div class="col-12">
-                                <h5 class="form-title"><span>Vendor Product Details</span></h5>
+                                <h5 class="form-title"><span>Vendor Credit Balance Details</span></h5>
                             </div>
+
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
                                     <label>Vendor Name</label>
                                     <select class="form-control form-select " name="vendor_id" required>
-                                        <option value="" disabled selected hidden>------- Select Vendor -------</option>
+                                        <option value="" disabled selected hidden>------- Select Vendor Name -------</option>
                                         {% for vendor in vendorData %}
                                             <option value="{{vendor.vendor_id}}">{{vendor.vendor_code}} -- {{vendor.vendor_name }} </option>
                                         {% endfor %}
@@ -41,35 +42,27 @@
                             </div>
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
-                                    <label>Vendor Type</label>
-                                    <select class="form-control form-select" name="product_type_id" required>
-                                        <option value="" disabled selected hidden>------- Select Vendor Type -------</option>
-                                        {% for i in productTypesData %}
-                                            <option value="{{i.product_type_id}}">{{ i.product_type }} </option>
-                                        {% endfor %}
-                                    </select>
+                                    <label> Amount</label>
+                                    <input type="text" class="form-control" name="amount" required>
                                 </div>
                             </div>
+
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
-                                    <label>Product Rate</label>
-                                    <input type="text" class="form-control" name="product_rate" required>
-                                </div>
+                                    <label>Reason:</label>
+                                    <textarea rows="4" cols="4" class="form-control" placeholder="Enter message" name="reason"></textarea>
+                                 </div>
                             </div>
+
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
-                                    <label>Product TCS</label>
-                                    <input type="text" class="form-control" name="product_tcs" required>
+                                    <label>Credit Date</label>
+                                    <input type="date" class="form-control" name="credit_date" required>
                                 </div>
                             </div>
-                            <div class="col-12 col-sm-6">
-                                <div class="form-group">
-                                    <label>Product TDS</label>
-                                    <input type="text" class="form-control" name="product_tds" required>
-                                </div>
-                            </div>
+                            
                             <div class="col-12">
-                                <button type="submit" class="btn btn-primary">Add Vendor Product</button>
+                                <button type="submit" class="btn btn-primary">Add Credit Balance</button>
                             </div>
                         </div>
                     </form>

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Vendor, VendorProduct
+from .models import Vendor, VendorProduct, VendorOpeningBalance, VendorCreditBalance
 # Register your models here.
 
 
@@ -24,8 +24,28 @@ class VendorProductAdmin(admin.ModelAdmin):
 
 
 
+class VendorOpeningBalanceAdmin(admin.ModelAdmin):
+    list_display = ('vendor_opening_balance_id', 'vendorId', 'balance_date', 'balance', 'active', 'adjustment_amount', 'adjustment_remark', 'balance_utc_date', 'created_on', 'created_by', 'last_modified_on', 'last_modified_by', 'is_deleted', 'deleted_by')
+
+    search_fields = ('vendor_opening_balance_id', 'vendorId', 'balance_date', 'balance', 'active', 'adjustment_amount', 'adjustment_remark', 'balance_utc_date', 'created_on', 'created_by', 'last_modified_on', 'last_modified_by', 'is_deleted', 'deleted_by')
+
+    list_display_links = ('vendor_opening_balance_id', 'vendorId', 'balance_date', 'balance', 'active', 'adjustment_amount', 'adjustment_remark', 'balance_utc_date')
+
+
+
+
+class VendorCreditBalanceAdmin(admin.ModelAdmin):
+    list_display = ('vendor_credit_balance_id', 'vendorId', 'amount', 'reason', 'credit_date', 'is_deleted')
+
+    search_fields = ('vendor_credit_balance_id', 'vendorId', 'amount', 'reason', 'credit_date', 'is_deleted')
+
+    list_display_links = ('vendor_credit_balance_id', 'vendorId', 'amount', 'reason', 'credit_date', 'is_deleted')
+
+
 
 
 
 admin.site.register(Vendor, VendorAdmin)
 admin.site.register(VendorProduct, VendorProductAdmin)
+admin.site.register(VendorOpeningBalance, VendorOpeningBalanceAdmin)
+admin.site.register(VendorCreditBalance, VendorCreditBalanceAdmin)

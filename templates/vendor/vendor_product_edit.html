@@ -32,7 +32,7 @@
                                 <div class="form-group">
                                     <label>Vendor Name</label>
                                     <select class="form-control form-select " name="vendor_id" required>
-                                        <option  disabled >------- Select Product Type -------</option>
+                                        <option  disabled >------- Select Vendor  -------</option>
                                         <option value="{{vendorProductEdit.vendorId.vendor_id}}">{{vendorProductEdit.vendorId.vendor_code}}-- {{vendorProductEdit.vendorId}}</option>
                                         {% for vendor in vendorData %}
                                             <option value="{{vendor.vendor_id}}" {% if vendorProductEdit.vendorId.vendor_id ==  vendor.vendor_id %}
@@ -45,7 +45,7 @@
                                 <div class="form-group">
                                     <label>Vendor Type</label>
                                     <select class="form-control form-select" name="product_type_id" required>
-                                        <option  disabled >------- Select Product Type -------</option>
+                                        <option  disabled >------- Select Vendor Type -------</option>
                                         <option value="{{vendorProductEdit.productId.product_type_id}}">{{vendorProductEdit.productId}} </option>
                                         {% for i in productTypesData %}
                                             <option value="{{i.product_type_id}}" {% if vendorProductEdit.productId.product_type_id == i.product_type_id %} style="display:none" {% endif %}>{{ i.product_type }} </option>

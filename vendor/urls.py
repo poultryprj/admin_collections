@@ -30,4 +30,15 @@ urlpatterns = [
 
     path('vendor_opening_balance_edit/<int:id>', views.VendorOpeningBalanceEdit, name='vendor_opening_balance_edit'),
 
+    path('vendor_opening_balance_delete/<int:id>', views.VendorOpeningBalanceDelete, name='vendor_opening_balance_delete'),
+
+
+    # ================================== Vendor Credit Balance =====================================
+
+    path('vendor_credit_balance_list/', views.VendorCreditBalanceList, name='vendor_credit_balance_list'),
+
+    path('vendor_credit_balance_add/', views.VendorCreditBalanceAdd, name='vendor_credit_balance_add'),
+
+    path('vendor_credit_balance_edit/<int:id>', views.VendorCreditBalanceEdit, name='vendor_credit_balance_edit'),
+
 ]
