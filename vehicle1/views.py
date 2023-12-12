@@ -728,13 +728,6 @@ def vehiclePermitUpdate(request):
         vehiclePermitData.vehicle_permit_id = request.POST.get('vehicle_permit_id')
         vehiclePermitData.last_modified_by_id = request.user
 
-        print( vehiclePermitData.vehicle_permit_from_Date,
-              vehiclePermitData.vehicle_permit_to_Date,
-               vehiclePermitData.vehicle_permit_type,
-               vehiclePermitData.vehicle_permit_id,
-              vehiclePermitData.last_modified_by_id,
-           )
-
         vehiclePermitData.save()
 
         messages.success(request, "Vehicle Permit Details Updated Successfully..!!")
@@ -752,3 +745,6 @@ def vehiclePermitdelete(request, id):
     vehiclePermitList = VehiclePermit.objects.filter(is_deleted=False)  # Filter non-deleted items
     messages.success(request, "Vehicle Permit Details Deleted Successfully..!!")
     return render(request, 'vehicle/vehicle_permit_list.html', {'vehiclePermitList': vehiclePermitList})
+
+
+################# Vehicle Pollution

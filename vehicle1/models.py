@@ -152,3 +152,19 @@ class VehiclePermit(models.Model):
     
     def __str__(self):
         return str(self.permit_id)
+
+class VehiclePollution(models.Model):
+    pollution_id = models.AutoField(primary_key=True)
+    vehicle_id = models.ForeignKey(Vehicle, on_delete=models.SET_NULL, null=True)  #vehicle number FK of Vehicle
+    vehicle_pollution_from_Date = models.DateField()
+    vehicle_pollution_to_Date = models.DateField()    
+    vehicle_pollution_value = models.CharField(max_length=255)
+    created_by_id = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='vehicle_pollution_created_by')          #FK of User take select user
+    last_modified_by_id = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='vehicle_pollution_modify_by')     #FK of User update
+    created_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    lastModifiedOn = models.DateTimeField(auto_now=True)
+    is_deleted = models.BooleanField(default=False)
+    deleted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='vehicle_pollution_deleted_by')
+    
+    def __str__(self):
+        return str(self.pollution_id)
