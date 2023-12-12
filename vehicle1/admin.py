@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import InsuranceCompany, Vehicle, VehicleInsurance, VehiclePermit, Vendor, ProductRecieve, VehicleMakeBy, VehicleModel, VehicleType, Fitness
+from .models import InsuranceCompany, Vehicle, VehicleInsurance, VehiclePermit, VehiclePollution, Vendor, ProductRecieve, VehicleMakeBy, VehicleModel, VehicleType, Fitness
 # Register your models here.
 
 
@@ -108,6 +108,24 @@ class VehiclePermitAdmin(admin.ModelAdmin):
         'vehicle_permit_type', 'vehicle_permit_id','created_by_id',
         'last_modified_by_id', 'created_on', 'lastModifiedOn', 'is_deleted', 'deleted_by',
                           )
+    
+class VehiclePollutionAdmin(admin.ModelAdmin):
+    list_display = (
+        'pollution_id', 'vehicle_id', 'vehicle_pollution_from_Date', 'vehicle_pollution_to_Date',
+        'vehicle_pollution_value', 'created_by_id',
+        'last_modified_by_id', 'created_on', 'lastModifiedOn', 'is_deleted', 'deleted_by',
+    )
+
+    search_fields = (
+        'pollution_id', 'vehicle_id', 'vehicle_pollution_from_Date', 'vehicle_pollution_to_Date',
+        'vehicle_pollution_value',
+    )
+
+    list_display_links = (
+        'pollution_id', 'vehicle_id', 'vehicle_pollution_from_Date', 'vehicle_pollution_to_Date',
+        'vehicle_pollution_value', 'created_by_id',
+        'last_modified_by_id', 'created_on', 'lastModifiedOn', 'is_deleted', 'deleted_by',
+                          )
 
 admin.site.register(VehicleMakeBy,VehicleMakeByModelAdmin)
 admin.site.register(VehicleModel,VehicleModelAdmin)
@@ -119,3 +137,4 @@ admin.site.register(Fitness,FitnessAdmin)
 admin.site.register(VehicleInsurance,VehicleInsuranceAdmin)
 admin.site.register(InsuranceCompany,InsuranceCompanyAdmin)
 admin.site.register(VehiclePermit,VehiclePermitAdmin)
+admin.site.register(VehiclePollution,VehiclePollutionAdmin)

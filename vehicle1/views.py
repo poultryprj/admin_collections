@@ -7,7 +7,7 @@ from shop.models import ProductMaster, ProductTypes
 from user.models import UserModel
 from vehicle1.models import ProductRecieve, Vehicle, VehicleMakeBy, VehicleModel, VehicleType, Vendor
 from django.contrib import messages
-from .models import Fitness, InsuranceCompany, ProductRecieve, VehicleInsurance, VehiclePermit
+from .models import Fitness, InsuranceCompany, ProductRecieve, VehicleInsurance, VehiclePermit, VehiclePollution
 from django.db import IntegrityError
 from .models import Vehicle, InsuranceCompany, VehicleInsurance
 from .models import InsuranceCompany, VehicleInsurance, Vehicle
@@ -746,5 +746,106 @@ def vehiclePermitdelete(request, id):
     messages.success(request, "Vehicle Permit Details Deleted Successfully..!!")
     return render(request, 'vehicle/vehicle_permit_list.html', {'vehiclePermitList': vehiclePermitList})
 
+###############################################################################################################
+################# Vehicle Pollution ADD
+def VehiclePollutionAdd(request):
+    vehicleData = Vehicle.objects.all()
 
-################# Vehicle Pollution
+    if request.method == "POST":
+        vehiclenewId = request.POST['vehicle_id']
+        vehiclePollutionFromDate = request.POST['vehicle_pollution_from_Date']
+        vehiclePollutionToDate = request.POST['vehicle_pollution_to_Date']
+        vehiclePollutionValue = request.POST['vehicle_pollution_value']
+
+        vehicleId = get_object_or_404(Vehicle, vehicle_id=vehiclenewId)
+
+        try:
+
+            vehiclePollutionDetailAdd = VehiclePollution(
+                vehicle_id=vehicleId,
+                vehicle_pollution_from_Date=vehiclePollutionFromDate,
+                vehicle_pollution_to_Date=vehiclePollutionToDate,
+                vehicle_pollution_value=vehiclePollutionValue,
+                created_by_id=request.user,
+                last_modified_by_id=request.user,
+            )
+
+            print(vehiclePollutionDetailAdd.vehicle_id,vehiclePollutionDetailAdd.vehicle_pollution_from_Date,
+                  vehiclePollutionDetailAdd.vehicle_pollution_to_Date,
+                  vehiclePollutionDetailAdd.vehicle_pollution_value,
+                  vehiclePollutionDetailAdd.created_by_id,
+                  vehiclePollutionDetailAdd.last_modified_by_id)
+            vehiclePollutionDetailAdd.save()
+
+            messages.success(request, "Vehicle Pollution Detail Added.")
+            return redirect('vehicle_pollution_list')  # Redirect to a success page or the same page
+
+        except IntegrityError as e:
+            messages.error(request, str(e))
+
+    context = {
+        'vehicleData': vehicleData,
+    }
+
+    return render(request, 'vehicle/vehicle_pollution_add.html', context)
+
+################# Vehicle Pollution list
+def VehiclePollutionList(request):
+    vehiclePollutionList = VehiclePollution.objects.filter(is_deleted=False)
+
+    context = {
+        'vehiclePollutionList': vehiclePollutionList
+    }
+    return render(request, 'vehicle/vehicle_pollution_list.html', context)
+
+################# Vehicle Pollution edit
+
+def VehiclePollutionEdit(request, id):
+    try:
+        vehiclePollutionData = get_object_or_404(VehiclePollution, pollution_id=id)
+        vehicleDetailEdit = vehiclePollutionData.vehicle_id
+
+        context = {
+            'vehicleDetailEdit': vehicleDetailEdit,
+            'vehiclePollutionData': vehiclePollutionData,
+        }
+        return render(request, "vehicle/vehicle_pollution_edit.html", context)
+    except VehiclePollution.DoesNotExist:
+        messages.error(request, "Vehicle Pollution record not found.")
+        return redirect('error_page')
+    
+################# Vehicle Pollution update
+def vehiclePollutionUpdate(request):
+    if request.method == "POST":
+        pollutionId = request.POST.get('pollution_id')
+
+        vehiclePollutionData = get_object_or_404(VehiclePollution, pollution_id=pollutionId)
+
+        vehiclePollutionData.vehicle_pollution_from_Date = request.POST.get('vehicle_pollution_from_Date')
+        vehiclePollutionData.vehicle_pollution_to_Date = request.POST.get('vehicle_pollution_to_Date')
+        vehiclePollutionData.vehicle_pollution_value = request.POST.get('vehicle_pollution_value')
+        vehiclePollutionData.last_modified_by_id = request.user
+
+        print(vehiclePollutionData.pollution_id,
+        vehiclePollutionData.vehicle_pollution_from_Date,
+        vehiclePollutionData.vehicle_pollution_to_Date,
+        vehiclePollutionData.vehicle_pollution_value,
+        vehiclePollutionData.last_modified_by_id)
+
+        vehiclePollutionData.save()
+
+        messages.success(request, "Vehicle Pollution Details Updated Successfully..!!")
+        return redirect('vehicle_pollution_list')
+    
+    return render(request, 'vehicle/vehicle_pollution_list.html',)
+
+################# Vehicle Pollution delete
+
+def vehiclePollutiondelete(request, id):
+    vehiclePollutionData = get_object_or_404(VehiclePollution, pollution_id=id)
+    vehiclePollutionData.is_deleted = True
+    vehiclePollutionData.deleted_by = request.user
+    vehiclePollutionData.save()
+    vehiclePollutionList = VehiclePollution.objects.filter(is_deleted=False)  # Filter non-deleted items
+    messages.success(request, "Vehicle Pollution Details Deleted Successfully..!!")
+    return render(request, 'vehicle/vehicle_pollution_list.html', {'vehiclePollutionList': vehiclePollutionList})
