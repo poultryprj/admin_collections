@@ -186,6 +186,60 @@
                         <p>No Insurance data available for this vehicle.</p>
                         {% endif %}
 
+                        {% comment %} Vehicle permit details {% endcomment %}
+                        {% if permitDetailList %}
+                        <div class="row">
+                            <div class="col-12">
+                                <h5 class="form-title"><span>Vehicle Permit Details</span></h5>
+                            </div>
+
+                            {% for permit in permitDetailList %}
+                            <div class="row">
+                                <div class="col-12">
+                                    <h5 class="form-title"><span>Permit Record. {{ forloop.counter }}</span></h5>
+                                </div>
+                                <div class="col-12 col-sm-3">
+                                    <div class="form-group">
+                                        <label>Permit Id</label>
+                                        <input type="text" class="form-control" name="permit_id" value="{{ permit.permit_id }}" readonly>
+                                    </div>
+                              
+                                </div>
+                                <div class="col-12 col-sm-3">
+                                    <div class="form-group">
+                                        <label>Vehicle Permit From Date</label>
+                                        <input type="date" class="form-control" name="vehicle_permit_from_Date" value="{% if permit.vehicle_permit_from_Date %}{{ permit.vehicle_permit_from_Date|date:'Y-m-d' }}{% endif %}" readonly>
+                                    </div>
+                                </div>
+    
+                                <div class="col-12 col-sm-3">
+                                    <div class="form-group">
+                                        <label>Vehicle Permit To Date</label>
+                                        <input type="date" class="form-control" name="vehicle_permit_to_Date" value="{% if permit.vehicle_permit_to_Date %}{{ permit.vehicle_permit_to_Date|date:'Y-m-d' }}{% endif %}" readonly>
+                                    </div>
+                                </div>
+    
+                                <div class="col-12 col-sm-3">
+                                    <div class="form-group">
+                                        <label>Vehicle Permit Type</label>
+                                        <input type="text" class="form-control" name="vehicle_permit_type" value="{{ permit.vehicle_permit_type }}" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-sm-3">
+                                    <div class="form-group">
+                                        <label>Vehicle Permit No.</label>
+                                        <input type="text" class="form-control" name="vehicle_permit_id" value="{{ permit.vehicle_permit_id }}" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <p>No Permit data available for this vehicle.</p>
+                        {% endif %}
+
+
                         {% comment %}  {% endcomment %}
 
                         <div class="col-12">

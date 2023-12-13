@@ -479,6 +479,8 @@ def ShowVehicleDetail(request, id):
         vehicleFitnessData = fitnessDetailList.filter(vehicle_id=vehicleDetailEdit).first()
 
         insuranceDetailList = VehicleInsurance.objects.filter(vehicle_id=vehicleDetailEdit, is_deleted=False)
+
+        permitDetailList = VehiclePermit.objects.filter(vehicle_id=vehicleDetailEdit, is_deleted=False)
         
         context = {
             "vehicleDetailEdit": vehicleDetailEdit,
@@ -488,6 +490,7 @@ def ShowVehicleDetail(request, id):
             'vehicleFitnessData': vehicleFitnessData,
             'insuranceCompanyData': insuranceCompanyData,
             'insuranceDetails': insuranceDetailList,
+            'permitDetailList' : permitDetailList,
         }
 
         return render(request, 'vehicle/show_vehicle_details.html', context)
@@ -505,6 +508,7 @@ def ShowVehicleDetail(request, id):
         'vehicleTypeData': vehicleTypeData,
         'vehicleFitnessData': vehicleFitnessData,
         'insuranceDetails': [],
+        'permitDetailList': [],
     }
     return render(request, 'vehicle/show_vehicle_details.html', context)
 
