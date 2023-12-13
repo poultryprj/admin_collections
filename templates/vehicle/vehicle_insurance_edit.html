@@ -48,13 +48,16 @@
                                 <div class="form-group">
                                     <label for="insurance_company_name">Vehicle Insurance Company</label>
                                     <select class="form-control form-select" name="insurance_company_name" id="insurance_company" required>
-                                        <option value="" disabled selected>------- Select Insurance Company -------</option>
+                                        <option value="" disabled>------- Select Insurance Company -------</option>
                                         {% for company in insuranceCompanyData %}
-                                            <option value="{{ company.insurance_company_name }}">{{ company.insurance_company_name }}</option>
+                                            <option value="{{ company.insurance_company_name }}" {% if vehicleInsuranceData.insurance_company_name == company.insurance_company_name %} selected {% endif %}>
+                                                {{ company.insurance_company_name }}
+                                            </option>
                                         {% endfor %}
                                     </select>
                                 </div>
                             </div>
+                            
                             
 
 

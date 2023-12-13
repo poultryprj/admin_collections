@@ -7,10 +7,10 @@
     <div class="page-header">
         <div class="row align-items-center">
             <div class="col">
-                <h3 class="page-title">Edit Vehicle Permit Details</h3>
+                <h3 class="page-title">Edit Vehicle Tax Details</h3>
                 <ul class="breadcrumb">
                     <li class="breadcrumb-item"><a href="">Vehicles</a></li>
-                    <li class="breadcrumb-item active">Vehicle Permit</li>
+                    <li class="breadcrumb-item active">Vehicle Tax</li>
                 </ul>
             </div>
         </div>
@@ -22,11 +22,11 @@
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-body">
-                    <form action="{% url 'vehicle_permit_update' %}" method="POST" >
+                    <form action="{% url 'vehicle_tax_update' %}" method="POST" >
                         {% csrf_token %}
                         <div class="row">
                             <div class="col-12">
-                                <h5 class="form-title"><span>Vehicle Permit Details</span></h5>
+                                <h5 class="form-title"><span>Vehicle Tax Details</span></h5>
                             </div>
 
                             <div class="col-12 col-sm-6">
@@ -38,8 +38,8 @@
 
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
-                                    <label>Permit Id</label>
-                                    <input type="text" class="form-control" name="permit_id" value="{{vehiclePermitData.permit_id}}" readonly>
+                                    <label>Tax Id</label>
+                                    <input type="text" class="form-control" name="tax_id" value="{{vehicleTaxData.tax_id}}" readonly>
                                 </div>
                             </div>
 
@@ -52,37 +52,44 @@
 
                             <div class="col-12 col-sm-3">
                                 <div class="form-group">
-                                    <label>Vehicle Permit From Date</label>
-                                    <input type="date" class="form-control" name="vehicle_permit_from_Date" value="{% if vehiclePermitData.vehicle_permit_from_Date %}{{ vehiclePermitData.vehicle_permit_from_Date|date:'Y-m-d' }}{% endif %}" required>
+                                    <label>Vehicle Tax From Date</label>
+                                    <input type="date" class="form-control" name="vehicle_tax_from_Date" value="{% if vehicleTaxData.vehicle_tax_from_Date %}{{ vehicleTaxData.vehicle_tax_from_Date|date:'Y-m-d' }}{% endif %}" required>
                                 </div>
                             </div>
 
                             <div class="col-12 col-sm-3">
                                 <div class="form-group">
-                                    <label>Vehicle Permit To Date</label>
-                                    <input type="date" class="form-control" name="vehicle_permit_to_Date" value="{% if vehiclePermitData.vehicle_permit_to_Date %}{{ vehiclePermitData.vehicle_permit_to_Date|date:'Y-m-d' }}{% endif %}" required>
+                                    <label>Vehicle Tax To Date</label>
+                                    <input type="date" class="form-control" name="vehicle_tax_to_Date" value="{% if vehicleTaxData.vehicle_tax_to_Date %}{{ vehicleTaxData.vehicle_tax_to_Date|date:'Y-m-d' }}{% endif %}" required>
                                 </div>
                             </div>
 
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
-                                    <label for="permit_type">Permit Type</label>
-                                    <select class="form-control form-select" name="permit_type" id="permit_type" required>
-                                        <option value="" disabled>------- Select Permit Type -------</option>
-                                        {% for permit in TypeOfPermit %}
-                                            <option value="{{ permit }}" {% if vehiclePermitData.permit_type == permit %} selected {% endif %}>
-                                                {{ permit }}
+                                    <label>Vehicle Tax Types</label>
+                                    <select class="form-control form-select" placeholder="Enter Owner Id" name="vehicle_tax_type" required>
+                                        {% for taxType in vehicleTaxTypes %}
+                                            <option value="{{ taxType }}" {% if vehicleTaxData.vehicle_tax_type == taxType %} selected {% endif %}>
+                                                {{ taxType }}
                                             </option>
                                         {% endfor %}
                                     </select>
                                 </div>
                             </div>
                             
+                            
 
                             <div class="col-12 col-sm-3">
                                 <div class="form-group">
-                                    <label>Vehicle Permit No.</label>
-                                    <input type="text" class="form-control" name="vehicle_permit_id" value="{{vehiclePermitData.vehicle_permit_id}}" required>
+                                    <label>Vehicle Environment Tax</label>
+                                    <input type="text" class="form-control" name="vehicle_environment_tax" value="{{vehicleTaxData.vehicle_environment_tax}}" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group">
+                                    <label>Vehicle Professional Tax</label>
+                                    <input type="text" class="form-control" name="vehicle_professional_tax" value="{{vehicleTaxData.vehicle_professional_tax}}" required>
                                 </div>
                             </div>
                             
