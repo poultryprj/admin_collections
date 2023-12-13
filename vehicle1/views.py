@@ -465,15 +465,20 @@ def VehicleFitnessDetailsdelete(request, id):
 
 ###########################################################################################################################################################################
 ######## Show Vehicle All Details in single form
+
 def ShowVehicleDetail(request, id):
     try:
         vehicleDetailEdit = Vehicle.objects.get(vehicle_id=id)
         vehicleMakeByData = VehicleMakeBy.objects.all()
         vehicleModelyData = VehicleModel.objects.all()
         vehicleTypeData = VehicleType.objects.all()
+
+        insuranceCompanyData = InsuranceCompany.objects.all()
         
         fitnessDetailList = Fitness.objects.filter(is_deleted=False)
         vehicleFitnessData = fitnessDetailList.filter(vehicle_id=vehicleDetailEdit).first()
+
+        insuranceDetailList = VehicleInsurance.objects.filter(vehicle_id=vehicleDetailEdit, is_deleted=False)
         
         context = {
             "vehicleDetailEdit": vehicleDetailEdit,
@@ -481,6 +486,8 @@ def ShowVehicleDetail(request, id):
             'vehicleModelyData': vehicleModelyData,
             'vehicleTypeData': vehicleTypeData,
             'vehicleFitnessData': vehicleFitnessData,
+            'insuranceCompanyData': insuranceCompanyData,
+            'insuranceDetails': insuranceDetailList,
         }
 
         return render(request, 'vehicle/show_vehicle_details.html', context)
@@ -490,15 +497,16 @@ def ShowVehicleDetail(request, id):
         return redirect('error_page')
     except Fitness.DoesNotExist:
         vehicleFitnessData = None
-        context = {
-            "vehicleDetailEdit": vehicleDetailEdit,
-            'vehicleMakeByData': vehicleMakeByData,
-            'vehicleModelyData': vehicleModelyData,
-            'vehicleTypeData': vehicleTypeData,
-            'vehicleFitnessData': vehicleFitnessData,
-        }
-        return render(request, 'vehicle/show_vehicle_details.html', context)
 
+    context = {
+        "vehicleDetailEdit": vehicleDetailEdit,
+        'vehicleMakeByData': vehicleMakeByData,
+        'vehicleModelyData': vehicleModelyData,
+        'vehicleTypeData': vehicleTypeData,
+        'vehicleFitnessData': vehicleFitnessData,
+        'insuranceDetails': [],
+    }
+    return render(request, 'vehicle/show_vehicle_details.html', context)
 
 
 #########Vehicle Insurance#################################################################################################################
