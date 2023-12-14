@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<div class="content container-fluid">
+
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title">Add Asset Detail</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="">Asset</a></li>
+                    <li class="breadcrumb-item active">Add Asset Detail</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    {% include "includes/message.html" %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <form action="{% url 'asset_add' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-12">
+                                <h5 class="form-title"><span>Asset Details</span></h5>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group mb-3">
+                                    <label class="mb-2">Asset Name</label>
+                                    <input type="text" class="form-control" name="asset_name" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <label>Asset Types</label>
+                                <div class="input-group">
+                                    <select class="form-control form-select" placeholder=""
+                                        name="asset_types" >
+                                        <option value="" disabled selected>------- Select Asset Type -------</option>
+                                        {% for asset in assetTypes %}
+                                        <option value="{{asset}}">{{ asset }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            {% if 'Slowly_Finished_Product' in assetTypes %}
+                            <div class="col-12 col-sm-6" id="slowly_finished_product_div" style="display: none;">
+                                <label>Slowly Finished Product</label>
+                                <div class="input-group mb-3">
+                                    <select class="form-control form-select" placeholder=""
+                                        name="slowly_finished_product" >
+                                        <option value="" disabled selected>------- Select Slowly Finished Product Type -------</option>
+                                        {% for asset in slowly_finished_product_types %}
+                                        <option value="{{asset}}">{{ asset }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            {% if 'Long_Lasting_Products' in assetTypes %}
+                            <div class="col-12 col-sm-6" id="long_lasting_product_div" style="display: none;">
+                                <label>Long Lasting Product</label>
+                                <div class="input-group mb-3">
+                                    <select class="form-control form-select" placeholder=""
+                                        name="long_lasting_products" >
+                                        <option value="" disabled selected>------- Select Long Lasting Product Type -------</option>
+                                        {% for asset in long_lasting_products_types %}
+                                        <option value="{{asset}}">{{ asset }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            <div class="col-12"> 
+                                <button type="submit" class="btn btn-primary"> Add Details </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Add event listener for asset types selection change
+        document.querySelector('select[name="asset_types"]').addEventListener('change', function () {
+            var selectedValue = this.value;
+
+            // Show/hide respective product selection based on asset type selected
+            if (selectedValue === 'Slowly_Finished_Product') {
+                document.getElementById('slowly_finished_product_div').style.display = 'block';
+                document.getElementById('long_lasting_product_div').style.display = 'none';
+            } else if (selectedValue === 'Long_Lasting_Products') {
+                document.getElementById('slowly_finished_product_div').style.display = 'none';
+                document.getElementById('long_lasting_product_div').style.display = 'block';
+            } else {
+                document.getElementById('slowly_finished_product_div').style.display = 'none';
+                document.getElementById('long_lasting_product_div').style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock content %}

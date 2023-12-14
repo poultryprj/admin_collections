@@ -34,5 +34,7 @@ urlpatterns = [
     path('vehicle/', include('vehicle2.urls')),
 
     path('vendor/', include('vendor1.urls')),
+
+    path('asset/', include('asset.urls')),
     
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
