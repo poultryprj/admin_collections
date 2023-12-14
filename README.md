@@ -1,1 +1,25 @@
 # admin_collections
+
+
+class ProductIssue(models.Model):
+    product_issue_id = models.AutoField(primary_key=True)
+    issue_date = models.DateField(null=True)
+    shopId = models.ForeignKey(ShopModel, on_delete=models.SET_NULL, null=True)
+    paper_rate = models.FloatField()
+    boiler_size = models.CharField(max_length=20)
+    issue_birds = models.CharField(max_length=20)
+    birds_weight = models.FloatField()
+    daily_rate = models.FloatField()
+    issue_amount = models.FloatField()
+    vehicleId = models.ForeignKey(Vehicle, on_delete=models.SET_NULL, null=True)
+    driverId = models.ForeignKey(UserModel, on_delete=models.SET_NULL, null=True)
+    entry_source = models.IntegerField()
+    latitude = models.DecimalField(max_digits=20, decimal_places=5,null=True)
+    longtitude = models.DecimalField(max_digits=20, decimal_places=5,null=True)
+    product_typeId = models.ForeignKey(ProductTypes,on_delete=models.SET_NULL, null=True)
+    created_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='ProductIssue_created_by')
+    last_modified_on = models.DateTimeField(auto_now=True)
+    last_modified_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='ProductIssue_last_modified')
+    is_deleted = models.BooleanField(default=False)
+    deleted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='ProductIssue_deleted')
