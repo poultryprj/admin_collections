@@ -481,6 +481,8 @@ def ShowVehicleDetail(request, id):
         insuranceDetailList = VehicleInsurance.objects.filter(vehicle_id=vehicleDetailEdit, is_deleted=False)
 
         permitDetailList = VehiclePermit.objects.filter(vehicle_id=vehicleDetailEdit, is_deleted=False)
+        pollutionDetailList = VehiclePollution.objects.filter(vehicle_id=vehicleDetailEdit, is_deleted=False)
+        vehicleTaxDetailList = VehicleTax.objects.filter(vehicle_id=vehicleDetailEdit, is_deleted=False)
         
         context = {
             "vehicleDetailEdit": vehicleDetailEdit,
@@ -491,6 +493,8 @@ def ShowVehicleDetail(request, id):
             'insuranceCompanyData': insuranceCompanyData,
             'insuranceDetails': insuranceDetailList,
             'permitDetailList' : permitDetailList,
+            'pollutionDetailList' : pollutionDetailList,
+            'vehicleTaxDetailList' : vehicleTaxDetailList
         }
 
         return render(request, 'vehicle/show_vehicle_details.html', context)
@@ -502,13 +506,15 @@ def ShowVehicleDetail(request, id):
         vehicleFitnessData = None
 
     context = {
-        "vehicleDetailEdit": vehicleDetailEdit,
-        'vehicleMakeByData': vehicleMakeByData,
-        'vehicleModelyData': vehicleModelyData,
-        'vehicleTypeData': vehicleTypeData,
-        'vehicleFitnessData': vehicleFitnessData,
-        'insuranceDetails': [],
-        'permitDetailList': [],
+        "vehicleDetailEdit" : vehicleDetailEdit,
+        'vehicleMakeByData' : vehicleMakeByData,
+        'vehicleModelyData' : vehicleModelyData,
+        'vehicleTypeData' : vehicleTypeData,
+        'vehicleFitnessData' : vehicleFitnessData,
+        'insuranceDetails' : [],
+        'permitDetailList' : [],
+        'pollutionDetailList' : [],
+        'vehicleTaxDetailList' : [],
     }
     return render(request, 'vehicle/show_vehicle_details.html', context)
 

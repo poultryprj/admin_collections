@@ -239,8 +239,118 @@
                         <p>No Permit data available for this vehicle.</p>
                         {% endif %}
 
+                        {% comment %} Vehicle pollution details {% endcomment %}
+                        {% if pollutionDetailList %}
+                        <div class="row">
+                            <div class="col-12">
+                                <h5 class="form-title"><span>Vehicle Pollution Details</span></h5>
+                            </div>
 
-                        {% comment %}  {% endcomment %}
+                            {% for pollution in pollutionDetailList %}
+                            <div class="row">
+                                <div class="col-12">
+                                    <h5 class="form-title"><span>Pollution Record. {{ forloop.counter }}</span></h5>
+                                </div>
+                                <div class="col-12 col-sm-3">
+                                    <div class="form-group">
+                                        <label>Pollution Id</label>
+                                        <input type="text" class="form-control" name="pollution_id" value="{{ pollution.pollution_id }}" readonly>
+                                    </div>
+                              
+                                </div>
+                                <div class="col-12 col-sm-3">
+                                    <div class="form-group">
+                                        <label>Vehicle Pollution From Date</label>
+                                        <input type="date" class="form-control" name="vehicle_pollution_from_Date" value="{% if pollution.vehicle_pollution_from_Date %}{{ pollution.vehicle_pollution_from_Date|date:'Y-m-d' }}{% endif %}" readonly>
+                                    </div>
+                                </div>
+    
+                                <div class="col-12 col-sm-3">
+                                    <div class="form-group">
+                                        <label>Vehicle Pollution To Date</label>
+                                        <input type="date" class="form-control" name="vehicle_pollution_to_Date" value="{% if pollution.vehicle_pollution_to_Date %}{{ pollution.vehicle_pollution_to_Date|date:'Y-m-d' }}{% endif %}" readonly>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-12 col-sm-3">
+                                    <div class="form-group">
+                                        <label>Vehicle Pollution Value.</label>
+                                        <input type="text" class="form-control" name="vehicle_pollution_value" value="{{ pollution.vehicle_pollution_value }}" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <p>No Pollution data available for this vehicle.</p>
+                        {% endif %}
+                        {% comment %} Vehicle Tax Details {% endcomment %}
+
+                        {% if vehicleTaxDetailList %}
+                        <div class="row">
+                            <div class="col-12">
+                                <h5 class="form-title"><span>Vehicle Tax Details</span></h5>
+                            </div>
+
+                            {% for tax in vehicleTaxDetailList %}
+                            <div class="row">
+                                <div class="col-12">
+                                    <h5 class="form-title"><span>Tax Record. {{ forloop.counter }}</span></h5>
+                                </div>
+                                <div class="col-12 col-sm-3">
+                                    <div class="form-group">
+                                        <label>Tax Id</label>
+                                        <input type="text" class="form-control" name="tax_id" value="{{ tax.tax_id }}" readonly>
+                                    </div>
+                              
+                                </div>
+                                <div class="col-12 col-sm-3">
+                                    <div class="form-group">
+                                        <label>Vehicle Tax From Date</label>
+                                        <input type="date" class="form-control" name="vehicle_tax_from_Date" value="{% if tax.vehicle_tax_from_Date %}{{ tax.vehicle_tax_from_Date|date:'Y-m-d' }}{% endif %}" readonly>
+                                    </div>
+                                </div>
+    
+                                <div class="col-12 col-sm-3">
+                                    <div class="form-group">
+                                        <label>Vehicle Tax To Date</label>
+                                        <input type="date" class="form-control" name="vehicle_tax_to_Date" value="{% if tax.vehicle_tax_to_Date %}{{ tax.vehicle_tax_to_Date|date:'Y-m-d' }}{% endif %}" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-sm-3">
+                                    <div class="form-group">
+                                        <label>Vehicle Tax Type</label>
+                                        <input type="text" class="form-control" name="vehicle_tax_type" value="{{ tax.vehicle_tax_type }}" readonly>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-12 col-sm-3">
+                                    <div class="form-group">
+                                        <label>Vehicle Environment tax</label>
+                                        <input type="text" class="form-control" name="vehicle_environment_tax" value="{{ tax.vehicle_environment_tax }}" readonly>
+                                    </div>
+                                </div>
+
+                                
+                                <div class="col-12 col-sm-3">
+                                    <div class="form-group">
+                                        <label>Vehicle Professional tax</label>
+                                        <input type="text" class="form-control" name="vehicle_professional_tax" value="{{ tax.vehicle_professional_tax }}" readonly>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <p>No Tax data available for this vehicle.</p>
+                        {% endif %}
+
+
 
                         <div class="col-12">
                             <form action="{% url 'vehicle_detail_list' %}" method="get">
