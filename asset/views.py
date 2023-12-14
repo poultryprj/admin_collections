@@ -1,13 +1,11 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
-from asset.models import Assets
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Assets 
 
 ##################################### Assets Add ###################################################
 ################# Assets Add
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from .models import Assets  # Import your Assets model here
-
 def AssetAdd(request):
     if request.method == "POST":
         assetName = request.POST.get('asset_name')
@@ -55,14 +53,14 @@ def AssetAdd(request):
     return render(request, 'asset/asset_add.html', context)
 
 
-################# Vehicle Tax List
-def VehicleTaxList(request):
-    vehicleTaxList = VehicleTax.objects.filter(is_deleted=False)
+################# Asset List
+def AssetList(request):
+    AssetsList = Assets.objects.filter(is_deleted=False)
 
     context = {
-        'vehicleTaxList': vehicleTaxList
+        'AssetsList': AssetsList
     }
-    return render(request, 'vehicle/vehicle_tax_list.html', context)
+    return render(request, 'asset/asset_list.html', context)
 
 
 ################# Vehicle Tax Edit
