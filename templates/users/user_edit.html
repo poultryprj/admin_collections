@@ -69,7 +69,18 @@
                                     </div>
                                 </div>
                             </div>
-                        
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>User Role</label>
+                                    <select class="form-control form-select " name="role_id" required>
+                                        <option  disabled  >------- Select User Role -------</option>
+                                        <option value="{{editUserData.user_role.user_role_id}}">{{editUserData.user_role}} </option>
+                                        {% for userRole in userRoles %}
+                                            <option value="{{userRole.user_role_id}}" {% if editUserData.user_role.user_role_id == userRole.user_role_id %} style="display:none" {% endif %}>{{userRole.user_role_name }} </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
                                     <label>User Level</label>
@@ -78,7 +89,7 @@
                             </div>
                            
                             <div class="col-12">
-                                <button type="submit" class="btn btn-primary">Update</button>
+                                <button type="submit" class="btn btn-primary">Update User</button>
                             </div>
                         </div>
                     </form>

@@ -27,12 +27,14 @@ urlpatterns = [
 
     path('routes/', include('routes.urls')),
 
-    path('shops/', include('shop.urls')),
+    path('shops/', include('shops1.urls')),
 
     path('users/', include('user.urls')),
 
-    path('vehicle/', include('vehicle1.urls')),
+    path('vehicle/', include('vehicle2.urls')),
 
-    path('vendor/', include('vendor.urls')),
+    path('vendor/', include('vendor1.urls')),
+
+    path('api/', include('collection_api.urls')),
     
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
