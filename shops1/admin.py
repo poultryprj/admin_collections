@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ShopModel, ShopOwner, ShopRoute, ProductTypes, ProductCategories, ProductMaster, Associations, ShopProductRates
+from .models import ProductRecieve, ShopBalance, ShopFlexibleRate, ShopModel, ShopOwner, ShopRoute, ProductTypes, ProductCategories, ProductMaster, Associations, ShopProductRates
 
 # Register your models here.
 
@@ -78,6 +78,35 @@ class ShopProductRatesAdmin(admin.ModelAdmin):
 
 
 
+
+class ShopBalanceAdmin(admin.ModelAdmin):
+    list_display = ('shop_balance_id', 'shopId', 'balance_date', 'balance', 'active', 'adjustment_amount', 'adjustment_remark', 'balance_utc_date')
+
+    search_fields = ('shop_balance_id', 'shopId', 'balance_date', 'balance', 'active', 'adjustment_amount', 'adjustment_remark', 'balance_utc_date')
+
+    list_display_links = ('shop_balance_id', 'shopId', 'balance_date', 'balance', 'active', 'adjustment_amount', 'adjustment_remark', 'balance_utc_date')
+
+
+
+class ShopFlexibleRateAdmin(admin.ModelAdmin):
+    list_display = ('shop_flexible_rate_id', 'flexible_rate_date', 'shopId', 'product_typeId', 'flexible_rate', 'flexible_formula', 'sell_rate', 'with_skin', 'without_skin', 'sms_send_yn', 'sms_replyId', 'created_on', 'created_by', 'last_modified_on', 'last_modified_by', 'is_deleted', 'deleted_by')
+
+    search_fields = ('shop_flexible_rate_id', 'flexible_rate_date', 'shopId', 'product_typeId', 'flexible_rate', 'flexible_formula', 'sell_rate', 'with_skin', 'without_skin', 'sms_send_yn', 'sms_replyId' )
+
+    list_display_links = ('shop_flexible_rate_id', 'flexible_rate_date', 'shopId', 'product_typeId', 'flexible_rate', 'flexible_formula', 'sell_rate', 'with_skin', 'without_skin', 'sms_send_yn', 'sms_replyId')
+
+
+
+class ProductRecieveModelAdmin(admin.ModelAdmin):
+    list_display = ('product_record_id', 'recieved_date', 'vendorId', 'product_typeId', 'productId','paper_rate', 'amount', 'recieved_amount', 'vehicleId', 'driverId', 'delete_reason')
+
+    search_fields = ('product_record_id', 'recieved_date', 'vendorId', 'product_typeId', 'productId','paper_rate', 'amount', 'recieved_amount', 'vehicleId', 'driverId')
+
+    list_display_links = ('product_record_id', 'recieved_date', 'vendorId', 'product_typeId', 'productId','paper_rate', 'amount', 'recieved_amount', 'vehicleId', 'driverId', 'delete_reason')
+
+
+
+
 admin.site.register(ShopOwner, ShopOwnerModelAdmin)
 admin.site.register(ShopModel,ShopModelAdmin)
 admin.site.register(ShopRoute,ShopRouteAdmin)
@@ -86,3 +115,6 @@ admin.site.register(ProductCategories,ProductCategoryAdmin)
 admin.site.register(ProductMaster,ProductMasterAdmin)
 admin.site.register(Associations,AssociationsAdmin)
 admin.site.register(ShopProductRates,ShopProductRatesAdmin)
+admin.site.register(ShopBalance,ShopBalanceAdmin)
+admin.site.register(ShopFlexibleRate,ShopFlexibleRateAdmin)
+admin.site.register(ProductRecieve,ProductRecieveModelAdmin)

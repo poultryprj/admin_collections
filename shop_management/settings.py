@@ -39,10 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'account',
     'active_link',
-    'shop',
+    'shops1',
     'routes',
     'user',
-    'vehicle1'
+    'vehicle2',
+    'vendor1',
 ]
 
 MIDDLEWARE = [
@@ -125,6 +126,7 @@ USE_I18N = True
 USE_TZ = False
 
 
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
@@ -142,4 +144,3 @@ MESSAGE_TAGS = {
     messages.INFO: "",
     messages.ERROR: "danger"
 }
-

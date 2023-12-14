@@ -5,6 +5,7 @@ urlpatterns = [
 
     # Shops Urls
     path('shop_list/', views.ShopList, name='shop_list'),
+    path('ShopBalanceDetails/<int:id>', views.ShopBalanceDetails, name='ShopBalanceDetails'),
 
     path('shop_add/', views.ShopAdd, name='shop_add'),
 
@@ -73,5 +74,39 @@ urlpatterns = [
 
     path('product_rate_delete/<int:id>/', views.ProductRateDelete, name='product_rate_delete'),
 
+
+
+    #  Shop Balance
+    path('shop_balance_list/', views.ShopBalanceList, name='shop_balance_list'),
+
+    path('shop_balance_add/', views.ShopBalanceAdd, name='shop_balance_add'),
+
+    path('shop_balance_edit/<int:id>', views.ShopBalanceEdit, name='shop_balance_edit'),
+
+    path('shop_balance_delete/<int:id>', views.ShopBalanceDelete, name='shop_balance_delete'),
+
+
+    path('shop_and_balance_detail/<int:id>', views.ShopAndBalanceDetail, name='shop_and_balance_detail'),
+
+
+
+    # Shop Flexible Rate
+    path('shop_flexible_rate_list/', views.ShopFlexibleRateList, name='shop_flexible_rate_list'),
+
+    path('shop_flexible_rate_add/', views.ShopFlexibleRateAdd, name='shop_flexible_rate_add'),
+
+    path('shop_flexible_rate_edit/<int:id>', views.ShopFlexibleRateEdit, name='shop_flexible_rate_edit'),
+
+    path('shop_flexible_rate_delete/<int:id>', views.ShopFlexibleRateDelete, name='shop_flexible_rate_delete'),
+
+
+    #######
+    path('product_received_list/', views.ProductReceivedList, name='product_received_list'),
+
+    path('product_received_add/', views.ProductReceivedAdd, name='product_received_add'),
     
+    path('product_received_edit/<int:id>/', views.ProductReceivedEdit, name='product_received_edit'),
+    path('product_received_update/', views.ProductReceivedUpdate, name='product_received_update'),
+    
+    path('product_received_delete/<int:id>/', views.product_received_delete, name='product_received_delete'),
 ]

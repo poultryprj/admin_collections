@@ -1,8 +1,9 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from shop.models import ShopModel, ShopOwner
+from shops1.models import ShopModel, ShopOwner
 from routes.models import RouteModel
 
 # Create your views here.

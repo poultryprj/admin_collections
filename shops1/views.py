@@ -1,9 +1,13 @@
+import json
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .models import  Associations, ShopModel, ShopOwner, ShopProductRates, ShopRoute, ProductTypes, ProductCategories, ProductMaster
+from user.models import UserModel
+
+from vehicle2.models import Vehicle, Vendor
+from .models import  Associations, ProductRecieve, ShopBalance, ShopFlexibleRate, ShopModel, ShopOwner, ShopProductRates, ShopRoute, ProductTypes, ProductCategories, ProductMaster
 from routes.models import RouteModel
 from django.core.exceptions import ValidationError
 
@@ -12,9 +16,27 @@ from django.core.exceptions import ValidationError
 
 
 def ShopList(request):
+
     shopLists = ShopModel.objects.filter(is_deleted=False)
+ 
     return render(request, 'shops/shop_list.html', context={'shopLists': shopLists})
 
+
+
+
+def ShopBalanceDetails(request,id):
+    shopBalance  = None
+    shopModel = None
+    try:
+        shopBalance = ShopBalance.objects.get(shopId=id)
+    except ShopBalance.DoesNotExist:
+        shopModel = ShopModel.objects.get(shop_id=id)
+        print(shopModel)
+    context={
+        'shopAndBalance' : shopBalance,
+        'shopModel' : shopModel
+    } 
+    return render(request, 'shops/demo2.html', context)
 
 
 def ShopAdd(request):
@@ -290,7 +312,7 @@ def ProductTypeAdd(request):
 
 def ProductTypeEdit(request,id):
     if request.method == "POST":
-        productTypeName=request.POST['product_type_name']
+        productTypeName=request.POST['product_type_name'].capitalize().strip()
 
         productTypeId = ProductTypes.objects.get(product_type_id=id)
         productTypeId.product_type = productTypeName
@@ -315,7 +337,7 @@ def ProductCategoriesList(request):
 
 def ProductCategoriesAdd(request):
     if request.method == "POST":
-        categoryname = request.POST['product_category_name']
+        categoryname = request.POST['product_category_name'].capitalize().strip()
 
         productCategoryData = ProductCategories(product_category = categoryname)
         productCategoryData.save()
@@ -327,7 +349,7 @@ def ProductCategoriesAdd(request):
 
 def ProductTypeUpdate(request,id):
     if request.method == "POST":
-        productCategoryName=request.POST['product_category_name']
+        productCategoryName=request.POST['product_category_name'].capitalize().strip()
 
         productTypeId = ProductCategories.objects.get(product_category_id=id)
         productTypeId.product_category = productCategoryName
@@ -359,7 +381,7 @@ def ProductAdd(request):
     ProductCategoriesData = ProductCategories.objects.all()
 
     if request.method == "POST":
-        productName = request.POST['product_name']
+        productName = request.POST['product_name'].capitalize().strip()
         productTypeId = request.POST['product_typeId']
         productCategoryId = request.POST['product_categoryId']
         productValue = request.POST['product_value']
@@ -392,7 +414,6 @@ def ProductAdd(request):
 
 
 def ProductEdit(request,id):
-
     productTypeList = ProductTypes.objects.all()
     productCategoryList = ProductCategories.objects.all()
     productDataEdit = ProductMaster.objects.get(product_id=id)
@@ -415,27 +436,24 @@ def ProductUpdate(request):
         productValue = request.POST['product_value'] 
         user = request.user
 
-        productUpdate = ProductMaster.objects.get(product_id=productId)
-
-        productUpdate.product_name = productName
-        productUpdate.product_value_on = productValue
-        productUpdate.last_modified_by = user
-
         productType = ProductTypes.objects.get(product_type_id=productTypeId)
         productCategory = ProductCategories.objects.get(product_category_id=productCategoryId)
 
+        productUpdate = ProductMaster.objects.get(product_id=productId)
+        productUpdate.product_name = productName
+        productUpdate.product_value_on = productValue
+        productUpdate.last_modified_by = user
         productUpdate.product_typeId = productType
         productUpdate.product_categoryId = productCategory
-
         productUpdate.save()
 
         messages.success(request, "Product Name:  {} Update in the database.".format(productName))
         return redirect('product_list')
     
 
+
 def ProductDelete(request,id):
     productDelete = ProductMaster.objects.get(product_id=id)
-    productDelete.delete()
 
     productDelete.is_deleted = True
     productDelete.deleted_by = request.user
@@ -461,7 +479,6 @@ def ProductRateAdd(request):
     associationData = Associations.objects.all()
     productMasterData = ProductMaster.objects.all()
 
-
     if request.method=="POST":
         shopCodeId = request.POST['shop_codeId']
         associationId = request.POST['associationId']
@@ -471,10 +488,8 @@ def ProductRateAdd(request):
         flexibleFormula = request.POST['flexible_formula']  
 
         shopCode = ShopModel.objects.get(shop_id=shopCodeId)
-
         association = Associations.objects.get(association_id=associationId)
         productMaster = ProductMaster.objects.get(product_id=productId)
-        
 
         shopProductRateAdd = ShopProductRates(
             shopId = shopCode,
@@ -490,9 +505,6 @@ def ProductRateAdd(request):
 
         messages.success(request, "Product Rate:  {} Added in the database.".format(rateMargin))
         return redirect('product_rate_list')
-
-
-
 
     context = {
         "shopModelData" : shopModelData,
@@ -551,7 +563,6 @@ def ProductRateUpdate(request):
 
 def ProductRateDelete(request,id):
     productRateDelete = ShopProductRates.objects.get(shop_product_rates_id = id)
-    productRateDelete.delete()
 
     productRateDelete.is_deleted = True
     productRateDelete.deleted_by = request.user
@@ -559,3 +570,427 @@ def ProductRateDelete(request,id):
 
     return redirect('product_rate_list')
 
+
+
+
+# ========================== Shop Balance ===========================
+
+
+def ShopBalanceList(request):
+    shopBalanceList = ShopBalance.objects.filter(is_deleted = False)
+
+    context={
+        'shopBalanceList' : shopBalanceList
+    }
+    return render(request, 'shops/shop_balance_list.html', context)
+
+
+
+
+def ShopBalanceAdd(request):
+    shopModelData = ShopModel.objects.all()
+
+    if request.method == "POST":
+        shopId = request.POST['shop_id']
+        balanceDate = request.POST['balance_date']
+        balance = request.POST['balance']
+        status = request.POST['status']
+        adjustmentAmount = request.POST['adjustment_amount']
+        adjustmentRemark = request.POST['adjustment_remark']
+
+        print(shopId, balanceDate, balance, status, adjustmentAmount, adjustmentRemark)
+
+        shopId = ShopModel.objects.get(shop_id = shopId)
+
+        shopBalanceAdd = ShopBalance(
+            shopId = shopId,
+            balance_date = balanceDate,
+            balance = balance,
+            active = status,
+            adjustment_amount = adjustmentAmount,
+            adjustment_remark = adjustmentRemark,
+            created_by = request.user
+        )
+        shopBalanceAdd.save()
+
+        messages.success(request, "Shop Balance Added Succesfully...!")
+        return redirect('shop_balance_list')
+
+    context = {
+        'shopModelData' : shopModelData
+    }
+    return render(request, 'shops/shop_balance_add.html', context)
+
+
+
+
+def ShopBalanceEdit(request,id =None):
+    shopModelData = ShopModel.objects.all()
+    shopBalanceEdit = ShopBalance.objects.get(shop_balance_id = id)
+
+    if request.method == "POST":
+        shopId = request.POST['shop_id']
+        balanceDate = request.POST['balance_date']
+        balance = request.POST['balance']
+        status = request.POST['status']
+        adjustmentAmount = request.POST['adjustment_amount']
+        adjustmentRemark = request.POST['adjustment_remark']
+
+        shopId = ShopModel.objects.get(shop_id = shopId)
+
+        shopBalanceEdit.shopId = shopId
+        shopBalanceEdit.balance_date = balanceDate
+        shopBalanceEdit.balance = balance
+        shopBalanceEdit.active = status
+        shopBalanceEdit.adjustment_amount = adjustmentAmount
+        shopBalanceEdit.adjustment_remark = adjustmentRemark
+        shopBalanceEdit.last_modified_by = request.user
+        shopBalanceEdit.save()
+
+        messages.success(request, "Shop Balance Updated Succesfully...!")
+        return redirect('shop_balance_list')
+
+    context = {
+        'shopModelData' : shopModelData,
+        'shopBalanceEdit' : shopBalanceEdit
+    }
+    return render(request, 'shops/shop_balance_edit.html', context)
+
+
+
+def ShopBalanceDelete(request,id):
+    shopBalanceDelete = ShopBalance.objects.get(shop_balance_id = id)
+
+    shopBalanceDelete.is_deleted = True
+    shopBalanceDelete.deleted_by = request.user
+    shopBalanceDelete.save()
+
+    messages.success(request, "Shop Balance Deleted Succesfully...!")
+    return redirect('shop_balance_list')
+
+
+
+def ShopAndBalanceDetail(request,id):
+    shopAndBalance = ShopBalance.objects.get(shop_balance_id = id)
+    context ={
+        'shopAndBalance' : shopAndBalance
+    }
+    return render(request, 'shops/shop_and_balance_detail.html', context) 
+
+ 
+
+
+# ===========================  Shop Flexible Rate ==========================
+
+
+def ShopFlexibleRateList(request):
+    shopFlexibleRateList = ShopFlexibleRate.objects.filter(is_deleted = False)
+
+    context ={
+        'shopFlexibleRateList' : shopFlexibleRateList
+    }
+    return render(request, 'shops/shop_flexible_rate_list.html', context) 
+
+
+
+
+def ShopFlexibleRateAdd(request):
+    shopModelData = ShopModel.objects.all()
+    productTypeData = ProductTypes.objects.all()
+
+    if request.method == "POST":
+        rateDate = request.POST['shop_flexible_date']
+        shopId = request.POST['shop_id']
+        productTypeId = request.POST['product_type_id']
+        flexibleRate = request.POST['flexible_rate']
+        flexibleFormula = request.POST['flexible_formula']
+        sellRate = request.POST['sell_rate']
+        withSkin = request.POST['with_skin']
+        withoutSkin = request.POST['without_skin']
+        smsSendYN = request.POST['sms_send_yn']
+        smsReplyId = request.POST['sms_replyId']
+
+        print(rateDate, shopId, productTypeId,flexibleRate, flexibleFormula,  sellRate, withSkin, withoutSkin, smsSendYN,smsReplyId )
+
+        shopId = ShopModel.objects.get(shop_id=shopId)
+        productTypeId = ProductTypes.objects.get(product_type_id=productTypeId)
+
+        shopFlexibleRateAdd = ShopFlexibleRate(
+            flexible_rate_date = rateDate,
+            shopId = shopId,
+            product_typeId = productTypeId,
+            flexible_rate = flexibleRate,
+            flexible_formula = flexibleFormula,
+            sell_rate = sellRate,
+            with_skin = withSkin,
+            without_skin = withoutSkin,
+            sms_send_yn = smsSendYN,
+            sms_replyId = smsReplyId,
+            created_by = request.user
+        )
+        shopFlexibleRateAdd.save()
+
+        messages.success(request, "Shop Flexible Rate Added Succesfully...!")
+        return redirect('shop_flexible_rate_list')
+
+    context = {
+        'shopModelData' : shopModelData,
+        'productTypeData' : productTypeData
+    }
+
+    return render(request, 'shops/shop_flexible_rate_add.html', context) 
+
+
+
+def ShopFlexibleRateEdit(request,id):
+    shopModelData = ShopModel.objects.all()
+    productTypeData = ProductTypes.objects.all()
+
+    shopFlexibleRateEdit = ShopFlexibleRate.objects.get(shop_flexible_rate_id = id)
+
+    if request.method == "POST":
+        rateDate = request.POST['shop_flexible_date']
+        shopId = request.POST['shop_id']
+        productTypeId = request.POST['product_type_id']
+        flexibleRate = request.POST['flexible_rate']
+        flexibleFormula = request.POST['flexible_formula']
+        sellRate = request.POST['sell_rate']
+        withSkin = request.POST['with_skin']
+        withoutSkin = request.POST['without_skin']
+        smsSendYN = request.POST['sms_send_yn']
+        smsReplyId = request.POST['sms_replyId']
+
+        print(rateDate, shopId, productTypeId,flexibleRate, flexibleFormula,  sellRate, withSkin, withoutSkin, smsSendYN,smsReplyId )
+
+        shopId = ShopModel.objects.get(shop_id=shopId)
+        productTypeId = ProductTypes.objects.get(product_type_id=productTypeId)
+
+        shopFlexibleRateEdit.flexible_rate_date = rateDate
+        shopFlexibleRateEdit.shopId = shopId
+        shopFlexibleRateEdit.product_typeId = productTypeId
+        shopFlexibleRateEdit.flexible_rate = flexibleRate
+        shopFlexibleRateEdit.flexible_formula = flexibleFormula
+        shopFlexibleRateEdit.sell_rate = sellRate
+        shopFlexibleRateEdit.with_skin = withSkin
+        shopFlexibleRateEdit.without_skin = withoutSkin
+        shopFlexibleRateEdit.sms_send_yn = smsSendYN
+        shopFlexibleRateEdit.sms_replyId = smsReplyId
+        shopFlexibleRateEdit.last_modified_by = request.user
+        shopFlexibleRateEdit.save()
+
+        messages.success(request, "Shop Flexible Rate Updated Succesfully...!")
+        return redirect('shop_flexible_rate_list')
+
+    context = {
+        'shopModelData' : shopModelData,
+        'productTypeData' : productTypeData,
+        'shopFlexibleRateEdit' : shopFlexibleRateEdit
+    }
+
+    return render(request, 'shops/shop_flexible_rate_edit.html', context)
+
+
+
+def ShopFlexibleRateDelete(request,id):
+    shopFlexibleRateDelete = ShopFlexibleRate.objects.get(shop_flexible_rate_id = id)
+
+    shopFlexibleRateDelete.is_deleted = True
+    shopFlexibleRateDelete.deleted_by = request.user
+    shopFlexibleRateDelete.save()
+
+    messages.success(request, "Shop Flexible Rate Deleted Succesfully...!")
+    return redirect('shop_flexible_rate_list')
+
+
+
+##################################
+
+############## Product Received List
+def ProductReceivedList(request):
+    print("ghhvhvhbv")
+    productRecieveList = ProductRecieve.objects.filter(is_deleted = False)
+
+    context ={
+        'productRecieveList' : productRecieveList
+    }
+
+    return render(request, "received_products/received_product_list.html", context)
+
+############## Product Received Add
+def ProductReceivedAdd(request):
+    vendorData = Vendor.objects.all()
+    productTypesData = ProductTypes.objects.all()
+    productMasterData = ProductMaster.objects.all()
+    vehicleData = Vehicle.objects.all()
+    userModelData = UserModel.objects.all()
+
+
+    if request.method == "POST":
+        receiveDate = request.POST['received_date']
+        vendorId = request.POST['vendor_id']
+        productTypeId = request.POST['product_type_id']
+        productId = request.POST['product_id']
+        paperRate = request.POST['paper_rate']
+        receivedQuantity = request.POST['received_quantity']
+        receivedWeight = request.POST['received_weight']     
+        receivedDailyRate = request.POST['received_daily_rate']
+        receivedTcsRate = request.POST['received_tcs_rate']
+        receivedTcsValue = request.POST['received_tcs_value']
+        amount = request.POST['amount']
+        receivedAmount = request.POST['received_amount']
+        vehicleId = request.POST['vehicle_id']
+        driverId = request.POST['driver_id']
+        sourceVehicleId = request.POST['source_vehicle_id']
+        sourceDriverId = request.POST['source_driver_id']
+        challanNo = request.POST['challan_no']
+        entrySource = request.POST['entry_source']
+        latitude = request.POST['latitude']
+        longitude = request.POST['longitude']
+        
+        vendorId = Vendor.objects.get(vendor_id=vendorId)
+        productTypesId = ProductTypes.objects.get(product_type_id=productTypeId)
+        productMasterId = ProductMaster.objects.get(product_id=productId)
+        vehicleId = Vehicle.objects.get(vehicle_id=vehicleId)
+        userModelId = UserModel.objects.get(user_id=driverId)
+
+        productRecieveDataAdd = ProductRecieve(
+            recieved_date = receiveDate,
+            vendorId = vendorId,
+            product_typeId = productTypesId,
+            productId = productMasterId,
+            paper_rate = paperRate,
+            recieved_quantity = receivedQuantity,
+            recieved_weight = receivedWeight,
+            daily_rate = receivedDailyRate,
+            tcs_rate = receivedTcsRate,
+            tcs_value = receivedTcsValue,
+            amount = amount,
+            recieved_amount = receivedAmount,
+            vehicleId = vehicleId,
+            driverId = userModelId,
+            source_vehicle_id = sourceVehicleId,
+            source_driver_id = sourceDriverId,
+            challan_no = challanNo,
+            entry_source = entrySource,
+            latitude = latitude,
+            longtitude = longitude,
+            created_by = request.user,
+            last_modified_by = request.user
+
+        )
+        productRecieveDataAdd.save()
+        messages.success(request, "Product Received Add Successfully..!!")
+        return redirect('product_received_list')
+
+    
+    context = {
+        "vendorData" : vendorData,
+        "productTypesData" : productTypesData,
+        "productMasterData" : productMasterData,
+        "vehicleData" : vehicleData,
+        "userModelData" : userModelData
+
+    }
+        
+    return render(request, "received_products/received_product_add.html", context)
+
+############## Product Received Edit
+def ProductReceivedEdit(request,id):
+    productRecieveDataEdit = ProductRecieve.objects.get(product_record_id = id)
+    vendorData = Vendor.objects.all()
+    productTypesData = ProductTypes.objects.all()
+    productMasterData = ProductMaster.objects.all()
+    vehicleData = Vehicle.objects.all()
+    userModelData = UserModel.objects.all()
+
+    context = {
+        'productRecieveDataEdit' : productRecieveDataEdit,
+        "vendorData" : vendorData,
+        "productTypesData" : productTypesData,
+        "productMasterData" : productMasterData,
+        "vehicleData" : vehicleData,
+        "userModelData" : userModelData
+    }
+    return render(request, "received_products/received_product_edit.html", context) 
+
+############## Product Received Update
+def ProductReceivedUpdate(request):
+    if request.method == "POST":
+        productReceivedId = request.POST['product_received_id']
+        receiveDate = request.POST['received_date']
+        vendorId = request.POST['vendor_id']
+        productTypeId = request.POST['product_type_id']
+        productId = request.POST['product_id']
+        paperRate = request.POST['paper_rate']
+        receivedQuantity = request.POST['received_quantity']
+        receivedWeight = request.POST['received_weight']     
+        receivedDailyRate = request.POST['received_daily_rate']
+        receivedTcsRate = request.POST['received_tcs_rate']
+        receivedTcsValue = request.POST['received_tcs_value']
+        amount = request.POST['amount']
+        receivedAmount = request.POST['received_amount']
+        vehicleId = request.POST['vehicle_id']
+        driverId = request.POST['driver_id']
+        sourceVehicleId = request.POST['source_vehicle_id']
+        sourceDriverId = request.POST['source_driver_id']
+        challanNo = request.POST['challan_no']
+        entrySource = request.POST['entry_source']
+        latitude = request.POST['latitude']
+        longitude = request.POST['longitude']
+
+
+        vendorId = Vendor.objects.get(vendor_id=vendorId)
+        productTypesId = ProductTypes.objects.get(product_type_id=productTypeId)
+        productMasterId = ProductMaster.objects.get(product_id=productId)
+        vehicleId = Vehicle.objects.get(vehicle_id=vehicleId)
+        userModelId = UserModel.objects.get(user_id=driverId)
+
+        productRecieveDataUpdate = ProductRecieve.objects.get(product_record_id = productReceivedId)
+        productRecieveDataUpdate.recieved_date = receiveDate
+        productRecieveDataUpdate.vendorId = vendorId
+        productRecieveDataUpdate.product_typeId = productTypesId
+        productRecieveDataUpdate.productId = productMasterId
+        productRecieveDataUpdate.paper_rate = paperRate
+        productRecieveDataUpdate.recieved_quantity = receivedQuantity
+        productRecieveDataUpdate.recieved_weight = receivedWeight
+        productRecieveDataUpdate.daily_rate = receivedDailyRate
+        productRecieveDataUpdate.tcs_rate = receivedTcsRate
+        productRecieveDataUpdate.tcs_value = receivedTcsValue
+        productRecieveDataUpdate.amount = amount
+        productRecieveDataUpdate.recieved_amount = receivedAmount
+        productRecieveDataUpdate.vehicleId = vehicleId
+        productRecieveDataUpdate.driverId = userModelId
+        productRecieveDataUpdate.source_vehicle_id = sourceVehicleId
+        productRecieveDataUpdate.source_driver_id = sourceDriverId
+        productRecieveDataUpdate.challan_no = challanNo
+        productRecieveDataUpdate.entry_source = entrySource
+        productRecieveDataUpdate.latitude = latitude
+        productRecieveDataUpdate.longtitude = longitude
+        productRecieveDataUpdate.last_modified_by = request.user
+        productRecieveDataUpdate.save()
+
+        messages.success(request, "Product Received Updated Successfully..!!")
+        return redirect('product_received_list')
+
+############## Product Received Delete
+def product_received_delete(request, id):
+    if request.method == 'POST':
+        print("HGJHGJHBVJHB")
+        print(id)
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            delete_reason = data.get('delete_reason')  # Assuming you're using POST method to send data
+            print(delete_reason)
+
+            productRecieveDataDelete = ProductRecieve.objects.get(product_record_id = id)
+            productRecieveDataDelete.is_deleted = True
+            productRecieveDataDelete.deleted_by = request.user
+            productRecieveDataDelete.delete_reason  = delete_reason
+            productRecieveDataDelete.save()
+
+            # Perform necessary deletion logic
+            
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+        

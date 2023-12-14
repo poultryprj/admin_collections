@@ -1,6 +1,4 @@
 from django.db import models
-from shop.models import ProductMaster, ProductTypes
-from user.models import UserModel
 from django.contrib.auth.models import User
 
 # Create your models here.
@@ -59,40 +57,7 @@ class Vendor(models.Model):
     def __str__(self):
         return self.vendor_name
     
-
-
-class ProductRecieve(models.Model):
-    product_record_id = models.AutoField(primary_key=True)
-    recieved_date = models.DateField(null=True)
-    vendorId = models.ForeignKey(Vendor,on_delete=models.SET_NULL, null=True)
-    product_typeId = models.ForeignKey(ProductTypes,on_delete=models.SET_NULL, null=True)
-    productId = models.ForeignKey(ProductMaster,on_delete=models.SET_NULL, null=True)
-    paper_rate = models.DecimalField(max_digits=10 ,decimal_places = 2)
-    recieved_quantity = models.IntegerField()
-    recieved_weight = models.DecimalField(max_digits=10,decimal_places=2)
-    daily_rate = models.DecimalField(max_digits=10,decimal_places=2)
-    tcs_rate = models.DecimalField(max_digits=10,decimal_places=2, default=0)
-    tcs_value = models.DecimalField(max_digits=10,decimal_places=2, default=0)
-    amount = models.DecimalField(max_digits=10, decimal_places=2,default=0)
-    recieved_amount = models.DecimalField(max_digits=10,decimal_places=2, default=0)
-    vehicleId = models.ForeignKey(Vehicle, on_delete=models.SET_NULL, null=True)
-    driverId = models.ForeignKey(UserModel, on_delete=models.SET_NULL, null=True)
-    source_vehicle_id = models.IntegerField()
-    source_driver_id = models.IntegerField()
-    challan_no = models.CharField(max_length=150)
-    entry_source = models.IntegerField()
-    latitude = models.DecimalField(max_digits=20, decimal_places=5,null=True)
-    longtitude = models.DecimalField(max_digits=20, decimal_places=5,null=True)
-    created_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='product_received_created_by')
-    last_modified_on = models.DateTimeField(auto_now=True)
-    last_modified_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='product_received_last_modified')
-    is_deleted = models.BooleanField(default=False)
-    deleted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='product_received_deleted')
-    delete_reason = models.CharField(max_length=150)
-
-    def __str__(self):
-        return str(self.product_record_id)
+##############
 
 class Fitness(models.Model):
     fitness_id = models.AutoField(primary_key=True)

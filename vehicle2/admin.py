@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import InsuranceCompany, Vehicle, VehicleInsurance, VehiclePermit, VehiclePollution, VehicleTax, Vendor, ProductRecieve, VehicleMakeBy, VehicleModel, VehicleType, Fitness
+from .models import InsuranceCompany, Vehicle, VehicleInsurance, VehiclePermit, VehiclePollution, VehicleTax, Vendor, VehicleMakeBy, VehicleModel, VehicleType, Fitness
 # Register your models here.
 
 
@@ -22,13 +22,6 @@ class VendorModelAdmin(admin.ModelAdmin):
 
 
 
-
-class ProductRecieveModelAdmin(admin.ModelAdmin):
-    list_display = ('product_record_id', 'recieved_date', 'vendorId', 'product_typeId', 'productId','paper_rate', 'amount', 'recieved_amount', 'vehicleId', 'driverId', 'delete_reason')
-
-    search_fields = ('product_record_id', 'recieved_date', 'vendorId', 'product_typeId', 'productId','paper_rate', 'amount', 'recieved_amount', 'vehicleId', 'driverId')
-
-    list_display_links = ('product_record_id', 'recieved_date', 'vendorId', 'product_typeId', 'productId','paper_rate', 'amount', 'recieved_amount', 'vehicleId', 'driverId', 'delete_reason')
 
 
 
@@ -151,7 +144,6 @@ admin.site.register(VehicleModel,VehicleModelAdmin)
 admin.site.register(VehicleType,VehicleTypeModelAdmin)
 admin.site.register(Vehicle,VehicleModelAdmin)
 admin.site.register(Vendor,VendorModelAdmin)
-admin.site.register(ProductRecieve,ProductRecieveModelAdmin)
 admin.site.register(Fitness,FitnessAdmin)
 admin.site.register(VehicleInsurance,VehicleInsuranceAdmin)
 admin.site.register(InsuranceCompany,InsuranceCompanyAdmin)
