@@ -6,6 +6,7 @@ from rest_framework import status
 from .models import Collection, ShopModel
 from .serializers import CollectionSerializer, ShopModelSerializer
 from django.db.models import Q
+from django.contrib.auth.models import User
 
 
 @api_view(['GET'])
@@ -69,6 +70,24 @@ def CollectionView(request):
     if request.method == 'GET':
         cashier_id = request.GET.get('cashierId')
         if cashier_id:
+            # Validate if cashierId is an integer
+            if not cashier_id.isdigit():
+                return Response({
+                    "message_text": "Invalid cashierId format. Must be an integer.",
+                    "message_code": 997,
+                    "message_data": []
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            # Check if the cashierId exists in the database
+            try:
+                cashier = User.objects.get(id=cashier_id)
+            except User.DoesNotExist:
+                return Response({
+                    "message_text": "CashierId does not exist",
+                    "message_code": 996,
+                    "message_data": []
+                }, status=status.HTTP_404_NOT_FOUND)
+
             collections = Collection.objects.filter(cashierId=cashier_id)
             serializer = CollectionSerializer(collections, many=True)
             response_data = {
