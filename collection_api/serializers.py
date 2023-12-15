@@ -1,7 +1,8 @@
 from rest_framework import serializers
 
 from routes.models import RouteModel
-from .models import Collection, ShopModel, UserModel
+from .models import Collection, CollectionMode, ShopModel, ShopModel
+from django.contrib.auth.models import User
 
 
 class ShopModelSerializer(serializers.ModelSerializer):
@@ -13,7 +14,7 @@ class ShopModelSerializer(serializers.ModelSerializer):
 
 class UserModelSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserModel
+        model = User
         fields = '__all__'
 
 
@@ -28,4 +29,8 @@ class CollectionSerializer(serializers.ModelSerializer):
 class RouteModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = RouteModel
+        
+class CollectionModeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CollectionMode
         fields = '__all__'

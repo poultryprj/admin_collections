@@ -1,8 +1,6 @@
 from django.db import models
-
 from shops1.models import ShopModel
 from django.contrib.auth.models import User
-from user.models import UserModel
 
 # Create your models here.
 
@@ -11,7 +9,7 @@ class Collection(models.Model):
     collection_date = models.DateField(null=True)
     collection_time = models.TimeField(null=True)
     shopId = models.ForeignKey(ShopModel, on_delete=models.SET_NULL, null=True)
-    cashierId = models.ForeignKey(UserModel, on_delete=models.SET_NULL, null=True)
+    cashierId = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='collection_cashier_id')
     latitude = models.DecimalField(max_digits=20, decimal_places=5,null=True)
     longtitude = models.DecimalField(max_digits=20, decimal_places=5,null=True)
     total_amount = models.FloatField()
@@ -25,6 +23,7 @@ class CollectionMode(models.Model):
     collectionId = models.ForeignKey(Collection, on_delete=models.SET_NULL, null=True)
     payment_mode = models.CharField(max_length=100)
     payment_amount = models.FloatField()
+    upload_image = models.FileField(blank=True, null=True, upload_to=f'collection/all_collections/', max_length=2000)
 
 
 
@@ -33,7 +32,7 @@ class SkipShop(models.Model):
     skip_shop_date = models.DateField(null=True)
     skip_shop_time = models.TimeField(null=True)
     shopId = models.ForeignKey(ShopModel, on_delete=models.SET_NULL, null=True)
-    cashierId = models.ForeignKey(UserModel, on_delete=models.SET_NULL, null=True)
+    cashierId = models.ForeignKey(User, on_delete=models.SET_NULL, null=True,  related_name='SkipShop_cashier_Id')
     approve_yn = models.CharField(max_length=50)
     remark = models.TextField(null=True)
     approve_byId = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)

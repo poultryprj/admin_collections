@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views
+from .import views
 
 urlpatterns = [
 
@@ -18,5 +18,10 @@ urlpatterns = [
 
     # Get shop under route
     path('get_shops_under_route_api/<int:route_id>/', views.GetShopsUnderRoute, name='get_shops_under_route_api'),
+    
+################################################################################
+    path('collections_view/',views.CollectionView, name='collections_view'),
+    path('collection_mode_add/',views.CollectionModeAdd, name='collection_mode_add'),
+     path('collection_mode_get/<int:collection_id>/', views.CollectionModeGet, name='collection_mode_get'),
     
 ]
