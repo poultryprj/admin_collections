@@ -3,7 +3,7 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Collection, ShopModel, UserModel
+from .models import Collection, ShopModel
 from .serializers import CollectionSerializer, ShopModelSerializer
 from django.db.models import Q
 
@@ -43,3 +43,22 @@ def CollectionsAddView(request):
                 }, status=status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(['GET'])
+def CollectionView(request):
+    if request.method == 'GET':
+        cashier_id = request.GET.get('cashierId')
+        if cashier_id:
+            collections = Collection.objects.filter(cashierId=cashier_id)
+            serializer = CollectionSerializer(collections, many=True)
+            response_data = {
+                "message_text": "Success",
+                "message_code": 1000,
+                "message_data": serializer.data
+            }
+            return Response(response_data, status=status.HTTP_200_OK)
+        else:
+            return Response({
+                "message_text": "No cashierId provided",
+                "message_code": 998,
+                "message_data": []
+            }, status=status.HTTP_400_BAD_REQUEST)
