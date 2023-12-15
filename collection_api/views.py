@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Collection, CollectionMode, ShopModel
-from .serializers import CollectionSerializer, ShopModelSerializer
+from .serializers import CollectionModeSerializer, CollectionSerializer, ShopModelSerializer
 from django.db.models import Q
 from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
@@ -161,3 +161,26 @@ def CollectionModeAdd(request):
                 "message_code": 996,
                 "message_data": str(e),
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['GET'])
+def CollectionModeGet(request, collection_id):
+    try:
+        collection = Collection.objects.get(pk=collection_id)
+        collection_modes = CollectionMode.objects.filter(collectionId=collection)
+
+        serializer = CollectionModeSerializer(collection_modes, many=True)
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Collection.DoesNotExist:
+        return Response({
+            "message_text": "Collection not found",
+            "message_code": 404,
+            "message_data": f"Collection with ID {collection_id} does not exist",
+        }, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({
+            "message_text": "An error occurred",
+            "message_code": 500,
+            "message_data": str(e),
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -21,3 +21,8 @@ class CollectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Collection
         fields = '__all__'
+
+class CollectionModeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CollectionMode
+        fields = '__all__'
