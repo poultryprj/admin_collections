@@ -6,5 +6,17 @@ urlpatterns = [
     path('shop_list_api/',views.ShopModelListView, name='shop_list_api'),
 
     path('collections_api/',views.CollectionsAddView, name='collections_api'),
+
+
+    # Login Api
+    path('user_login_api/', views.UserLogin, name='user_login_api'),
+
+
+    # Route List
+    path('route_list_api/', views.RoutesList, name='route_list_api'),\
+    
+
+    # Get shop under route
+    path('get_shops_under_route_api/<int:route_id>/', views.GetShopsUnderRoute, name='get_shops_under_route_api'),
     
 ]

@@ -1,4 +1,6 @@
 from rest_framework import serializers
+
+from routes.models import RouteModel
 from .models import Collection, ShopModel, UserModel
 
 
@@ -19,4 +21,11 @@ class UserModelSerializer(serializers.ModelSerializer):
 class CollectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Collection
+        fields = '__all__'
+
+
+
+class RouteModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RouteModel
         fields = '__all__'
