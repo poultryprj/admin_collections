@@ -23,6 +23,7 @@ class CollectionMode(models.Model):
     collectionId = models.ForeignKey(Collection, on_delete=models.SET_NULL, null=True)
     payment_mode = models.CharField(max_length=100)
     payment_amount = models.FloatField()
+    upload_image = models.FileField(blank=True, null=True, upload_to=f's3://kukudku/collection', max_length=2000)
 
 
 

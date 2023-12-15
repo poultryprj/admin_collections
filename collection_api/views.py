@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Collection, ShopModel
-from .serializers import CollectionSerializer, ShopModelSerializer
+from .serializers import CollectionModeSerializer, CollectionSerializer, ShopModelSerializer
 from django.db.models import Q
 from django.contrib.auth.models import User
 
@@ -102,3 +102,44 @@ def CollectionView(request):
                 "message_code": 998,
                 "message_data": []
             }, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def CollectionModeAdd(request):
+    if request.method == 'POST':
+        required_fields = ['collectionId', 'payment_mode', 'payment_amount']
+        missing_fields = []
+
+        for field in required_fields:
+            if field not in request.data:
+                missing_fields.append(field)
+
+        if missing_fields:
+            return Response({
+                "message_text": f"Missing fields: {', '.join(missing_fields)}",
+                "message_code": 998,
+                "message_data": [],
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            serializer = CollectionModeSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                response_data = {
+                    "message_text": "Success",
+                    "message_code": 1000,
+                    "message_data": serializer.data
+                }
+                return Response(response_data, status=status.HTTP_201_CREATED)
+            else:
+                return Response({
+                    "message_text": "Validation error",
+                    "message_code": 997,
+                    "message_data": serializer.errors,
+                }, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({
+                "message_text": "An error occurred",
+                "message_code": 996,
+                "message_data": str(e),
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

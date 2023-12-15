@@ -7,6 +7,8 @@ urlpatterns = [
 
     path('collections_api/',views.CollectionsAddView, name='collections_api'),
 
+################################################################################
     path('collections_view/',views.CollectionView, name='collections_view'),
+    path('collection_mode_add/',views.CollectionModeAdd, name='collection_mode_add'),
     
 ]
