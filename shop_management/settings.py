@@ -25,7 +25,8 @@ SECRET_KEY = 'django-insecure-i$0lj9@2)4jrb9d-ji#7mq3osqobgiff-%(sc0igwg!g(59xd^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost:8000', '127.0.0.1:8000','*', '3.110.255.77','localhost:5432', '127.0.0.1:8001', '0.0.0.0:8001', '3.110.255.77:8001']
+ALLOWED_HOSTS = ['localhost:8000', '127.0.0.1:8000','*', '3.110.255.77','localhost:5432', '127.0.0.1:8001', '0.0.0.0:8001', '3.110.255.77:8001',
+                 '127.0.0.1', 'localhost','192.168.1.24','.vercel.app',"*","3.110.255.77"]
 
 
 # Application definition
@@ -45,7 +46,8 @@ INSTALLED_APPS = [
     'vehicle2',
     'vendor1',
     'rest_framework',
-    'collection_api'
+    'collection_api',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -146,3 +148,11 @@ MESSAGE_TAGS = {
     messages.INFO: "",
     messages.ERROR: "danger"
 }
+
+AWS_ACCESS_KEY_ID = 'AKIA6AL6FGIVCDBX5BHU'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'kukudku'
+AWS_S3_REGION_NAME = 'ap-south-1'  # 
+
+# Configure static and media file storage
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'

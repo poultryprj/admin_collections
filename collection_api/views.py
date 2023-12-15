@@ -1,12 +1,20 @@
+import datetime
 from django.http import HttpResponse
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Collection, ShopModel
-from .serializers import CollectionModeSerializer, CollectionSerializer, ShopModelSerializer
+from .models import Collection, CollectionMode, ShopModel
+from .serializers import CollectionSerializer, ShopModelSerializer
 from django.db.models import Q
 from django.contrib.auth.models import User
+from django.core.files.base import ContentFile
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from .models import CollectionMode
+import datetime
+from django.utils import timezone
 
 
 @api_view(['GET'])
@@ -102,40 +110,50 @@ def CollectionView(request):
                 "message_code": 998,
                 "message_data": []
             }, status=status.HTTP_400_BAD_REQUEST)
-
+        
 
 @api_view(['POST'])
 def CollectionModeAdd(request):
     if request.method == 'POST':
-        required_fields = ['collectionId', 'payment_mode', 'payment_amount']
-        missing_fields = []
-
-        for field in required_fields:
-            if field not in request.data:
-                missing_fields.append(field)
-
-        if missing_fields:
-            return Response({
-                "message_text": f"Missing fields: {', '.join(missing_fields)}",
-                "message_code": 998,
-                "message_data": [],
-            }, status=status.HTTP_400_BAD_REQUEST)
-
         try:
-            serializer = CollectionModeSerializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save()
+            user_id = request.data.get('user_id')
+            collection_id = request.data.get('collectionId')
+            payment_mode = request.data.get('payment_mode')
+            payment_amount = request.data.get('payment_amount')
+            upload_image = request.FILES.get('upload_image')
+
+            if collection_id and payment_mode and payment_amount and upload_image:
+                collection = Collection.objects.get(pk=collection_id)
+                collection_mode = CollectionMode(
+                    collectionId=collection,
+                    payment_mode=payment_mode,
+                    payment_amount=payment_amount
+                )
+                
+                # Generate the custom filename
+                ShopModelData = ShopModel.objects.first() 
+                
+                current_datetime = timezone.now()
+                original_photo_name = upload_image.name
+                custom_filename = f"{payment_mode}_{user_id}_{ShopModelData.shop_id}_{current_datetime.strftime('%Y%m%d_%H%M%S')}_{original_photo_name}"
+                
+                # Save the file with the custom filename in the specified folder within the bucket
+                file_content = ContentFile(upload_image.read())
+                collection_mode.upload_image.save(custom_filename, file_content)
+                
                 response_data = {
                     "message_text": "Success",
                     "message_code": 1000,
-                    "message_data": serializer.data
+                    "message_data": {
+                        "file_url": collection_mode.upload_image.url  # Assuming you need to retrieve the uploaded file URL
+                    }
                 }
                 return Response(response_data, status=status.HTTP_201_CREATED)
             else:
                 return Response({
                     "message_text": "Validation error",
                     "message_code": 997,
-                    "message_data": serializer.errors,
+                    "message_data": "Invalid data provided",
                 }, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({
