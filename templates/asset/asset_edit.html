@@ -7,10 +7,10 @@
     <div class="page-header">
         <div class="row align-items-center">
             <div class="col">
-                <h3 class="page-title">Edit Vehicle Tax Details</h3>
+                <h3 class="page-title">Edit Asset Details</h3>
                 <ul class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="">Vehicles</a></li>
-                    <li class="breadcrumb-item active">Vehicle Tax</li>
+                    <li class="breadcrumb-item"><a href="">Asset</a></li>
+                    <li class="breadcrumb-item active">Asset Details</li>
                 </ul>
             </div>
         </div>
@@ -22,76 +22,69 @@
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-body">
-                    <form action="{% url 'vehicle_tax_update' %}" method="POST" >
+                    <form action="{% url 'asset_update' %}" method="POST" >
                         {% csrf_token %}
                         <div class="row">
                             <div class="col-12">
-                                <h5 class="form-title"><span>Vehicle Tax Details</span></h5>
+                                <h5 class="form-title"><span>Asset Details</span></h5>
                             </div>
 
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
-                                    <label>Vehicle Id</label>
-                                    <input type="text" class="form-control" name="vehicle_id" value="{{vehicleDetailEdit.vehicle_id}}" readonly>
-                                </div>
-                            </div>
-
-                            <div class="col-12 col-sm-6">
-                                <div class="form-group">
-                                    <label>Tax Id</label>
-                                    <input type="text" class="form-control" name="tax_id" value="{{vehicleTaxData.tax_id}}" readonly>
+                                    <label>Asset ID</label>
+                                    <input type="text" class="form-control" name="asset_id" value="{{assetData.asset_id}}" readonly>
                                 </div>
                             </div>
 
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
-                                    <label>Owner Name</label>
-                                    <input type="text" class="form-control" name="owner_name" value="{{vehicleDetailEdit.owner_name}}" readonly>
-                                </div>
-                            </div>                       
-
-                            <div class="col-12 col-sm-3">
-                                <div class="form-group">
-                                    <label>Vehicle Tax From Date</label>
-                                    <input type="date" class="form-control" name="vehicle_tax_from_Date" value="{% if vehicleTaxData.vehicle_tax_from_Date %}{{ vehicleTaxData.vehicle_tax_from_Date|date:'Y-m-d' }}{% endif %}" required>
-                                </div>
-                            </div>
-
-                            <div class="col-12 col-sm-3">
-                                <div class="form-group">
-                                    <label>Vehicle Tax To Date</label>
-                                    <input type="date" class="form-control" name="vehicle_tax_to_Date" value="{% if vehicleTaxData.vehicle_tax_to_Date %}{{ vehicleTaxData.vehicle_tax_to_Date|date:'Y-m-d' }}{% endif %}" required>
+                                    <label>Asset Name</label>
+                                    <input type="text" class="form-control" name="asset_name" value="{{assetData.asset_name}}">
                                 </div>
                             </div>
 
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
-                                    <label>Vehicle Tax Types</label>
-                                    <select class="form-control form-select" placeholder="Enter Owner Id" name="vehicle_tax_type" required>
-                                        {% for taxType in vehicleTaxTypes %}
-                                            <option value="{{ taxType }}" {% if vehicleTaxData.vehicle_tax_type == taxType %} selected {% endif %}>
-                                                {{ taxType }}
+                                    <label>Asset Types</label>
+                                    <select class="form-control form-select" name="asset_types" id="asset_types" required>
+                                        {% for asset in assetTypes %}
+                                            <option value="{{ asset }}" {% if assetData.asset_types == asset %} selected {% endif %}>
+                                                {{ asset }}
                                             </option>
                                         {% endfor %}
                                     </select>
                                 </div>
                             </div>
                             
+                            <div class="col-12 col-sm-6" id="slowly_finished_product_div" style="display: {% if assetData.asset_types == 'Slowly_Finished_Product' %}block{% else %}none{% endif %}">
+                                <div class="form-group">
+                                    <label>Slowly Finished Products</label>
+                                    <select class="form-control form-select" name="slowly_finished_product" required>
+                                        {% for product in slowly_finished_product_types %}
+                                            <option value="{{ product }}" {% if assetData.slowly_finished_product == product %} selected {% endif %}>
+                                                {{ product }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
                             
-
-                            <div class="col-12 col-sm-3">
+                            <div class="col-12 col-sm-6" id="long_lasting_product_div" style="display: {% if assetData.asset_types == 'Long_Lasting_Products' %}block{% else %}none{% endif %}">
                                 <div class="form-group">
-                                    <label>Vehicle Environment Tax</label>
-                                    <input type="text" class="form-control" name="vehicle_environment_tax" value="{{vehicleTaxData.vehicle_environment_tax}}" required>
+                                    <label>Long Lasting Products</label>
+                                    <select class="form-control form-select" name="long_lasting_products" required>
+                                        {% for product in long_lasting_products_types %}
+                                            <option value="{{ product }}" {% if assetData.long_lasting_products == product %} selected {% endif %}>
+                                                {{ product }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
                                 </div>
                             </div>
 
-                            <div class="col-12 col-sm-3">
-                                <div class="form-group">
-                                    <label>Vehicle Professional Tax</label>
-                                    <input type="text" class="form-control" name="vehicle_professional_tax" value="{{vehicleTaxData.vehicle_professional_tax}}" required>
-                                </div>
-                            </div>
+                
+
+
                             
                             <div class="col-12">
                                 <button type="submit" class="btn btn-primary">Update Details</button>
@@ -103,5 +96,31 @@
         </div>
     </div>
 </div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var assetTypesSelect = document.getElementById('asset_types');
+        var slowlyFinishedProductDiv = document.getElementById('slowly_finished_product_div');
+        var longLastingProductDiv = document.getElementById('long_lasting_product_div');
+
+        assetTypesSelect.addEventListener('change', function () {
+            if (this.value === 'Slowly_Finished_Product') {
+                slowlyFinishedProductDiv.style.display = 'block';
+                longLastingProductDiv.style.display = 'none';
+            } else if (this.value === 'Long_Lasting_Products') {
+                slowlyFinishedProductDiv.style.display = 'none';
+                longLastingProductDiv.style.display = 'block';
+            } else {
+                slowlyFinishedProductDiv.style.display = 'none';
+                longLastingProductDiv.style.display = 'none';
+            }
+        });
+
+        // Trigger change event on page load to initially show/hide based on the selected asset type
+        var event = new Event('change');
+        assetTypesSelect.dispatchEvent(event);
+    });
+</script>
 
 {% endblock content %}

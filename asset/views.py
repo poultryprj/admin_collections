@@ -39,7 +39,7 @@ def AssetAdd(request):
         AssetsDetailAdd.save()
 
         messages.success(request, "Asset Detail Added Successfully..!!")
-        return redirect('asset_add')  # Redirect to a success page or the same page
+        return redirect('asset_list')  # Redirect to a success page or the same page
 
     assetTypes = ['Slowly_Finished_Product', 'Long_Lasting_Products']
     slowly_finished_product_types = ['Polyethylene_Bags', 'Paper_Bags']
@@ -63,51 +63,80 @@ def AssetList(request):
     return render(request, 'asset/asset_list.html', context)
 
 
-################# Vehicle Tax Edit
-def VehicleTaxEdit(request, id):
+################# Asset Edit
+def AssetEdit(request, id):
     try:
-        vehicleTaxData = get_object_or_404(VehicleTax, tax_id=id)
-        vehicleDetailEdit = vehicleTaxData.vehicle_id
+        assetData = get_object_or_404(Assets, asset_id=id)
 
-        vehicleTaxTypes = ['Private', 'Transport']        
+        assetTypes = ['Slowly_Finished_Product', 'Long_Lasting_Products']
+        slowly_finished_product_types = ['Polyethylene_Bags', 'Paper_Bags']
+        long_lasting_products_types = ['T-Shirt', 'Eggs_Tray', 'Dustbin']
         context = {
-            'vehicleDetailEdit': vehicleDetailEdit,
-            'vehicleTaxData': vehicleTaxData,
-            'vehicleTaxTypes': vehicleTaxTypes,
+            'slowly_finished_product_types': slowly_finished_product_types,
+            'long_lasting_products_types': long_lasting_products_types,
+            'assetTypes': assetTypes,
+            'assetData' : assetData
         }
-        return render(request, "vehicle/vehicle_tax_edit.html", context)
-    except VehicleTax.DoesNotExist:
-        messages.error(request, "Vehicle Tax record not found.")
-        return redirect('error_page')
+        return render(request, "asset/asset_edit.html", context)
+    except Exception as e:
+        print(e)
     
     
 ################# Vehicle Tax Update
-def vehicleTaxUpdate(request):
+def AssetUpdate(request):
     if request.method == "POST":
-        taxId = request.POST.get('tax_id')
+        assetName = request.POST.get('asset_name')
+        assetTypes = request.POST.get('asset_types')
+        slowlyFinishedProduct = request.POST.get('slowly_finished_product')
+        longLastingProducts = request.POST.get('long_lasting_products')
 
-        vehicleTaxData = get_object_or_404(VehicleTax, tax_id=taxId)
+        # Determine which product field to populate based on the asset type selected
+        if assetTypes == 'Slowly_Finished_Product':
+            selectedProduct = slowlyFinishedProduct
+        else:
+            selectedProduct = longLastingProducts
 
-        vehicleTaxData.vehicle_tax_from_Date = request.POST.get('vehicle_tax_from_Date')
-        vehicleTaxData.vehicle_tax_to_Date = request.POST.get('vehicle_tax_to_Date')
-        vehicleTaxData.vehicle_tax_type = request.POST.get('vehicle_tax_type')
-        vehicleTaxData.vehicle_environment_tax = request.POST.get('vehicle_environment_tax')
-        vehicleTaxData.vehicle_professional_tax = request.POST.get('vehicle_professional_tax')
-        vehicleTaxData.last_modified_by_id = request.user
+        # Save the asset detail based on the selected product
+        AssetsDetailAdd = Assets(
+            asset_name=assetName,
+            asset_types=assetTypes,
+            created_by=request.user,
+        )
 
-        vehicleTaxData.save()
+        if assetTypes == 'Slowly_Finished_Product':
+            AssetsDetailAdd.slowly_finished_product = selectedProduct
+        else:
+            AssetsDetailAdd.long_lasting_products = selectedProduct
+        
+        print(AssetsDetailAdd.asset_name,
+              AssetsDetailAdd.asset_types,
+              AssetsDetailAdd.slowly_finished_product,
+              AssetsDetailAdd.long_lasting_products,
+              AssetsDetailAdd.created_by)
+        AssetsDetailAdd.save()
 
-        messages.success(request, "Vehicle Tax Details Updated Successfully..!!")
-        return redirect('vehicle_tax_list')
+        messages.success(request, "Asset Detail Updated Successfully..!!")
+        return redirect('asset_list')  # Redirect to a success page or the same page
+
+    assetTypes = ['Slowly_Finished_Product', 'Long_Lasting_Products']
+    slowly_finished_product_types = ['Polyethylene_Bags', 'Paper_Bags']
+    long_lasting_products_types = ['T-Shirt', 'Eggs_Tray', 'Dustbin']
+    context = {
+        'slowly_finished_product_types': slowly_finished_product_types,
+        'long_lasting_products_types': long_lasting_products_types,
+        'assetTypes': assetTypes
+    }
+
+    return render(request, 'asset/asset_list.html', context)
+
     
-    return render(request, 'vehicle/vehicle_tax_list.html',)
 
 ################# Vehicle Tax delete
-def vehicleTaxdelete(request, id):
-    vehicleTaxData = get_object_or_404(VehicleTax, tax_id=id)
-    vehicleTaxData.is_deleted = True
-    vehicleTaxData.deleted_by = request.user
-    vehicleTaxData.save()
-    vehicleTaxList = VehicleTax.objects.filter(is_deleted=False)  # Filter non-deleted items
-    messages.success(request, "Vehicle Tax Details Deleted Successfully..!!")
-    return render(request, 'vehicle/vehicle_tax_list.html', {'vehicleTaxList': vehicleTaxList})
+def Assetdelete(request, id):
+    assetData = get_object_or_404(Assets, asset_id=id)
+    assetData.is_deleted = True
+    assetData.deleted_by = request.user
+    assetData.save()
+    assetList = Assets.objects.filter(is_deleted=False)  # Filter non-deleted items
+    messages.success(request, "Asset Details Deleted Successfully..!!")
+    return render(request, 'asset/asset_list.html', {'vehicleTaxList': assetList})
