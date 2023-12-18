@@ -82,7 +82,7 @@ def AssetEdit(request, id):
         print(e)
     
     
-################# Vehicle Tax Update
+################# Asset Update
 def AssetUpdate(request):
     if request.method == "POST":
         assetName = request.POST.get('asset_name')
@@ -101,6 +101,7 @@ def AssetUpdate(request):
             asset_name=assetName,
             asset_types=assetTypes,
             created_by=request.user,
+            last_modified_by=request.user,
         )
 
         if assetTypes == 'Slowly_Finished_Product':
@@ -108,11 +109,6 @@ def AssetUpdate(request):
         else:
             AssetsDetailAdd.long_lasting_products = selectedProduct
         
-        print(AssetsDetailAdd.asset_name,
-              AssetsDetailAdd.asset_types,
-              AssetsDetailAdd.slowly_finished_product,
-              AssetsDetailAdd.long_lasting_products,
-              AssetsDetailAdd.created_by)
         AssetsDetailAdd.save()
 
         messages.success(request, "Asset Detail Updated Successfully..!!")
@@ -129,9 +125,8 @@ def AssetUpdate(request):
 
     return render(request, 'asset/asset_list.html', context)
 
-    
 
-################# Vehicle Tax delete
+################# Asset delete
 def Assetdelete(request, id):
     assetData = get_object_or_404(Assets, asset_id=id)
     assetData.is_deleted = True
@@ -139,4 +134,4 @@ def Assetdelete(request, id):
     assetData.save()
     assetList = Assets.objects.filter(is_deleted=False)  # Filter non-deleted items
     messages.success(request, "Asset Details Deleted Successfully..!!")
-    return render(request, 'asset/asset_list.html', {'vehicleTaxList': assetList})
+    return render(request, 'asset/asset_list.html', {'AssetsList': assetList})
