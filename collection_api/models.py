@@ -40,3 +40,17 @@ class SkipShop(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='SkipShop_created_by')
     last_modified_on = models.DateTimeField(auto_now=True)
     last_modified_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='SkipShop_last_modified_by')
+
+class Complaint(models.Model):
+    complaint_id = models.AutoField(primary_key=True)
+    complaint_date = models.DateField(null=True)
+    complaint_time = models.TimeField(null=True)
+    shopId = models.ForeignKey(ShopModel, on_delete=models.SET_NULL, null=True)
+    cashierId = models.ForeignKey(User, on_delete=models.SET_NULL, null=True,  related_name='Complaint_cashier_Id')
+    approve_yn = models.CharField(max_length=50)
+    remark = models.TextField(null=True)
+    approve_byId = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    created_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='Complaint_created_by')
+    last_modified_on = models.DateTimeField(auto_now=True)
+    last_modified_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='Complaint_last_modified_by')
