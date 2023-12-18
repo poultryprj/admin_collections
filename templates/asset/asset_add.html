@@ -2,9 +2,7 @@
 
 {% block content %}
 
-
 <div class="content container-fluid">
-
     <div class="page-header">
         <div class="row align-items-center">
             <div class="col">
@@ -23,7 +21,7 @@
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-body">
-                    <form action="{% url 'asset_add' %}" method="POST">
+                    <form action="{% url 'asset_add' %}" method="POST" onsubmit="return validateForm()">
                         {% csrf_token %}
                         <div class="row">
                             <div class="col-12">
@@ -41,10 +39,10 @@
                                 <label>Asset Types</label>
                                 <div class="input-group">
                                     <select class="form-control form-select" placeholder=""
-                                        name="asset_types" >
+                                            name="asset_types">
                                         <option value="" disabled selected>------- Select Asset Type -------</option>
                                         {% for asset in assetTypes %}
-                                        <option value="{{asset}}">{{ asset }}</option>
+                                            <option value="{{asset}}">{{ asset }}</option>
                                         {% endfor %}
                                     </select>
                                 </div>
@@ -55,10 +53,10 @@
                                 <label>Slowly Finished Product</label>
                                 <div class="input-group mb-3">
                                     <select class="form-control form-select" placeholder=""
-                                        name="slowly_finished_product" >
+                                            name="slowly_finished_product">
                                         <option value="" disabled selected>------- Select Slowly Finished Product Type -------</option>
                                         {% for asset in slowly_finished_product_types %}
-                                        <option value="{{asset}}">{{ asset }}</option>
+                                            <option value="{{asset}}">{{ asset }}</option>
                                         {% endfor %}
                                     </select>
                                 </div>
@@ -70,18 +68,24 @@
                                 <label>Long Lasting Product</label>
                                 <div class="input-group mb-3">
                                     <select class="form-control form-select" placeholder=""
-                                        name="long_lasting_products" >
+                                            name="long_lasting_products">
                                         <option value="" disabled selected>------- Select Long Lasting Product Type -------</option>
                                         {% for asset in long_lasting_products_types %}
-                                        <option value="{{asset}}">{{ asset }}</option>
+                                            <option value="{{asset}}">{{ asset }}</option>
                                         {% endfor %}
                                     </select>
                                 </div>
                             </div>
                             {% endif %}
 
-                            <div class="col-12"> 
+                            <div class="col-12">
                                 <button type="submit" class="btn btn-primary"> Add Details </button>
+                            </div>
+
+                            <div class="col-12 mt-3">
+                                <div class="alert alert-danger" id="error-message" role="alert" style="display: none;">
+                                    Please fill out all required fields.
+                                </div>
                             </div>
                         </div>
                     </form>
@@ -91,10 +95,24 @@
     </div>
 </div>
 
-</body>
-</html>
-
 <script>
+    function validateForm() {
+        const assetName = document.querySelector('input[name="asset_name"]').value.trim();
+        const assetTypes = document.querySelector('select[name="asset_types"]').value;
+        const slowlyFinishedProduct = document.querySelector('select[name="slowly_finished_product"]').value;
+        const longLastingProducts = document.querySelector('select[name="long_lasting_products"]').value;
+
+        if (!assetName || !assetTypes || (assetTypes === 'Slowly_Finished_Product' && !slowlyFinishedProduct) || (assetTypes === 'Long_Lasting_Products' && !longLastingProducts)) {
+            document.getElementById('error-message').style.display = 'block';
+            setTimeout(function () {
+                document.getElementById('error-message').style.display = 'none';
+            }, 4000); // 4 seconds timeout
+            return false;
+        }
+
+        return true;
+    }
+
     document.addEventListener("DOMContentLoaded", function () {
         // Add event listener for asset types selection change
         document.querySelector('select[name="asset_types"]').addEventListener('change', function () {
@@ -114,4 +132,5 @@
         });
     });
 </script>
+
 {% endblock content %}
