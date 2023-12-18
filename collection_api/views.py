@@ -271,7 +271,6 @@ def GetShopsUnderRoute(request, route_id):
 
         shops = ShopModel.objects.filter(shop_id__in=shop_ids)
        
-
         shops_data = []
         for shop in shops:
             shop_data = {
@@ -280,11 +279,16 @@ def GetShopsUnderRoute(request, route_id):
             }
             shops_data.append(shop_data)
 
+        total_shop_count = len(shops_data)
 
         response_data = {
             "message_text": "Success",
             "message_code": 1000,
-            "message_data": shops_data,
+            "message_data": {
+                'total_shop_count': total_shop_count,  # Including total shop count in the response
+                'shops': shops_data
+                
+            }
         }
 
         return Response(response_data, status=status.HTTP_200_OK)
