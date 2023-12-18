@@ -99,3 +99,60 @@ Certainly! Below is a `README.md` file that provides information about the provi
 ```
 
 This `README.md` provides a summary of your Django models, their relationships, and how to interact with your defined API endpoints using Postman. Adjust the example data and endpoints as needed based on your specific implementation.
+
+
+############################################ Skip Shops And Complaints #################
+
+Certainly! Here are the Postman examples for testing the provided APIs:
+
+### SkipShop APIs
+
+#### 1. **SkipShop Add API**
+- Endpoint: `http://your-api-domain.com/skip_shop_add/`
+- Method: `POST`
+- Body (JSON):
+    ```json
+    {
+        "skip_shop_date": "2023-12-18",
+        "skip_shop_time": "09:00:00",
+        "shopId": 123,
+        "cashierId": 456,
+        "approve_yn": true,
+        "remark": "Skipped shop for today",
+        "approve_byId": 789,
+        "created_on": "2023-12-18T09:00:00",
+        "created_by": "Admin"
+    }
+    ```
+  
+#### 2. **SkipShop View Data by Cashier ID**
+- Endpoint: `http://your-api-domain.com/skip_shop_view/?cashierId=123`
+- Method: `GET`
+
+### Complaint APIs
+
+#### 1. **Complaint Add API**
+- Endpoint: `http://your-api-domain.com/complaint_add/`
+- Method: `POST`
+- Body (JSON):
+    ```json
+    {
+        "complaint_date": "2023-12-18",
+        "complaint_time": "09:00:00",
+        "shopId": 123,
+        "cashierId": 456,
+        "approve_yn": true,
+        "remark": "Customer complaint",
+        "approve_byId": 789,
+        "created_on": "2023-12-18T09:00:00",
+        "created_by": "Admin"
+    }
+    ```
+
+#### 2. **Complaint List View by Cashier ID**
+- Endpoint: `http://your-api-domain.com/complaint_view/?cashierId=123`
+- Method: `GET`
+
+Replace `http://your-api-domain.com/` with your actual API domain. Also, ensure to replace the sample data with appropriate values that correspond to your system's structure.
+
+These examples demonstrate how to use Postman to send requests to your APIs. Modify the endpoint URLs, request methods, and data in the request bodies to match your API setup and test your API functionalities accordingly.

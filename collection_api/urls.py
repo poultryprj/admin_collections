@@ -24,9 +24,14 @@ urlpatterns = [
     path('collection_mode_add/',views.CollectionModeAdd, name='collection_mode_add'),
     path('collection_mode_get/<int:collection_id>/', views.CollectionModeGet, name='collection_mode_get'),
 
-################################################################################
+#################################### Skip Shop ############################################
      
     path('skip_shop_add/', views.SkipShopAdd, name="skip_shop_add"),
-    path('skip_shop_view/', views.SkipShopListView, name="skip_shop_view")
+    path('skip_shop_view/', views.SkipShopListView, name="skip_shop_view"),
+
+#################################### Complaint ############################################
+
+    path('complaint_add/', views.ComplaintAdd, name="complaint_add"),
+    path('complaint_view/', views.ComplaintListView, name="complaint_view")
     
 ]

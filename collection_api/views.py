@@ -4,8 +4,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from routes.models import RouteModel
 from shops1.models import ShopRoute
-from .models import Collection, ShopModel, CollectionMode, SkipShop
-from .serializers import CollectionSerializer, ShopModelSerializer, CollectionModeSerializer, SkipShopSerializer
+from .models import Collection, Complaint, ShopModel, CollectionMode, SkipShop
+from .serializers import CollectionSerializer, ComplaintSerializer, ShopModelSerializer, CollectionModeSerializer, SkipShopSerializer
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
@@ -377,3 +377,83 @@ def SkipShopListView(request):
                 "message_data": []
             }, status=status.HTTP_400_BAD_REQUEST)
 
+
+
+########################################### Complaint ########################################################
+########## Complaint Add ###########
+@api_view(['POST'])
+def ComplaintAdd(request):
+    if request.method == 'POST':
+        required_fields = ['complaint_date', 'complaint_time', 'shopId', 'cashierId', 'approve_yn', 'remark', 'approve_byId', 'created_on', 'created_by']
+        missing_fields = [field for field in required_fields if field not in request.data]
+
+        if missing_fields:
+            return Response({
+                "message_text": f"Missing fields: {', '.join(missing_fields)}",
+                "message_code": 998,
+                "message_data": [],
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            serializer = ComplaintSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                response_data = {
+                    "message_text": "Success",
+                    "message_code": 1000,
+                    "message_data": serializer.data
+                }
+                return Response(response_data, status=status.HTTP_201_CREATED)
+            else:
+                return Response({
+                    "message_text": "Validation error",
+                    "message_code": 997,
+                    "message_data": serializer.errors,
+                }, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({
+                "message_text": "An error occurred",
+                "message_code": 996,
+                "message_data": str(e),
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+############## Complaint List View by cashier Id ####################
+@api_view(['GET'])
+def ComplaintListView(request):
+    if request.method == 'GET':
+        cashier_id = request.GET.get('cashierId')
+        if cashier_id:
+            # Validate if cashierId is an integer
+            if not cashier_id.isdigit():
+                return Response({
+                    "message_text": "Invalid cashierId format. Must be an integer.",
+                    "message_code": 997,
+                    "message_data": []
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            # Check if the cashierId exists in the database
+            try:
+                cashier = User.objects.get(id=cashier_id)
+            except User.DoesNotExist:
+                return Response({
+                    "message_text": "CashierId does not exist",
+                    "message_code": 996,
+                    "message_data": []
+                }, status=status.HTTP_404_NOT_FOUND)
+
+            # Fetch skip shop data associated with the provided cashier ID
+            collections = Complaint.objects.filter(cashierId=cashier_id)
+            serializer = ComplaintSerializer(collections, many=True)
+            response_data = {
+                "message_text": "Success",
+                "message_code": 1000,
+                "message_data": serializer.data
+            }
+            return Response(response_data, status=status.HTTP_200_OK)
+        else:
+            return Response({
+                "message_text": "No cashierId provided",
+                "message_code": 998,
+                "message_data": []
+            }, status=status.HTTP_400_BAD_REQUEST)
