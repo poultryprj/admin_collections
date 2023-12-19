@@ -55,7 +55,7 @@ class Vendor(models.Model):
     vendor_type = models.CharField(max_length=150)
 
     def __str__(self):
-        return self.vendor_name
+        return str(self.vendor_id)
     
 ##############
 

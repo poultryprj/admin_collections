@@ -17,6 +17,9 @@ class Assets(models.Model):
     is_deleted = models.BooleanField(default=False)
     deleted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='Assets_deleted')
 
+    def __str__(self):
+        return str(self.asset_id)
+
 
 class AssetPurchase(models.Model):
     asset_purchase_id = models.AutoField(primary_key=True)
@@ -35,6 +38,8 @@ class AssetPurchase(models.Model):
     is_deleted = models.BooleanField(default=False)
     deleted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='AssetsPurchase_deleted')
 
+    def __str__(self):
+        return str(self.asset_purchase_id)
 
 class AssetDistribution(models.Model):
     asset_distribution_id = models.AutoField(primary_key=True)
@@ -52,6 +57,9 @@ class AssetDistribution(models.Model):
     is_deleted = models.BooleanField(default=False)
     deleted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='AssetsDistribution_deleted')
 
+    def __str__(self):
+        return str(self.asset_distribution_id)
+
 class AssetStock(models.Model):
     stock_id = models.AutoField(primary_key=True)
     asset_Id = models.ForeignKey(Assets, on_delete=models.SET_NULL, null=True)
@@ -63,3 +71,6 @@ class AssetStock(models.Model):
     last_modified_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='AssetsStocks_last_modified')
     is_deleted = models.BooleanField(default=False)
     deleted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='AssetsStocks_deleted')
+
+    def __str__(self):
+        return str(self.stock_id)
