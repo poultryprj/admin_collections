@@ -189,7 +189,7 @@ def AssetPurchaseAdd(request):
 
 ################# Asset List #################
 def AssetPurchaseList(request):
-    AssetPrchaseList = AssetPurchase.objects.filter(is_deleted=False)
+    AssetPrchaseList = AssetPurchase.objects.filter(is_deleted=False).order_by('-asset_purchase_id')
 
     context = {
         'AssetPrchaseList': AssetPrchaseList,
@@ -198,18 +198,30 @@ def AssetPurchaseList(request):
 
 
 ################# Asset Edit #################
+# views.py
+from django.utils import timezone
+
 def AssetPurchaseEdit(request, id):
     try:
+        assetData = Assets.objects.all()
+        vendorData = Vendor.objects.all()
         assetPurchaseData = get_object_or_404(AssetPurchase, asset_purchase_id=id)
 
+        # Extracting date and time from the purchase_on timestamp
+        purchase_date = assetPurchaseData.purchase_on.strftime('%Y-%m-%d')
+        purchase_time = assetPurchaseData.purchase_on.strftime('%H:%M')
 
         context = {
-
-            'assetPurchaseData' : assetPurchaseData,
+            'assetPurchaseData': assetPurchaseData,
+            'purchase_date': purchase_date,  # Sending pre-fetched date to the template
+            'purchase_time': purchase_time,  # Sending pre-fetched time to the template
+            'assetData': assetData,
+            'vendorData': vendorData
         }
         return render(request, "asset/asset_purchase_edit.html", context)
     except Exception as e:
         print(e)
+
     
     
 ################# Asset Update #################
@@ -217,19 +229,35 @@ def AssetPurchaseUpdate(request):
     assetData = Assets.objects.all()
     vendorData = Vendor.objects.all()
     if request.method == "POST":
-        assetName = request.POST.get('asset_name')
-        assetTypes = request.POST.get('asset_types')
+        assetNewid = request.POST.get('asset_id')
+        vendorNewid = request.POST.get('vendor_id') 
+        purchase_date = request.POST.get('purchase_date')
+        purchase_time = request.POST.get('purchase_time')
+        purchase_on = datetime.datetime.strptime(f"{purchase_date} {purchase_time}", "%Y-%m-%d %H:%M")
+        quantity = request.POST.get('quantity')
+        weight = request.POST.get('weight')
+        rate = request.POST.get('rate')
+        amount = request.POST.get('amount')
+        remarks = request.POST.get('remarks')
 
+        assetId = get_object_or_404(Assets, asset_id=assetNewid)
+        vendorId = get_object_or_404(Vendor, vendor_id=vendorNewid)
 
-        # Save the asset detail based on the selected product
-        AssetsDetailAdd = AssetPurchase(
-            asset_name=assetName,
-            asset_types=assetTypes,
+        # Create the AssetPurchase object
+        asset_purchase_add = AssetPurchase(
+            purchase_on=purchase_on,
+            vendor_Id=vendorId,
+            asset_Id=assetId,
+            quantity=quantity,
+            weight=weight,
+            rate=rate,
+            amount=amount,
+            remarks=remarks,
             created_by=request.user,
             last_modified_by=request.user,
         )
         
-        AssetsDetailAdd.save()
+        asset_purchase_add.save()
 
         messages.success(request, "Asset Purchase Detail Updated Successfully..!!")
         return redirect('asset_purchase_list')  # Redirect to a success page or the same page
@@ -250,6 +278,5 @@ def AssetPurchaseDelete(request, id):
     assetPurchaseData.is_deleted = True
     assetPurchaseData.deleted_by = request.user
     assetPurchaseData.save()
-    assetPurchaseList = Assets.objects.filter(is_deleted=False)  # Filter non-deleted items
     messages.success(request, "Asset Purchase Details Deleted Successfully..!!")
-    return render(request, 'asset/asset_purchase_list.html', {'assetPurchaseList': assetPurchaseList})
+    return redirect('asset_purchase_list')

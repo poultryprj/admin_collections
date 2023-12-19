@@ -14,7 +14,7 @@
             </div>
             <div class="col-auto text-right float-right ml-auto">
 
-                <a href="{% url 'asset_add' %}" class="btn btn-primary"><i class="fas fa-plus"></i></a>
+                <a href="{% url 'asset_purchase_add' %}" class="btn btn-primary"><i class="fas fa-plus"></i></a>
             </div>
         </div>
     </div>
@@ -41,18 +41,27 @@
                                                 <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
                                                     rowspan="1" colspan="1"
                                                     aria-label="Gender: activate to sort column ascending"
-                                                    style="width: 36.025px;">Asset Name</th>
+                                                    style="width: 36.025px;">Purchase on</th>
 
                                                 <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
                                                     rowspan="1" colspan="1"
                                                     aria-label="Gender: activate to sort column ascending"
-                                                    style="width: 36.025px;">Slowly Finished Product</th>
+                                                    style="width: 36.025px;">Vendor id</th>
 
                                                 <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
                                                     rowspan="1" colspan="1"
                                                     aria-label="Gender: activate to sort column ascending"
-                                                    style="width: 36.025px;">Long Lasting Products</th>
+                                                    style="width: 36.025px;">Asset Id</th>
 
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Gender: activate to sort column ascending"
+                                                    style="width: 36.025px;">Quantity</th>
+
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Gender: activate to sort column ascending"
+                                                    style="width: 36.025px;">Weight</th>
 
                                                 <th class="text-right sorting" tabindex="0"
                                                     aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
@@ -66,9 +75,11 @@
 
                                             <tr role="row" class="odd">
                                                 <td class="sorting_1">{{forloop.counter}}</td>   
-                                                <td>{{asset.asset_name}}</td>                                             
-                                                <td>{{asset.slowly_finished_product}}</td>
-                                                <td>{{asset.long_lasting_products}}</td>
+                                                <td>{{asset.purchase_on}}</td>                                             
+                                                <td>{{asset.vendor_Id}}</td>
+                                                <td>{{asset.asset_Id}}</td>
+                                                <td>{{asset.quantity}}</td>
+                                                <td>{{asset.weight}}</td>
                                             
                                                 <td class="text-right">
                                                     <div class="actions">
