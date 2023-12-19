@@ -272,10 +272,12 @@ def GetShopsUnderRoute(request, route_id):
         shops = ShopModel.objects.filter(shop_id__in=shop_ids)
        
         shops_data = []
+        out_standing_amount = 100000                                 ### temporary added
         for shop in shops:
             shop_data = {
                 'shopcode': shop.shop_code,
                 'shopname': shop.shop_name,
+                'out_standing_amount': out_standing_amount           ###temporary added
             }
             shops_data.append(shop_data)
 
