@@ -50,13 +50,14 @@
                                     <select class="form-control form-select" name="insurance_company_name" id="insurance_company" required>
                                         <option value="" disabled>------- Select Insurance Company -------</option>
                                         {% for company in insuranceCompanyData %}
-                                            <option value="{{ company.insurance_company_name }}" {% if vehicleInsuranceData.insurance_company_name == company.insurance_company_name %} selected {% endif %}>
+                                            <option value="{{ company.insurance_company_name }}" {% if vehicleInsuranceData.insurance_company.insurance_id == company.insurance_id %} selected {% endif %}>
                                                 {{ company.insurance_company_name }}
                                             </option>
                                         {% endfor %}
                                     </select>
                                 </div>
                             </div>
+                            
                             
                             
 

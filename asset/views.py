@@ -56,7 +56,7 @@ def AssetAdd(request):
 
 ################# Asset List #################
 def AssetList(request):
-    AssetsList = Assets.objects.filter(is_deleted=False)
+    AssetsList = Assets.objects.filter(is_deleted=False).order_by('-asset_id')
 
     context = {
         'AssetsList': AssetsList

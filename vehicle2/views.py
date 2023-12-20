@@ -28,7 +28,7 @@ def vehicle(request):
 ############## Vehicle List            
 def VehicleDetailList(request):
 
-    vehicleDetailList = Vehicle.objects.all()
+    vehicleDetailList = Vehicle.objects.all().order_by('-vehicle_id')
     print(vehicleDetailList)
 
     context = {
@@ -217,7 +217,7 @@ def VehicleFitnessAdd(request):
 ############## Vehicle Fitness View List
 def VehicleFitnessList(request):
     # Filter out deleted fitness details
-    fitnessDetailList = Fitness.objects.filter(is_deleted=False)
+    fitnessDetailList = Fitness.objects.filter(is_deleted=False).order_by('-fitness_id')
 
     context = {
         'fitnessDetailList': fitnessDetailList
@@ -286,14 +286,14 @@ def ShowVehicleDetail(request, id):
 
         insuranceCompanyData = InsuranceCompany.objects.all()
         
-        fitnessDetailList = Fitness.objects.filter(is_deleted=False)
+        fitnessDetailList = Fitness.objects.filter(is_deleted=False).order_by('-fitness_id')
         vehicleFitnessData = fitnessDetailList.filter(vehicle_id=vehicleDetailEdit).first()
 
-        insuranceDetailList = VehicleInsurance.objects.filter(vehicle_id=vehicleDetailEdit, is_deleted=False)
+        insuranceDetailList = VehicleInsurance.objects.filter(vehicle_id=vehicleDetailEdit, is_deleted=False).order_by('-insurance_id')
 
-        permitDetailList = VehiclePermit.objects.filter(vehicle_id=vehicleDetailEdit, is_deleted=False)
-        pollutionDetailList = VehiclePollution.objects.filter(vehicle_id=vehicleDetailEdit, is_deleted=False)
-        vehicleTaxDetailList = VehicleTax.objects.filter(vehicle_id=vehicleDetailEdit, is_deleted=False)
+        permitDetailList = VehiclePermit.objects.filter(vehicle_id=vehicleDetailEdit, is_deleted=False).order_by('-permit_id')
+        pollutionDetailList = VehiclePollution.objects.filter(vehicle_id=vehicleDetailEdit, is_deleted=False).order_by('-pollution_id')
+        vehicleTaxDetailList = VehicleTax.objects.filter(vehicle_id=vehicleDetailEdit, is_deleted=False).order_by('-tax_id')
         
         context = {
             "vehicleDetailEdit": vehicleDetailEdit,
@@ -407,7 +407,7 @@ def VehicleInsuranceCompanyAddList(request):
 
 ########### Vehicle Insurance List View
 def VehicleInsuranceList(request):
-    vehicleInsuranceList = VehicleInsurance.objects.filter(is_deleted=False)
+    vehicleInsuranceList = VehicleInsurance.objects.filter(is_deleted=False).order_by('-insurance_id')
 
     context = {
         'vehicleInsuranceList': vehicleInsuranceList
@@ -510,7 +510,7 @@ def VehiclePermitAdd(request):
 
 ################# Vehicle Permit ADD
 def VehiclePermitList(request):
-    vehiclePermitList = VehiclePermit.objects.filter(is_deleted=False)
+    vehiclePermitList = VehiclePermit.objects.filter(is_deleted=False).order_by('-permit_id')
 
     context = {
         'vehiclePermitList': vehiclePermitList
@@ -604,7 +604,7 @@ def VehiclePollutionAdd(request):
 
 ################# Vehicle Pollution list
 def VehiclePollutionList(request):
-    vehiclePollutionList = VehiclePollution.objects.filter(is_deleted=False)
+    vehiclePollutionList = VehiclePollution.objects.filter(is_deleted=False).order_by('-pollution_id')
 
     context = {
         'vehiclePollutionList': vehiclePollutionList
@@ -704,7 +704,7 @@ def VehicleTaxAdd(request):
 
 ################# Vehicle Tax List
 def VehicleTaxList(request):
-    vehicleTaxList = VehicleTax.objects.filter(is_deleted=False)
+    vehicleTaxList = VehicleTax.objects.filter(is_deleted=False).order_by('-tax_id')
 
     context = {
         'vehicleTaxList': vehicleTaxList
