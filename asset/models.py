@@ -2,6 +2,7 @@ from django.db import models
 from user.models import UserRole
 from django.contrib.auth.models import User
 from vehicle2.models import Vendor
+from django.contrib.auth.models import Group
 
 # Create your models here.
 class Assets(models.Model):
@@ -45,7 +46,7 @@ class AssetDistribution(models.Model):
     asset_distribution_id = models.AutoField(primary_key=True)
     distribution_date_and_time = models.DateTimeField()
     assets_cunsumer_type = models.CharField(max_length=255)
-    user_roll_id = models.ForeignKey(UserRole, on_delete=models.SET_NULL, null=True)   #FK UserRole
+    user_group = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True)   #FK UserRole
     distribution_to_id = models.IntegerField()
     quantity = models.IntegerField()
     weight = models.DecimalField(max_digits=30,decimal_places=2)

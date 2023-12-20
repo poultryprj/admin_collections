@@ -2,8 +2,10 @@ import datetime
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
 from django.shortcuts import render, redirect
+from user.models import UserRole
 from vehicle2.models import Vendor
 from .models import AssetPurchase, Assets, Vendor 
+from datetime import datetime
 
 ##################################### Assets Add ###################################################
 ################# Assets Add #################
@@ -233,7 +235,7 @@ def AssetPurchaseUpdate(request):
         vendorNewid = request.POST.get('vendor_id') 
         purchase_date = request.POST.get('purchase_date')
         purchase_time = request.POST.get('purchase_time')
-        purchase_on = datetime.datetime.strptime(f"{purchase_date} {purchase_time}", "%Y-%m-%d %H:%M")
+        purchase_on = datetime.strptime(f"{purchase_date} {purchase_time}", "%Y-%m-%d %H:%M")
         quantity = request.POST.get('quantity')
         weight = request.POST.get('weight')
         rate = request.POST.get('rate')
@@ -280,3 +282,134 @@ def AssetPurchaseDelete(request, id):
     assetPurchaseData.save()
     messages.success(request, "Asset Purchase Details Deleted Successfully..!!")
     return redirect('asset_purchase_list')
+
+
+
+from .models import AssetDistribution
+from django.shortcuts import get_object_or_404
+from django.contrib import messages
+from django.shortcuts import redirect, render
+from datetime import datetime
+
+################# AssetDistribution Add #################
+def AssetDistributionAdd(request):
+    userRoleData = UserRole.objects.all()
+
+    if request.method == "POST":
+        distribution_date = request.POST.get('distribution_date')
+        distribution_time = request.POST.get('distribution_time')
+        distribution_date_time = datetime.strptime(f"{distribution_date} {distribution_time}", "%Y-%m-%d %H:%M")
+        consumer_type = request.POST.get('consumer_type')
+        user_roll_id = request.POST.get('user_roll_id')
+        distribution_to_id = request.POST.get('distribution_to_id')
+        quantity = request.POST.get('quantity')
+        weight = request.POST.get('weight')
+        remarks = request.POST.get('remarks')
+
+        userRoleId = get_object_or_404(UserRole, id=user_roll_id)
+
+        # Create the AssetDistribution object
+        asset_distribution_add = AssetDistribution(
+            distribution_date_and_time=distribution_date_time,
+            assets_cunsumer_type=consumer_type,
+            user_roll_id=userRoleId,
+            distribution_to_id=distribution_to_id,
+            quantity=quantity,
+            weight=weight,
+            remarks=remarks,
+            created_by=request.user,
+            last_modified_by=request.user,
+        )
+
+        asset_distribution_add.save()
+
+        messages.success(request, "Asset Distribution Details Added Successfully..!!")
+        return redirect('asset_distribution_list')
+
+    context = {
+        'userRoleData': userRoleData,
+    }
+
+    return render(request, 'asset/asset_distribution_add.html', context)
+
+
+################# AssetDistribution List #################
+def AssetDistributionList(request):
+    AssetDistributionList = AssetDistribution.objects.filter(is_deleted=False).order_by('-asset_distribution_id')
+
+    context = {
+        'AssetDistributionList': AssetDistributionList,
+    }
+    return render(request, 'asset/asset_distribution_list.html', context)
+
+
+################# AssetDistribution Edit #################
+def AssetDistributionEdit(request, id):
+    try:
+        userRoleData = UserRole.objects.all()
+        assetDistributionData = get_object_or_404(AssetDistribution, asset_distribution_id=id)
+
+        # Extracting date and time from the distribution_date_and_time timestamp
+        distribution_date = assetDistributionData.distribution_date_and_time.strftime('%Y-%m-%d')
+        distribution_time = assetDistributionData.distribution_date_and_time.strftime('%H:%M')
+
+        context = {
+            'assetDistributionData': assetDistributionData,
+            'distribution_date': distribution_date,  # Sending pre-fetched date to the template
+            'distribution_time': distribution_time,  # Sending pre-fetched time to the template
+            'userRoleData': userRoleData,
+        }
+        return render(request, "asset/asset_distribution_edit.html", context)
+    except Exception as e:
+        print(e)
+
+
+################# AssetDistribution Update #################
+def AssetDistributionUpdate(request):
+    userRoleData = UserRole.objects.all()
+
+    if request.method == "POST":
+        distribution_date = request.POST.get('distribution_date')
+        distribution_time = request.POST.get('distribution_time')
+        distribution_date_time = datetime.strptime(f"{distribution_date} {distribution_time}", "%Y-%m-%d %H:%M")
+        consumer_type = request.POST.get('consumer_type')
+        user_roll_id = request.POST.get('user_roll_id')
+        distribution_to_id = request.POST.get('distribution_to_id')
+        quantity = request.POST.get('quantity')
+        weight = request.POST.get('weight')
+        remarks = request.POST.get('remarks')
+
+        userRoleId = get_object_or_404(UserRole, id=user_roll_id)
+
+        assetDistributionData = get_object_or_404(AssetDistribution, asset_distribution_id=request.POST.get('asset_distribution_id'))
+
+        # Update the AssetDistribution object
+        assetDistributionData.distribution_date_and_time = distribution_date_time
+        assetDistributionData.assets_cunsumer_type = consumer_type
+        assetDistributionData.user_roll_id = userRoleId
+        assetDistributionData.distribution_to_id = distribution_to_id
+        assetDistributionData.quantity = quantity
+        assetDistributionData.weight = weight
+        assetDistributionData.remarks = remarks
+        assetDistributionData.last_modified_by = request.user
+
+        assetDistributionData.save()
+
+        messages.success(request, "Asset Distribution Detail Updated Successfully..!!")
+        return redirect('asset_distribution_list')
+
+    context = {
+        'userRoleData': userRoleData,
+    }
+
+    return render(request, 'asset/asset_distribution_list.html', context)
+
+
+################# AssetDistribution Delete #################
+def AssetDistributionDelete(request, id):
+    assetDistributionData = get_object_or_404(AssetDistribution, asset_distribution_id=id)
+    assetDistributionData.is_deleted = True
+    assetDistributionData.deleted_by = request.user
+    assetDistributionData.save()
+    messages.success(request, "Asset Distribution Details Deleted Successfully..!!")
+    return redirect('asset_distribution_list')
