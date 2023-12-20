@@ -4,8 +4,10 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from user.models import UserRole
 from vehicle2.models import Vendor
-from .models import AssetPurchase, Assets, Vendor 
+from .models import AssetPurchase, Assets, Vendor, AssetDistribution
 from datetime import datetime
+from django.contrib.auth.models import Group
+from django.utils import timezone
 
 ##################################### Assets Add ###################################################
 ################# Assets Add #################
@@ -201,7 +203,6 @@ def AssetPurchaseList(request):
 
 ################# Asset Edit #################
 # views.py
-from django.utils import timezone
 
 def AssetPurchaseEdit(request, id):
     try:
@@ -283,36 +284,28 @@ def AssetPurchaseDelete(request, id):
     messages.success(request, "Asset Purchase Details Deleted Successfully..!!")
     return redirect('asset_purchase_list')
 
-
-
-from .models import AssetDistribution
-from django.shortcuts import get_object_or_404
-from django.contrib import messages
-from django.shortcuts import redirect, render
-from datetime import datetime
-
 ################# AssetDistribution Add #################
 def AssetDistributionAdd(request):
-    userRoleData = UserRole.objects.all()
+    groups = Group.objects.all()
 
     if request.method == "POST":
         distribution_date = request.POST.get('distribution_date')
         distribution_time = request.POST.get('distribution_time')
         distribution_date_time = datetime.strptime(f"{distribution_date} {distribution_time}", "%Y-%m-%d %H:%M")
-        consumer_type = request.POST.get('consumer_type')
-        user_roll_id = request.POST.get('user_roll_id')
+        assets_consumer_type = request.POST.get('assets_consumer_type')
+        group_id = request.POST.get('group_id')
         distribution_to_id = request.POST.get('distribution_to_id')
         quantity = request.POST.get('quantity')
         weight = request.POST.get('weight')
         remarks = request.POST.get('remarks')
 
-        userRoleId = get_object_or_404(UserRole, id=user_roll_id)
-
+        group = get_object_or_404(Group, id=group_id)
+        
         # Create the AssetDistribution object
         asset_distribution_add = AssetDistribution(
             distribution_date_and_time=distribution_date_time,
-            assets_cunsumer_type=consumer_type,
-            user_roll_id=userRoleId,
+            assets_consumer_type=assets_consumer_type,
+            user_group = group,
             distribution_to_id=distribution_to_id,
             quantity=quantity,
             weight=weight,
@@ -321,13 +314,22 @@ def AssetDistributionAdd(request):
             last_modified_by=request.user,
         )
 
+        print(asset_distribution_add.distribution_date_and_time,
+           asset_distribution_add.assets_consumer_type,
+           asset_distribution_add.user_group,
+           asset_distribution_add.distribution_to_id,
+           asset_distribution_add.quantity,
+           asset_distribution_add.weight,
+           asset_distribution_add.remarks,
+           asset_distribution_add.created_by,
+           asset_distribution_add.last_modified_by)
         asset_distribution_add.save()
 
         messages.success(request, "Asset Distribution Details Added Successfully..!!")
         return redirect('asset_distribution_list')
 
     context = {
-        'userRoleData': userRoleData,
+        'groups': groups,
     }
 
     return render(request, 'asset/asset_distribution_add.html', context)
@@ -343,10 +345,11 @@ def AssetDistributionList(request):
     return render(request, 'asset/asset_distribution_list.html', context)
 
 
+
 ################# AssetDistribution Edit #################
 def AssetDistributionEdit(request, id):
+    groups = Group.objects.all()
     try:
-        userRoleData = UserRole.objects.all()
         assetDistributionData = get_object_or_404(AssetDistribution, asset_distribution_id=id)
 
         # Extracting date and time from the distribution_date_and_time timestamp
@@ -357,36 +360,36 @@ def AssetDistributionEdit(request, id):
             'assetDistributionData': assetDistributionData,
             'distribution_date': distribution_date,  # Sending pre-fetched date to the template
             'distribution_time': distribution_time,  # Sending pre-fetched time to the template
-            'userRoleData': userRoleData,
+            'groups': groups,
         }
         return render(request, "asset/asset_distribution_edit.html", context)
     except Exception as e:
         print(e)
 
-
 ################# AssetDistribution Update #################
 def AssetDistributionUpdate(request):
-    userRoleData = UserRole.objects.all()
-
+    groups = Group.objects.all()
     if request.method == "POST":
         distribution_date = request.POST.get('distribution_date')
         distribution_time = request.POST.get('distribution_time')
         distribution_date_time = datetime.strptime(f"{distribution_date} {distribution_time}", "%Y-%m-%d %H:%M")
-        consumer_type = request.POST.get('consumer_type')
-        user_roll_id = request.POST.get('user_roll_id')
+        consumer_type = request.POST.get('assets_consumer_type')
+        group_id = request.POST.get('group_id')  # Assuming this field exists in your form
         distribution_to_id = request.POST.get('distribution_to_id')
         quantity = request.POST.get('quantity')
         weight = request.POST.get('weight')
         remarks = request.POST.get('remarks')
 
-        userRoleId = get_object_or_404(UserRole, id=user_roll_id)
+        user_group = get_object_or_404(Group, id=group_id)
 
         assetDistributionData = get_object_or_404(AssetDistribution, asset_distribution_id=request.POST.get('asset_distribution_id'))
+        assetDistributionData.distribution_date_and_time = distribution_date_time
+        assetDistributionData.assets_consumer_type = consumer_type if consumer_type else ''  # Assign a default value if consumer_type is None or empty
 
         # Update the AssetDistribution object
         assetDistributionData.distribution_date_and_time = distribution_date_time
-        assetDistributionData.assets_cunsumer_type = consumer_type
-        assetDistributionData.user_roll_id = userRoleId
+        assetDistributionData.assets_consumer_type = consumer_type
+        assetDistributionData.user_group = user_group  # Assigning the user group
         assetDistributionData.distribution_to_id = distribution_to_id
         assetDistributionData.quantity = quantity
         assetDistributionData.weight = weight
@@ -399,10 +402,11 @@ def AssetDistributionUpdate(request):
         return redirect('asset_distribution_list')
 
     context = {
-        'userRoleData': userRoleData,
+        'groups': groups,
     }
 
     return render(request, 'asset/asset_distribution_list.html', context)
+
 
 
 ################# AssetDistribution Delete #################

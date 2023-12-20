@@ -44,7 +44,7 @@ class AssetPurchase(models.Model):
 class AssetDistribution(models.Model):
     asset_distribution_id = models.AutoField(primary_key=True)
     distribution_date_and_time = models.DateTimeField()
-    assets_cunsumer_type = models.CharField(max_length=255)
+    assets_consumer_type = models.CharField(max_length=255)
     user_group = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True)   #FK Group
     distribution_to_id = models.IntegerField()
     quantity = models.IntegerField()
