@@ -152,7 +152,7 @@ def AssetPurchaseAdd(request):
         vendorNewid = request.POST.get('vendor_id') 
         purchase_date = request.POST.get('purchase_date')
         purchase_time = request.POST.get('purchase_time')
-        purchase_on = datetime.datetime.strptime(f"{purchase_date} {purchase_time}", "%Y-%m-%d %H:%M")
+        purchase_on = datetime.strptime(f"{purchase_date} {purchase_time}", "%Y-%m-%d %H:%M")
         quantity = request.POST.get('quantity')
         weight = request.POST.get('weight')
         rate = request.POST.get('rate')
