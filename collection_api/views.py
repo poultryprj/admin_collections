@@ -10,7 +10,9 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
 from django.utils import timezone
-
+from django.db.models import Max
+from rest_framework.response import Response
+from rest_framework import status
 
 @api_view(['GET'])
 def ShopModelListView(request):
@@ -258,9 +260,7 @@ def UserLogin(request):
     else:
         return Response({'message': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
     
-from django.db.models import Max
-from rest_framework.response import Response
-from rest_framework import status
+
 @api_view(['GET'])
 def GetShopsUnderRoute(request, route_id):
     try:
