@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from routes.models import RouteModel
-from shops1.models import ShopRoute
+from shops1.models import ShopBalance, ShopRoute
 from .models import Collection, Complaint, ShopModel, CollectionMode, SkipShop
 from .serializers import CollectionSerializer, ComplaintSerializer, ShopModelSerializer, CollectionModeSerializer, SkipShopSerializer
 from django.contrib.auth import authenticate
@@ -188,9 +188,13 @@ def RoutesList(request):
         routes = RouteModel.objects.all()
         routes_data = []
         for route in routes:
+            # Get the count of shops for each route
+            shop_count = ShopRoute.objects.filter(route_id=route.route_id).count()
+            
             route_data = {
                 'route_title': route.route_id,
                 'route_info': route.route_name,
+                'shop_count': shop_count,  # Include the shop count in the route data
             }
             routes_data.append(route_data)
 
@@ -203,10 +207,11 @@ def RoutesList(request):
     
     else:
         return Response({
-                    "message_text": "Failure",
-                    "message_code": 999,
-                    "message_data": [],
-                }, status=status.HTTP_400_BAD_REQUEST)
+            "message_text": "Failure",
+            "message_code": 999,
+            "message_data": [],
+        }, status=status.HTTP_400_BAD_REQUEST)
+
     
 @api_view(['POST'])
 def UserLogin(request):
@@ -252,7 +257,10 @@ def UserLogin(request):
                 }, status=status.HTTP_401_UNAUTHORIZED)
     else:
         return Response({'message': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from django.db.models import Max
 
 @api_view(['GET'])
 def GetShopsUnderRoute(request, route_id):
@@ -264,22 +272,36 @@ def GetShopsUnderRoute(request, route_id):
                 "message_text": "Failure",
                 "message_code": 999,
                 "message_data": []
-            }, status=404)
+            }, status=status.HTTP_404_NOT_FOUND)
         
-        shops_under_route = shop_routes.select_related('shop_id')
-        shop_ids = [shop.shop_id_id for shop in shops_under_route]
+        # Get the shop IDs under the given route
+        shop_ids = shop_routes.values_list('shop_id_id', flat=True)
 
-        shops = ShopModel.objects.filter(shop_id__in=shop_ids)
-       
+        # Fetching the most recent balance for each shop
+        latest_balances = ShopBalance.objects.filter(
+            shopId_id__in=shop_ids,
+            is_deleted=False
+        ).values('shopId_id').annotate(recent_balance_date=Max('balance_date')).order_by()
+
         shops_data = []
-        out_standing_amount = 100000                                 ### temporary added
-        for shop in shops:
-            shop_data = {
-                'shopcode': shop.shop_code,
-                'shopname': shop.shop_name,
-                'out_standing_amount': out_standing_amount           ###temporary added
-            }
-            shops_data.append(shop_data)
+        for balance in latest_balances:
+            shop_id = balance['shopId_id']
+            recent_balance_date = balance['recent_balance_date']
+            
+            # Fetch the recent balance record for the shop
+            recent_balance = ShopBalance.objects.filter(
+                shopId_id=shop_id,
+                balance_date=recent_balance_date,
+                is_deleted=False
+            ).first()
+
+            if recent_balance:
+                shop_data = {
+                    'shopcode': recent_balance.shopId.shop_code,
+                    'shopname': recent_balance.shopId.shop_name,
+                    'out_standing_amount': recent_balance.balance
+                }
+                shops_data.append(shop_data)
 
         total_shop_count = len(shops_data)
 
@@ -287,9 +309,8 @@ def GetShopsUnderRoute(request, route_id):
             "message_text": "Success",
             "message_code": 1000,
             "message_data": {
-                'total_shop_count': total_shop_count,  # Including total shop count in the response
+                'total_shop_count': total_shop_count,
                 'shops': shops_data
-                
             }
         }
 
@@ -301,7 +322,9 @@ def GetShopsUnderRoute(request, route_id):
             "message_code": 999,
             "message_data": {},
         }
-        return Response(response_data, status=500)
+        return Response(response_data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 
 
 ########################################### SkipShop ########################################################
