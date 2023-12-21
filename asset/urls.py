@@ -23,5 +23,11 @@ urlpatterns = [
     path('asset_distribution_update/', views.AssetDistributionUpdate, name='asset_distribution_update'),
     path('asset_distribution_delete/<int:id>/', views.AssetDistributionDelete, name='asset_distribution_delete'),
 
+################################################ ASSET DISTRIBUTIONS ################################################
+    path('asset_stock_add/', views.AssetStockAdd, name='asset_stock_add'),
+    path('asset_stock_list/', views.AssetStockList, name='asset_stock_list'),
+    path('asset_stock_edit/<int:id>/', views.AssetStockEdit, name='asset_stock_edit'),
+    path('asset_stock_update/', views.AssetStockUpdate, name='asset_stock_update'),
+    path('asset_stock_delete/<int:id>/', views.AssetStockDelete, name='asset_stock_delete'),
 
 ]

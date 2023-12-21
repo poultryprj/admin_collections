@@ -426,102 +426,53 @@ from django.contrib import messages
 from .models import AssetStock
 from datetime import datetime
 
+def create_asset_stock(request):
+    if request.method == 'POST':
+        asset_id = request.POST.get('asset_id')
+        quantity = request.POST.get('asset_stock_quantity')
+        weight = request.POST.get('asset_stock_weight')
+        created_by = request.user  # Assuming the logged-in user is creating this asset stock
 
-################# AssetDistribution Add #################
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from .models import AssetStock, Assets
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from .models import AssetStock, Assets
-
-def AssetStockAdd(request):
-    assetData = Assets.objects.all()
-
-    if request.method == "POST":
-        assetId = request.POST.get('asset_id')
-        assetStockQuantity = request.POST.get('asset_stock_quantity')
-        assetStockWeight = request.POST.get('asset_stock_weight')
-
-        assetsData = get_object_or_404(Assets, asset_id=assetId)
-        
-        # Create the AssetStock object by assigning the Assets instance to asset_Id
-        assetStock_Add = AssetStock(
-            asset_Id=assetsData,
-            asset_stock_quantity=assetStockQuantity,
-            asset_stock_weight=assetStockWeight,
-            created_by=request.user,
+        # Create AssetStock instance
+        asset_stock = AssetStock.objects.create(
+            asset_Id_id=asset_id,
+            asset_stock_quantity=quantity,
+            asset_stock_weight=weight,
+            created_by=created_by
         )
 
-        print(assetStock_Add.asset_Id,
-              assetStock_Add.asset_stock_quantity,
-              assetStock_Add.asset_stock_weight,
-              assetStock_Add.created_by,)
-        
+        messages.success(request, "Asset Stock Details Added Successfully..!!")
+        return redirect('asset_stock_detail', stock_id=asset_stock.stock_id)
 
-        # Save the created AssetStock object
-        assetStock_Add.save()
+    return render(request, 'create_asset_stock.html')
 
-        messages.success(request, "Asset stock Details Added Successfully..!!")
-        return redirect('asset_stock_list')
+def asset_stock_detail(request, stock_id):
+    asset_stock = get_object_or_404(AssetStock, stock_id=stock_id)
+    return render(request, 'asset_stock_detail.html', {'asset_stock': asset_stock})
 
-    context = {
-        'assetData': assetData,
-    }
+def update_asset_stock(request, stock_id):
+    asset_stock = get_object_or_404(AssetStock, stock_id=stock_id)
 
-    return render(request, 'asset/asset_stock_add.html', context)
-
-####################
-def AssetStockList(request):
-    asset_stock_list = AssetStock.objects.filter(is_deleted=False).order_by('-stock_id')
-    context = {
-        "asset_stock_list": asset_stock_list,
-    }
-    return render(request, 'asset/asset_stock_list.html', context)
-
-
-####################
-
-def AssetStockEdit(request, id):
-    assetData = Assets.objects.all()
-    try:
-        assetStockData = get_object_or_404(AssetStock, stock_id=id)
-
-        context = {
-            'assetStockData': assetStockData,
-            'assetData': assetData,
-        }
-        return render(request, "asset/asset_stock_edit.html", context)
-    except Exception as e:
-        print(e)
-
-###################
-def AssetStockUpdate(request):
-    if request.method == "POST":
-        stock_id = request.POST.get('stock_id')
-        asset_id = request.POST.get('asset_id')
-        asset_stock_quantity = request.POST.get('asset_stock_quantity')
-        asset_stock_weight = request.POST.get('asset_stock_weight')
-
-        asset_stock = get_object_or_404(AssetStock, stock_id=stock_id)
-        asset_stock.asset_Id = get_object_or_404(Assets, asset_id=asset_id)
-        asset_stock.asset_stock_quantity = asset_stock_quantity
-        asset_stock.asset_stock_weight = asset_stock_weight
-        asset_stock.last_modified_by = request.user
-
+    if request.method == 'POST':
+        asset_stock.asset_stock_quantity = request.POST.get('asset_stock_quantity')
+        asset_stock.asset_stock_weight = request.POST.get('asset_stock_weight')
+        asset_stock.last_modified_by = request.user  # Assuming the logged-in user is updating this asset stock
         asset_stock.save()
 
-        messages.success(request, "Asset stock Details Updated Successfully..!!")
+        messages.success(request, "Asset Stock Detail Updated Successfully..!!")
+        return redirect('asset_stock_detail', stock_id=asset_stock.stock_id)
+
+    return render(request, 'update_asset_stock.html', {'asset_stock': asset_stock})
+
+def delete_asset_stock(request, stock_id):
+    asset_stock = get_object_or_404(AssetStock, stock_id=stock_id)
+
+    if request.method == 'POST':
+        asset_stock.is_deleted = True
+        asset_stock.deleted_by = request.user  # Assuming the logged-in user is deleting this asset stock
+        asset_stock.save()
+
+        messages.success(request, "Asset Stock Details Deleted Successfully..!!")
         return redirect('asset_stock_list')
 
-    return render(request, 'asset/asset_stock_list.html')
-
-
-################# AssetDistribution Delete #################
-def AssetStockDelete(request, id):
-    assetStockData = get_object_or_404(AssetStock, stock_id=id)
-    assetStockData.is_deleted = True
-    assetStockData.deleted_by = request.user
-    assetStockData.save()
-    messages.success(request, "Asset Stock Details Deleted Successfully..!!")
-    return redirect('asset_stock_list')
+    return render(request, 'confirm_delete_asset_stock.html', {'asset_stock': asset_stock})
