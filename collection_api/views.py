@@ -257,57 +257,67 @@ def UserLogin(request):
                 }, status=status.HTTP_401_UNAUTHORIZED)
     else:
         return Response({'message': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-from rest_framework.decorators import api_view
+    
+from django.db.models import Max
 from rest_framework.response import Response
 from rest_framework import status
-from django.db.models import Max
-
 @api_view(['GET'])
 def GetShopsUnderRoute(request, route_id):
     try:
         shop_routes = ShopRoute.objects.filter(route_id=route_id)
-        
+
         if not shop_routes.exists():
             return Response({
-                "message_text": "Failure",
-                "message_code": 999,
+                "message_text": "No shops found for this route",
+                "message_code": 404,
                 "message_data": []
             }, status=status.HTTP_404_NOT_FOUND)
-        
+
         # Get the shop IDs under the given route
         shop_ids = shop_routes.values_list('shop_id_id', flat=True)
 
-        # Fetching the most recent balance for each shop
+        # Fetch all shops under the given route
+        shops = ShopModel.objects.filter(shop_id__in=shop_ids)
+
+        # Fetch latest balances for shops under the route
         latest_balances = ShopBalance.objects.filter(
             shopId_id__in=shop_ids,
             is_deleted=False
-        ).values('shopId_id').annotate(recent_balance_date=Max('balance_date')).order_by()
+        ).values('shopId_id').annotate(recent_balance_date=Max('balance_date'))
+
+        # Create a dictionary to store the latest balance for each shop
+        shop_balances = {
+            balance['shopId_id']: balance['recent_balance_date']
+            for balance in latest_balances
+        }
 
         shops_data = []
-        for balance in latest_balances:
-            shop_id = balance['shopId_id']
-            recent_balance_date = balance['recent_balance_date']
-            
-            # Fetch the recent balance record for the shop
-            recent_balance = ShopBalance.objects.filter(
-                shopId_id=shop_id,
-                balance_date=recent_balance_date,
-                is_deleted=False
-            ).first()
+        for shop in shops:
+            shop_data = {
+                'shopcode': shop.shop_code,
+                'shopname': shop.shop_name,
+                'out_standing_amount': 0  # Default to 0 for all shops
+            }
 
-            if recent_balance:
-                shop_data = {
-                    'shopcode': recent_balance.shopId.shop_code,
-                    'shopname': recent_balance.shopId.shop_name,
-                    'out_standing_amount': recent_balance.balance
-                }
-                shops_data.append(shop_data)
+            # Check if shop has a recent balance, update outstanding amount if available
+            recent_balance_date = shop_balances.get(shop.shop_id)
+            if recent_balance_date:
+                recent_balance = ShopBalance.objects.filter(
+                    shopId_id=shop.shop_id,
+                    balance_date=recent_balance_date,
+                    is_deleted=False
+                ).first()
+
+                if recent_balance:
+                    shop_data['out_standing_amount'] = recent_balance.balance
+
+            shops_data.append(shop_data)
 
         total_shop_count = len(shops_data)
 
         response_data = {
             "message_text": "Success",
-            "message_code": 1000,
+            "message_code": 200,
             "message_data": {
                 'total_shop_count': total_shop_count,
                 'shops': shops_data
@@ -315,15 +325,14 @@ def GetShopsUnderRoute(request, route_id):
         }
 
         return Response(response_data, status=status.HTTP_200_OK)
-    
+
     except Exception as e:
         response_data = {
             "message_text": str(e),
-            "message_code": 999,
+            "message_code": 500,
             "message_data": {},
         }
         return Response(response_data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
 
 
 

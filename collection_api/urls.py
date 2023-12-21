@@ -35,3 +35,4 @@ urlpatterns = [
     path('complaint_view/', views.ComplaintListView, name="complaint_view")
     
 ]
+
