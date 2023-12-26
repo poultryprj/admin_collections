@@ -108,6 +108,7 @@ urlpatterns = [
     
     path('product_received_edit/<int:id>/', views.ProductReceivedEdit, name='product_received_edit'),
     
+
     path('product_received_update/', views.ProductReceivedUpdate, name='product_received_update'),
     
     path('product_received_delete/<int:id>/', views.product_received_delete, name='product_received_delete'),
@@ -121,5 +122,6 @@ urlpatterns = [
     path('product_issue_edit/<int:id>', views.ProductIssueEdit, name='product_issue_edit'),
 
     path('product_issue_delete/<int:id>', views.ProductIssueDelete, name='product_issue_delete'),
+
 
 ]

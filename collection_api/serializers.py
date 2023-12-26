@@ -4,6 +4,9 @@ from routes.models import RouteModel
 from shops1.models import ProductRecieve
 from vehicle2.models import Vehicle
 from .models import Collection, CollectionMode, ShopModel, ShopModel
+
+from routes.models import RouteModel
+from .models import Collection, CollectionMode, Complaint, ShopModel, ShopModel, SkipShop
 from django.contrib.auth.models import User
 
 
@@ -64,4 +67,12 @@ from shops1.models import ProductIssue
 class ProductIssueSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductIssue
+class SkipShopSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SkipShop
+        fields = '__all__'
+
+class ComplaintSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Complaint
         fields = '__all__'

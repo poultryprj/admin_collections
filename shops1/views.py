@@ -5,6 +5,14 @@ from django.contrib import messages
 from user.models import UserModel
 from vehicle2.models import Vehicle, Vendor
 from .models import  Associations, ProductIssue, ProductRecieve, ShopBalance, ShopFlexibleRate, ShopModel, ShopOwner, ShopProductRates, ShopRoute, ProductTypes, ProductCategories, ProductMaster
+from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
+from user.models import UserModel
+
+from vehicle2.models import Vehicle, Vendor
+from .models import  Associations, ProductRecieve, ShopBalance, ShopFlexibleRate, ShopModel, ShopOwner, ShopProductRates, ShopRoute, ProductTypes, ProductCategories, ProductMaster
 from routes.models import RouteModel
 from django.core.exceptions import ValidationError
 
@@ -1121,4 +1129,5 @@ def ProductIssueDelete(request,id):
     return redirect('product_issue_list')
 
     
+        
         

@@ -3,17 +3,19 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from routes.models import RouteModel
-from shops1.models import ProductIssue, ProductRecieve, ShopRoute
+from shops1.models import ProductIssue, ProductRecieve, ShopBalance, ShopRoute
 from user.models import UserModel
 from vehicle2.models import Vehicle
-from .models import Collection, ShopModel, CollectionMode
-from .serializers import CollectionSerializer, ProductRecieveSerializer, ShopModelSerializer, CollectionModeSerializer, VehicleSerializer
+from .models import Collection, Complaint, ShopModel, CollectionMode, SkipShop
+from .serializers import CollectionSerializer, ComplaintSerializer, ProductRecieveSerializer, ShopModelSerializer, CollectionModeSerializer, SkipShopSerializer, VehicleSerializer
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
 from django.utils import timezone
 from django.contrib.auth.models import Group
 from django.db.models import Sum
+from django.db.models import Max
+
 
 @api_view(['GET'])
 def ShopModelListView(request):
@@ -191,9 +193,13 @@ def RoutesList(request):
         routes = RouteModel.objects.all()
         routes_data = []
         for route in routes:
+            # Get the count of shops for each route
+            shop_count = ShopRoute.objects.filter(route_id=route.route_id).count()
+            
             route_data = {
                 'route_title': route.route_id,
                 'route_info': route.route_name,
+                'shop_count': shop_count,  # Include the shop count in the route data
             }
             routes_data.append(route_data)
 
@@ -206,10 +212,11 @@ def RoutesList(request):
     
     else:
         return Response({
-                    "message_text": "Failure",
-                    "message_code": 999,
-                    "message_data": [],
-                }, status=status.HTTP_400_BAD_REQUEST)
+            "message_text": "Failure",
+            "message_code": 999,
+            "message_data": [],
+        }, status=status.HTTP_400_BAD_REQUEST)
+
     
 @api_view(['POST'])
 def UserLogin(request):
@@ -303,58 +310,238 @@ def UserLogin(request):
 
 
 @api_view(['GET'])
-def GetShopsUnderRoute(request, route_id, shop_code=None):
+def GetShopsUnderRoute(request, route_id):
     try:
         shop_routes = ShopRoute.objects.filter(route_id=route_id)
 
         if not shop_routes.exists():
             return Response({
-                "message_text": "Failure",
-                "message_code": 999,
+                "message_text": "No shops found for this route",
+                "message_code": 404,
                 "message_data": []
-            }, status=404)
+            }, status=status.HTTP_404_NOT_FOUND)
 
-        if shop_code:
-            # If shop_code is provided, filter shops based on the code
-            shops = ShopModel.objects.filter(shop_code=shop_code)
-            serializer = ShopModelSerializer(ShopModel, many=True)
-            response_data = {
-            "message_text": "Success",
-            "message_code": 1000,
-            "message_data": serializer.data,
+        # Get the shop IDs under the given route
+        shop_ids = shop_routes.values_list('shop_id_id', flat=True)
+
+        # Fetch all shops under the given route
+        shops = ShopModel.objects.filter(shop_id__in=shop_ids)
+
+        # Fetch latest balances for shops under the route
+        latest_balances = ShopBalance.objects.filter(
+            shopId_id__in=shop_ids,
+            is_deleted=False
+        ).values('shopId_id').annotate(recent_balance_date=Max('balance_date'))
+
+        # Create a dictionary to store the latest balance for each shop
+        shop_balances = {
+            balance['shopId_id']: balance['recent_balance_date']
+            for balance in latest_balances
         }
-            return Response(response_data, status=status.HTTP_200_OK)
-        else:
-            # If shop_code is not provided, continue with existing logic
-            shops_under_route = shop_routes.select_related('shop_id')
-            shop_ids = [shop.shop_id_id for shop in shops_under_route]
-
-            shops = ShopModel.objects.filter(shop_id__in=shop_ids)
 
         shops_data = []
         for shop in shops:
             shop_data = {
                 'shopcode': shop.shop_code,
                 'shopname': shop.shop_name,
+                'out_standing_amount': 0  # Default to 0 for all shops
             }
+
+            # Check if shop has a recent balance, update outstanding amount if available
+            recent_balance_date = shop_balances.get(shop.shop_id)
+            if recent_balance_date:
+                recent_balance = ShopBalance.objects.filter(
+                    shopId_id=shop.shop_id,
+                    balance_date=recent_balance_date,
+                    is_deleted=False
+                ).first()
+
+                if recent_balance:
+                    shop_data['out_standing_amount'] = recent_balance.balance
+
             shops_data.append(shop_data)
+
+        total_shop_count = len(shops_data)
 
         response_data = {
             "message_text": "Success",
-            "message_code": 1000,
-            "message_data": shops_data,
+            "message_code": 200,
+            "message_data": {
+                'total_shop_count': total_shop_count,
+                'shops': shops_data
+            }
         }
 
         return Response(response_data, status=status.HTTP_200_OK)
 
-    except ShopModel.DoesNotExist:
-        return Response({
-            "message_text": "Shop not found",
-            "message_code": 404,
-            "message_data": [],
-        }, status=404)
+    except Exception as e:
+        response_data = {
+            "message_text": str(e),
+            "message_code": 500,
+            "message_data": {},
+        }
+        return Response(response_data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+########################################### SkipShop ########################################################
+########## skip shop add ###########
+@api_view(['POST'])
+def SkipShopAdd(request):
+    if request.method == 'POST':
+        required_fields = ['skip_shop_date', 'skip_shop_time', 'shopId', 'cashierId', 'approve_yn', 'remark', 'approve_byId', 'created_on', 'created_by']
+        missing_fields = [field for field in required_fields if field not in request.data]
+
+        if missing_fields:
+            return Response({
+                "message_text": f"Missing fields: {', '.join(missing_fields)}",
+                "message_code": 998,
+                "message_data": [],
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            serializer = SkipShopSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                response_data = {
+                    "message_text": "Success",
+                    "message_code": 1000,
+                    "message_data": serializer.data
+                }
+                return Response(response_data, status=status.HTTP_201_CREATED)
+            else:
+                return Response({
+                    "message_text": "Validation error",
+                    "message_code": 997,
+                    "message_data": serializer.errors,
+                }, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({
+                "message_text": "An error occurred",
+                "message_code": 996,
+                "message_data": str(e),
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+############## Skip Shop View Data By Cashier Id ####################
+@api_view(['GET'])
+def SkipShopListView(request):
+    if request.method == 'GET':
+        cashier_id = request.GET.get('cashierId')
+        if cashier_id:
+            # Validate if cashierId is an integer
+            if not cashier_id.isdigit():
+                return Response({
+                    "message_text": "Invalid cashierId format. Must be an integer.",
+                    "message_code": 997,
+                    "message_data": []
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            # Check if the cashierId exists in the database
+            try:
+                cashier = User.objects.get(id=cashier_id)
+            except User.DoesNotExist:
+                return Response({
+                    "message_text": "CashierId does not exist",
+                    "message_code": 996,
+                    "message_data": []
+                }, status=status.HTTP_404_NOT_FOUND)
+
+            # Fetch skip shop data associated with the provided cashier ID
+            collections = SkipShop.objects.filter(cashierId=cashier_id)
+            serializer = SkipShopSerializer(collections, many=True)
+            response_data = {
+                "message_text": "Success",
+                "message_code": 1000,
+                "message_data": serializer.data
+            }
+            return Response(response_data, status=status.HTTP_200_OK)
+        else:
+            return Response({
+                "message_text": "No cashierId provided",
+                "message_code": 998,
+                "message_data": []
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+########################################### Complaint ########################################################
+########## Complaint Add ###########
+@api_view(['POST'])
+def ComplaintAdd(request):
+    if request.method == 'POST':
+        required_fields = ['complaint_date', 'complaint_time', 'shopId', 'cashierId', 'approve_yn', 'remark', 'approve_byId', 'created_on', 'created_by']
+        missing_fields = [field for field in required_fields if field not in request.data]
+
+        if missing_fields:
+            return Response({
+                "message_text": f"Missing fields: {', '.join(missing_fields)}",
+                "message_code": 998,
+                "message_data": [],
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            serializer = ComplaintSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                response_data = {
+                    "message_text": "Success",
+                    "message_code": 1000,
+                    "message_data": serializer.data
+                }
+                return Response(response_data, status=status.HTTP_201_CREATED)
+            else:
+                return Response({
+                    "message_text": "Validation error",
+                    "message_code": 997,
+                    "message_data": serializer.errors,
+                }, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({
+                "message_text": "An error occurred",
+                "message_code": 996,
+                "message_data": str(e),
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+############## Complaint List View by cashier Id ####################
+@api_view(['GET'])
+def ComplaintListView(request):
+    if request.method == 'GET':
+        cashier_id = request.GET.get('cashierId')
+        if cashier_id:
+            # Validate if cashierId is an integer
+            if not cashier_id.isdigit():
+                return Response({
+                    "message_text": "Invalid cashierId format. Must be an integer.",
+                    "message_code": 997,
+                    "message_data": []
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            # Check if the cashierId exists in the database
+            try:
+                cashier = User.objects.get(id=cashier_id)
+            except User.DoesNotExist:
+                return Response({
+                    "message_text": "CashierId does not exist",
+                    "message_code": 996,
+                    "message_data": []
+                }, status=status.HTTP_404_NOT_FOUND)
+
+            # Fetch skip shop data associated with the provided cashier ID
+            collections = Complaint.objects.filter(cashierId=cashier_id)
+            serializer = ComplaintSerializer(collections, many=True)
+            response_data = {
+                "message_text": "Success",
+                "message_code": 1000,
+                "message_data": serializer.data
+            }
+            return Response(response_data, status=status.HTTP_200_OK)
+        else:
+            return Response({
+                "message_text": "No cashierId provided",
+                "message_code": 998,
+                "message_data": []
+            }, status=status.HTTP_400_BAD_REQUEST)
 
 # ****************************************************************
 
