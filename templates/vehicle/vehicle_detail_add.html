@@ -1,0 +1,466 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="content container-fluid">
+
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title">Add Vehicle Detail</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="">Vehicle</a></li>
+                    <li class="breadcrumb-item active">Add Detail</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    {% include "includes/message.html" %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <form action="{% url 'vehicle_detail_add' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-12">
+                                <h5 class="form-title"><span>Vehicle Details</span></h5>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Registration No</label>
+                                    <input type="text" class="form-control" name="registration_no" required>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Owner Name</label>
+                                    <input type="text" class="form-control" name="owner_name" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <label>Vehicle Make By</label>
+                                <div class="input-group">
+                                    <select class="form-control form-select" placeholder="Enter Shop Area"
+                                        name="vehicle_make_by" required>
+                                        <option>------- Select Vechicle Make By -------</option>
+                                        {% for i in vehicleMakeByData %}
+                                        <option value="{{i.vehicle_make_by}}">{{ i.vehicle_make_by }} </option>
+                                        {% endfor %}
+                                    </select>
+
+
+
+
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal" data-bs-whatever="@mdo"> <i
+                                            class="fa-solid fa-square-plus"></i></button>
+
+                                    <!-- Your existing HTML content -->
+
+                                    <div class="modal fade" id="exampleModal" tabindex="-1"
+                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Vehicle Make By</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="mb-3">
+                                                        <label for="recipient-name"
+                                                            class="col-form-label">Vehicle Make By:</label>
+                                                        <input type="text" class="form-control" id="recipient-name">
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Close</button>
+                                                    <a onClick='addNewMake()'
+                                                        class="btn btn-primary">Add</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+                            
+
+                            <div class="col-12 col-sm-6 mb-4">
+                                <label>Vehicle Model</label>
+                                <div class="input-group">
+                                    <select class="form-control form-select" placeholder="Enter Shop Area"
+                                        name="vehicle_model" required>
+                                        <option>------- Select Vehicle Model By -------</option>
+                                        {% for i in vehicleModelyData %}
+                                        <option value="{{i.vehicle_model}}">{{ i.vehicle_model }} </option>
+                                        {% endfor %}
+                                    </select>
+
+
+
+
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal2" data-bs-whatever="@mdo"> <i
+                                            class="fa-solid fa-square-plus"></i></button>
+
+                                    <!-- Your existing HTML content -->
+
+                                    <div class="modal fade" id="exampleModal2" tabindex="-1"
+                                        aria-labelledby="exampleModalLabel2" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Vehicle Model</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="mb-3">
+                                                        <label for="recipient-name"
+                                                            class="col-form-label">Vehicle Model:</label>
+                                                        <input type="text" class="form-control" id="vehicle_model">
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Close</button>
+                                                    <a onClick='addNewModel()'
+                                                        class="btn btn-primary">Add</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="col-12 col-sm-6 mb-4">
+                                <label>Vehicle Type</label>
+                                <div class="input-group">
+                                    <select class="form-control form-select" placeholder="Enter Shop Area"
+                                        name="vehicle_type" required>
+                                        <option>------- Select Vehicle Type -------</option>
+                                        {% for i in vehicleTypeData %}
+                                        <option value="{{i.vehicle_type}}">{{ i.vehicle_type }} </option>
+                                        {% endfor %}
+                                    </select>
+
+
+
+
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal3" data-bs-whatever="@mdo"> <i
+                                            class="fa-solid fa-square-plus"></i></button>
+
+                                    <!-- Your existing HTML content -->
+
+                                    <div class="modal fade" id="exampleModal3" tabindex="-1"
+                                        aria-labelledby="exampleModalLabel3" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Vehicle Type</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="mb-3">
+                                                        <label for="recipient-name"
+                                                            class="col-form-label">Vehicle Type:</label>
+                                                        <input type="text" class="form-control" id="vehicle_type">
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Close</button>
+                                                    <a onClick='addNewType()'
+                                                        class="btn btn-primary">Add</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Vehicle Details</label>
+                                    <input type="text" class="form-control" name="vehicle_details" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Fuel Type</label>
+                                    <select class="form-control form-select" placeholder="Enter Fuel Type"
+                                        name="fuel_type" required>
+                                        <option>------- Select Fuel Type -------</option>
+                                        <option value="Diesel">Diesel</option>
+                                        <option value="Petrol">Petrol</option>
+                                        <option value="CNG">CNG</option>
+                                        <option value="Battery">Battery</option>
+                                        <option value="LPG">LPG</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>No of Wheel</label>
+                                    <select class="form-control form-select" placeholder="Enter No of Wheel"
+                                        name="no_of_wheel" required>
+                                        <option>------- Select No of Wheel -------</option>
+                                        <option value="2">2 Wheeler</option>
+                                        <option value="3">3 Wheeler</option>
+                                        <option value="4">4 Wheeler</option>
+                                        <option value="6">6 Wheeler</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Carrier Type</label>
+                                    <select class="form-control form-select" placeholder="Enter Carrier Type"
+                                        name="carrier_type" required>
+                                        <option>------- Select Carrier Type -------</option>
+                                        <option value="Birds">Birds</option>
+                                        <option value="Eggs">Eggs</option>
+                                        <option value="Open">Open</option>
+                                        <option value="Metal Cover Box With Door">Metal Cover Box With Door</option>
+                                        <option value="Cloth Cover Box">Cloth Cover Box</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Registration Date</label>
+                                    <input type="date" class="form-control" name="registration_date" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12"> 
+                                <button type="submit" class="btn btn-primary">Add </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Your existing HTML content -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+
+    // Vehicle Make
+    function addNewMake() {
+        const newName = $('#recipient-name').val();
+
+        $.ajax({
+            url: '{% url "vehicle_make_by_add" %}',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            data: JSON.stringify({ new_name: newName }),
+            success: function(data) {
+                if (data.success) {
+                    const select = $('select[name="vehicle_make_by"]');
+                    const option = $('<option></option>').attr('value', data.new_name).text(data.new_name);
+                    select.append(option);
+                    
+                    // Set the new option as selected
+                    select.val(data.new_name);
+                    
+                    // Hide the modal and clear input after successful addition
+                    $('#exampleModal').modal('hide');
+                    $('#recipient-name').val('');
+                    
+                    // Fetch updated data and populate the dropdown
+                    refreshMakeData();
+                } else {
+                    // Handle error
+                    alert('Failed to add make');
+                }
+            },
+            error: function(error) {
+                console.error('Error:', error);
+                alert('An error occurred while adding make!');
+            }
+        });
+    }
+
+    function refreshMakeData() {
+        // Perform an AJAX request to fetch updated data
+        $.ajax({
+            url: '{% url "vehicle_make_by_add" %}', // Replace with your endpoint to fetch updated data
+            method: 'GET',
+            success: function(response) {
+                var select = $('select[name="vehicle_make_by"]');
+                select.empty(); // Clear all existing options
+
+                // Add default option
+                select.append($('<option>------- Select Vechicle Make By -------</option>'));
+
+                // Add new options based on the fetched data
+                response.forEach(function(item) {
+                    var option = $('<option></option>').attr('value', item.vehicle_make_by).text(item.vehicle_make_by);
+                    select.append(option);
+                });
+            },
+            error: function(error) {
+                console.error('Error fetching updated data:', error);
+            }
+        });
+    }
+
+
+
+
+    //  Vehicle Model
+    function addNewModel() {
+        const newName = $('#vehicle_model').val();
+
+        $.ajax({
+            url: '{% url "vehicle_make_by_add" %}',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            data: JSON.stringify({ new_name: newName }),
+            success: function(data) {
+                if (data.success) {
+                    const select = $('select[name="vehicle_model"]');
+                    const option = $('<option></option>').attr('value', data.new_name).text(data.new_name);
+                    select.append(option);
+                    
+                    // Set the new option as selected
+                    select.val(data.new_name);
+                    
+                    // Hide the modal and clear input after successful addition
+                    $('#exampleModal2').modal('hide');
+                    $('#vehicle_model').val('');
+                    
+                    // Fetch updated data and populate the dropdown
+                    refreshModelData();
+                } else {
+                    // Handle error
+                    alert('Failed to add make');
+                }
+            },
+            error: function(error) {
+                console.error('Error:', error);
+                alert('An error occurred while adding make!');
+            }
+        });
+    }
+
+    function refreshModelData() {
+        // Perform an AJAX request to fetch updated data
+        $.ajax({
+            url: '{% url "vehicle_make_by_add" %}', // Replace with your endpoint to fetch updated data
+            method: 'GET',
+            success: function(response) {
+                var select = $('select[name="vehicle_model"]');
+                select.empty(); // Clear all existing options
+
+                // Add default option
+                select.append($('<option>------- Select Vechicle Model -------</option>'));
+
+                // Add new options based on the fetched data
+                response.forEach(function(item) {
+                    var option = $('<option></option>').attr('value', item.vehicle_model).text(item.vehicle_model);
+                    select.append(option);
+                });
+            },
+            error: function(error) {
+                console.error('Error fetching updated data:', error);
+            }
+        });
+    }
+
+
+
+//  Vehicle Type
+function addNewType() {
+        const newName = $('#vehicle_type').val();
+
+        $.ajax({
+            url: '{% url "vehicle_make_by_add" %}',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            data: JSON.stringify({ new_name: newName }),
+            success: function(data) {
+                if (data.success) {
+                    const select = $('select[name="vehicle_type"]');
+                    const option = $('<option></option>').attr('value', data.new_name).text(data.new_name);
+                    select.append(option);
+                    
+                    // Set the new option as selected
+                    select.val(data.new_name);
+                    
+                    // Hide the modal and clear input after successful addition
+                    $('#exampleModal3').modal('hide');
+                    $('#vehicle_type').val('');
+                    
+                    // Fetch updated data and populate the dropdown
+                    refreshTypeData();
+                } else {
+                    // Handle error
+                    alert('Failed to add make');
+                }
+            },
+            error: function(error) {
+                console.error('Error:', error);
+                alert('An error occurred while adding make!');
+            }
+        });
+    }
+
+    function refreshTypeData() {
+        // Perform an AJAX request to fetch updated data
+        $.ajax({
+            url: '{% url "vehicle_make_by_add" %}', // Replace with your endpoint to fetch updated data
+            method: 'GET',
+            success: function(response) {
+                var select = $('select[name="vehicle_type"]');
+                select.empty(); // Clear all existing options
+
+                // Add default option
+                select.append($('<option>------- Select Vechicle Type -------</option>'));
+
+                // Add new options based on the fetched data
+                response.forEach(function(item) {
+                    var option = $('<option></option>').attr('value', item.vehicle_type).text(item.vehicle_type);
+                    select.append(option);
+                });
+            },
+            error: function(error) {
+                console.error('Error fetching updated data:', error);
+            }
+        });
+    }
+
+</script>
+
+
+
+{% endblock content %}

@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="content container-fluid">
+
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title">Edit Vehicle Pollution Details</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="">Vehicles</a></li>
+                    <li class="breadcrumb-item active">Vehicle Pollution</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+{% include "includes/message.html" %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <form action="{% url 'vehicle_pollution_update' %}" method="POST" >
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-12">
+                                <h5 class="form-title"><span>Vehicle Pollution Details</span></h5>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Vehicle Id</label>
+                                    <input type="text" class="form-control" name="vehicle_id" value="{{vehicleDetailEdit.vehicle_id}}" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Pollution Id</label>
+                                    <input type="text" class="form-control" name="pollution_id" value="{{vehiclePollutionData.pollution_id}}" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Owner Name</label>
+                                    <input type="text" class="form-control" name="owner_name" value="{{vehicleDetailEdit.owner_name}}" readonly>
+                                </div>
+                            </div>                       
+
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group">
+                                    <label>Vehicle Pollution From Date</label>
+                                    <input type="date" class="form-control" name="vehicle_pollution_from_Date" value="{% if vehiclePollutionData.vehicle_pollution_from_Date %}{{ vehiclePollutionData.vehicle_pollution_from_Date|date:'Y-m-d' }}{% endif %}" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group">
+                                    <label>Vehicle Pollution To Date</label>
+                                    <input type="date" class="form-control" name="vehicle_pollution_to_Date" value="{% if vehiclePollutionData.vehicle_pollution_to_Date %}{{ vehiclePollutionData.vehicle_pollution_to_Date|date:'Y-m-d' }}{% endif %}" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group">
+                                    <label>Vehicle Pollution Value.</label>
+                                    <input type="text" class="form-control" name="vehicle_pollution_value" value="{{vehiclePollutionData.vehicle_pollution_value}}" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">Update Details</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

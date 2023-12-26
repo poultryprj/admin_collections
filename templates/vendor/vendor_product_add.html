@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="content container-fluid">
+
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title">Vendor Product</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="">Vendor</a></li>
+                    <li class="breadcrumb-item active">Vendor Product Add</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+{% include "includes/message.html" %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <form action="{% url 'vendor_product_add' %}" method="POST" >
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-12">
+                                <h5 class="form-title"><span>Vendor Product Details</span></h5>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Vendor Name</label>
+                                    <select class="form-control form-select " name="vendor_id" required>
+                                        <option value="" disabled selected hidden>------- Select Vendor -------</option>
+                                        {% for vendor in vendorData %}
+                                            <option value="{{vendor.vendor_id}}">{{vendor.vendor_code}} -- {{vendor.vendor_name }} </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Vendor Type</label>
+                                    <select class="form-control form-select" name="product_type_id" required>
+                                        <option value="" disabled selected hidden>------- Select Vendor Type -------</option>
+                                        {% for i in productTypesData %}
+                                            <option value="{{i.product_type_id}}">{{ i.product_type }} </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Product Rate</label>
+                                    <input type="text" class="form-control" name="product_rate" required>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Product TCS</label>
+                                    <input type="text" class="form-control" name="product_tcs" required>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Product TDS</label>
+                                    <input type="text" class="form-control" name="product_tds" required>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">Add Vendor Product</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

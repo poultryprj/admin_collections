@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="content container-fluid">
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title">Shops Balance</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'Index' %}">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Shops</li>
+                </ul>
+            </div>
+            <div class="col-auto text-right float-right ml-auto">
+                <a href="{% url 'shop_balance_add' %}" class="btn btn-primary"><i class="fas fa-plus"></i></a>
+            </div>
+        </div>
+    </div>
+
+    {% include "includes/message.html" %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card card-table">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table id="table_id" class="table table-hover table-center mb-0 no-footer"
+                                           id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
+                                        <thead>
+                                            <tr role="row">
+                                                <th style="width: 50px;">Sr.No</th>
+                                                <th style="width: 130px;">Shop Name</th>
+                                                <th style="width: 140px;">Date</th>
+                                                <th style="width: 100px;">Balance</th>
+                                                <th style="width: 100px;">Adjustment Amount</th>
+                                                <th style="width: 100px;">Adjustment Remark</th>
+                                                <th style="width: 20px;">Status</th>
+                                                <th style="width: 55px;" class="text-right">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for shopBalance in shopBalanceList %}
+                                            <tr role="row" class="odd">
+                                                <td>{{ forloop.counter }}</td>
+                                                <td>{{ shopBalance.shopId }}</td>
+                                                <td>{{ shopBalance.balance_date }}</td>
+                                                <td>{{ shopBalance.balance }}</td>
+                                                <td>{{ shopBalance.adjustment_amount }}</td>
+                                                <td>{{ shopBalance.adjustment_remark }}</td>
+                                                <td>
+                                                    {% if shopBalance.active == "Yes" %}
+                                                    <h6><span class="badge bg-primary">Yes</span></h6>
+                                                    {% else %}
+                                                    <h6><span class="badge bg-danger">No</span></h6>
+                                                    {% endif %}
+                                                </td>
+                                                <td class="text-right">
+                                                    <div class="actions">
+                                                        <a href="{% url 'shop_balance_edit' id=shopBalance.shop_balance_id %}" class="btn btn-warning btn-sm mr-2">
+                                                            <i class="fas fa-pen"></i>
+                                                        </a>
+                                                        <a href="{% url 'shop_balance_delete' shopBalance.shop_balance_id %}"  onclick="return confirm('Are you sure you want to delete this?')"
+                                                            class="btn btn-danger btn-sm mr-2">
+                                                            <i class="fas fa-trash"></i>
+                                                        </a>
+
+                                                        <a href="{% url 'shop_and_balance_detail' shopBalance.shop_balance_id %}"  
+                                                        class="btn btn-primary btn-sm">
+                                                        <i class="fa-solid fa-circle-info"></i>
+                                                    </a>
+                                                        
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

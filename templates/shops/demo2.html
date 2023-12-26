@@ -1,0 +1,295 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="content container-fluid">
+
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title">Shop and Balance</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'shop_list' %}">Shop</a></li>
+                    <li class="breadcrumb-item active">Shop and Balance</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    {% include "includes/message.html" %}
+
+    <div class="card">
+        {% if shopAndBalance %}
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-lg-9">
+                   <div class="card">
+                      <div class="card-body">
+                       
+                        <div class="row">
+                            <div class="col-12">
+                                <h5 class="form-title"><span>Shop  Details</span></h5>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Code</label>
+                                    <input type="text" class="form-control" name="shop_code" value="{{shopAndBalance.shopId.shop_code}}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Name</label>
+                                    <input type="text" class="form-control" name="shop_name" value="{{shopAndBalance.shopId.shop_name}}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Area</label>
+                                    <input type="text" class="form-control" name="shop_area" value="{{shopAndBalance.shopId.shop_area}}" readonly>
+                                </div>
+                            </div>
+                            
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Latitude</label>
+                                    <input type="text" class="form-control" name="shop_latitude" value="{{shopAndBalance.shopId.shop_latitude}}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Longitude</label>
+                                    <input type="text" class="form-control" name="shop_longitude" value="{{shopAndBalance.shopId.shop_longitude}}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Address</label>
+                                    <input type="text" class="form-control" name="shop_address" value="{{shopAndBalance.shopId.shop_address}}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Pin Code</label>
+                                    <input type="text" class="form-control" name="shop_pincode" value="{{shopAndBalance.shopId.shop_pincode}}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Distance</label>
+                                    <input type="text" class="form-control" name="shop_distance" value="{{shopAndBalance.shopId.shop_distance}}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Mobile No.</label>
+                                    <input type="text" class="form-control" name="shop_mob" value="{{shopAndBalance.shopId.shop_mobileNo}}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Alternate No.</label>
+                                    <input type="text" class="form-control" name="shop_mob_alt" value="{{shopAndBalance.shopId.shop_alternateNo}}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Owner Name</label>
+                                    <input type="text" class="form-control" name="shop_owner_name" value="{{shopAndBalance.shopId.shop_ownerId}}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Type</label>
+                                    <input type="text" class="form-control" name="shop_type" value="{{shopAndBalance.shopId.shop_type}}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Status</label>
+                                    <input type="text" class="form-control" name="shop_status" value="{{shopAndBalance.shopId.shop_status}}" readonly>
+                                </div>
+                            </div>
+                           
+                           
+                        </div>
+                      </div>
+                   </div>
+                </div>
+                <div class="col-lg-3">
+                   <div class="card">
+                      <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <h5 class="form-title"><span>Balance</span></h5>
+                            </div>
+                            <div class="col-12 col-sm-12">
+                                <div class="form-group">
+                                    <label>Balance Date</label>
+                                    <input type="date" class="form-control" name="balance_date" value="{% if shopAndBalance.balance_date %}{{ shopAndBalance.balance_date|date:'Y-m-d' }}{% endif %}" readonly>
+                                </div>
+                            </div>
+                           
+                            <div class="col-12 col-sm-12">
+                                <div class="form-group">
+                                    <label>Balance</label>
+                                    <input type="text" class="form-control" name="balance" value="{{shopAndBalance.balance}}" readonly>
+                                </div>
+                            </div>
+                            
+
+                            <div class="col-12 col-sm-12">
+                                <div class="form-group">
+                                    <label>Active</label>
+                                    <input type="text" class="form-control" name="active" value="{{shopAndBalance.active}}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12">
+                                <div class="form-group">
+                                    <label>Adjustment Amount</label>
+                                    <input type="text" class="form-control" name="adjustment_amount" value="{{shopAndBalance.adjustment_amount}}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12">
+                                <div class="form-group">
+                                    <label>Adjustment Remark</label>
+                                    <input type="text" class="form-control" name="adjustment_remark" value="{{shopAndBalance.adjustment_remark}}" readonly>
+                                </div>
+                            </div>
+                            
+                           
+                           
+                        </div>
+                      </div>
+                   </div>
+                   
+                </div>
+             </div>
+
+
+
+
+
+
+
+        </div>
+        {% else %}
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-lg-9">
+                   <div class="card">
+                      <div class="card-body">
+                       
+                        <div class="row">
+                            <div class="col-12">
+                                <h5 class="form-title"><span>Shop  Details</span></h5>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Code</label>
+                                    <input type="text" class="form-control" name="shop_code" value="{{shopModel.shop_code}}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Name</label>
+                                    <input type="text" class="form-control" name="shop_name" value="{{shopModel.shop_name}}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Area</label>
+                                    <input type="text" class="form-control" name="shop_area" value="{{shopModel.shop_area}}" readonly>
+                                </div>
+                            </div>
+                            
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Latitude</label>
+                                    <input type="text" class="form-control" name="shop_latitude" value="{{shopModel.shop_latitude}}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Longitude</label>
+                                    <input type="text" class="form-control" name="shop_longitude" value="{{shopModel.shop_longitude}}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Address</label>
+                                    <input type="text" class="form-control" name="shop_address" value="{{shopModel.shop_address}}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Pin Code</label>
+                                    <input type="text" class="form-control" name="shop_pincode" value="{{shopModel.shop_pincode}}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Distance</label>
+                                    <input type="text" class="form-control" name="shop_distance" value="{{shopModel.shop_distance}}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Mobile No.</label>
+                                    <input type="text" class="form-control" name="shop_mob" value="{{shopModel.shop_mobileNo}}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Alternate No.</label>
+                                    <input type="text" class="form-control" name="shop_mob_alt" value="{{shopModel.shop_alternateNo}}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Owner Name</label>
+                                    <input type="text" class="form-control" name="shop_owner_name" value="{{shopModel.shop_ownerId}}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Type</label>
+                                    <input type="text" class="form-control" name="shop_type" value="{{shopModel.shop_type}}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Status</label>
+                                    <input type="text" class="form-control" name="shop_status" value="{{shopModel.shop_status}}" readonly>
+                                </div>
+                            </div>
+                           
+                           
+                        </div>
+                      </div>
+                   </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="card">
+                       <div class="card-body">
+                         <div class="row">
+                             <div class="col-12">
+                                 <h5 class="form-title"><span>Balance</span></h5>
+                             </div>
+                             <h6 class='text-danger'>No shop balance found for this shop name ....!</h6>
+                         </div>
+                       </div>
+                    </div>
+                    
+                 </div>
+             </div>
+        </div>
+        {% endif %}
+    </div>
+
+</div>
+
+{% endblock content %}

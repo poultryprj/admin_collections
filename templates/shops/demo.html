@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="content container-fluid">
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title">Shops demo</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'Index' %}">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Shops</li>
+                </ul>
+            </div>
+            <div class="col-auto text-right float-right ml-auto">
+
+                <a href="{% url 'shop_add' %}" class="btn btn-primary"><i class="fas fa-plus"></i></a>
+            </div>
+        </div>
+    </div>
+
+    {% include "includes/message.html" %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card card-table">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table id="table_id" class="table table-hover table-center mb-0  no-footer"
+                                        id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
+                                        <thead>
+                                            <tr role="row">
+                                                <th class="sorting_asc" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1" aria-sort="ascending"
+                                                    aria-label="ID: activate to sort column descending"
+                                                    style="width: 50.5px;">Sr.No</th>
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Name: activate to sort column ascending"
+                                                    style="width: 13.4px;">Code</th>
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Class: activate to sort column ascending"
+                                                    style="width: 140.7px;">Name</th>
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Gender: activate to sort column ascending"
+                                                    style="width: 100.025px;">Owner</th>
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Gender: activate to sort column ascending"
+                                                    style="width: 56.025px;">Location</th>
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Gender: activate to sort column ascending"
+                                                    style="width: 36.025px;">Mobile No</th>
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Gender: activate to sort column ascending"
+                                                    style="width: 56.025px;">Alternate No</th>
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Gender: activate to sort column ascending"
+                                                    style="width: 20.025px;">Status</th>
+                                                <th class="text-right sorting" tabindex="0"
+                                                    aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+                                                    aria-label="Action: activate to sort column ascending"
+                                                    style="width: 54.7px;">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            {% for shopList in shopLists %}
+
+                                            <tr role="row" class="odd">
+                                                <td class="sorting_1">{{forloop.counter}}</td>
+
+                                                <td>{{shopList.shop_code}}</td>
+                                                <td>{{shopList.shop_name}}</td>
+                                                <td>{{shopList.shop_ownerId}}</td>
+                                                <td><button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-location-dot"></i></button></td>
+                                                <td>{{shopList.shop_mobileNo}}</td>
+                                                <td>{{shopList.shop_alternateNo}}</td>
+                                                <td>
+                                                    {% if shopList.shop_status == "Active" %}
+
+                                                    <button type="button" class="btn btn-success btn-sm"><i
+                                                            class="fa-solid fa-shop fa-lg"></i></button>
+                                                    {% else %}
+                                                    <button type="button" class="btn btn-danger btn-sm"> <i
+                                                            class="fa-solid fa-shop-slash fa-lg "></i></button>
+
+                                                    {% endif %}
+                                                </td>
+                                                <td class="text-right">
+                                                    <div class="actions">
+                                                        <a href="{% url 'shop_edit' shopList.shop_id %}"
+                                                            class="btn btn-warning btn-sm mr-2">
+                                                            <i class="fas fa-pen"></i>
+                                                        </a>
+                                                        <a href="{% url 'shop_delete' shopList.shop_id %}"  onclick="return confirm('Are you sure you want to delete this?')"
+                                                            class="btn btn-danger btn-sm">
+                                                            <i class="fas fa-trash"></i>
+                                                        </a>
+                                                        <a href="{% url 'ShopBalanceDetails' shopList.shop_id %}"  
+                                                        class="btn btn-primary btn-sm">
+                                                        <i class="fa-solid fa-circle-info"></i>
+                                                    </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %} 
+
+
+
+
+
+
+
+
+
+
+
+
+

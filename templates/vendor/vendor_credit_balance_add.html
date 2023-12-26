@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="content container-fluid">
+
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title">Vendor Credit Balance</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="">Vendor</a></li>
+                    <li class="breadcrumb-item active">Credit Balance Add</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+{% include "includes/message.html" %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <form action="{% url 'vendor_credit_balance_add' %}" method="POST" >
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-12">
+                                <h5 class="form-title"><span>Vendor Credit Balance Details</span></h5>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Vendor Name</label>
+                                    <select class="form-control form-select " name="vendor_id" required>
+                                        <option value="" disabled selected hidden>------- Select Vendor Name -------</option>
+                                        {% for vendor in vendorData %}
+                                            <option value="{{vendor.vendor_id}}">{{vendor.vendor_code}} -- {{vendor.vendor_name }} </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label> Amount</label>
+                                    <input type="text" class="form-control" name="amount" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Reason:</label>
+                                    <textarea rows="4" cols="4" class="form-control" placeholder="Enter message" name="reason"></textarea>
+                                 </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Credit Date</label>
+                                    <input type="date" class="form-control" name="credit_date" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">Add Credit Balance</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="content container-fluid">
+
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title">Add Shop Owner</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="">Shop Owner</a></li>
+                    <li class="breadcrumb-item active">Add Shop Owner</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+{% include "includes/message.html" %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <form action="{% url 'shop_owner_add' %}" method="POST" >
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-12">
+                                <h5 class="form-title"><span>Owner Details</span></h5>
+                            </div>
+                            
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Owner Name</label>
+                                    <input type="text" class="form-control" name="owner_name" required>
+                                </div>
+                            </div>
+                           
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Owner Mobile No</label>
+                                    <input type="text" class="form-control" name="owner_mobileNo" required>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Owner Alternate No</label>
+                                    <input type="text" class="form-control" name="owner_alternateNo" required>
+                                </div>
+                            </div>
+
+                            {% comment %} <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Owner Id</label>
+                                    <select class="form-control" placeholder="Enter Owner Id" name="shop_ownerId" required>
+                                        <option>Select Owner Id</option>
+                                        {% for i in a %}
+                                        
+                                        <option value="{{i.route_id}}">{{i.route_id}} </option>
+                                       
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div> {% endcomment %}
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">Add Shop Owner</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

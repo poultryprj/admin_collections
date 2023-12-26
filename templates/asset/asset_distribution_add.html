@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="content container-fluid">
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title">Add Asset Distribution Detail</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="">Asset Distribution</a></li>
+                    <li class="breadcrumb-item active">Add Asset Distribution Detail</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    {% include "includes/message.html" %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <form action="{% url 'asset_distribution_add' %}" method="POST" onsubmit="return validateForm()">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-12">
+                                <h5 class="form-title"><span>Asset Distribution Details</span></h5>
+                            </div>
+
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group mb-3">
+                                    <label class="mb-2">Distribution Date</label>
+                                    <input type="date" class="form-control" name="distribution_date" required>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group mb-3">
+                                    <label class="mb-2">Distribution Time</label>
+                                    <input type="time" class="form-control" name="distribution_time" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group mb-3">
+                                    <label class="mb-2">Assets Consumer</label>
+                                    <input type="text" class="form-control" name="assets_consumer_type" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-3 mb-3">
+                                <label>User Group</label>
+                                <div class="input-group">
+                                    <select class="form-control form-select" placeholder="" name="group_id" required>
+                                        <option value="" disabled selected>------- Select User Group -------</option>
+                                        {% for group in groups %}
+                                            <option value="{{ group.id }}">{{ group.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            
+
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group mb-3">
+                                    <label class="mb-2">Distribution To ID</label>
+                                    <input type="text" class="form-control" name="distribution_to_id" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group mb-3">
+                                    <label class="mb-2">Quantity</label>
+                                    <input type="text" class="form-control" name="quantity" pattern=".{1,}|.*\S" required value="0">
+                                    <!-- pattern=".{1,}|.*\S" ensures at least one character or non-whitespace character -->
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group mb-3">
+                                    <label class="mb-2">Weight</label>
+                                    <input type="text" class="form-control" name="weight" pattern=".{1,}|.*\S" required value="0">
+                                    <!-- pattern=".{1,}|.*\S" ensures at least one character or non-whitespace character -->
+                                </div>
+                            </div>
+                            
+                            
+
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group mb-3">
+                                    <label class="mb-2">Remarks</label>
+                                    <input type="text" class="form-control" name="remarks" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary"> Add Details </button>
+                            </div>
+
+                            <div class="col-12 mt-3">
+                                <div class="alert alert-danger" id="error-message" role="alert" style="display: none;">
+                                    Please fill out all required fields.
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

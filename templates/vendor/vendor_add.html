@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="content container-fluid">
+
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title">Vendor</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="">Vendor</a></li>
+                    <li class="breadcrumb-item active">Vendor Add</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+{% include "includes/message.html" %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <form action="{% url 'vendor_add' %}" method="POST" >
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-12">
+                                <h5 class="form-title"><span>Vendor Details</span></h5>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Vendor Name</label>
+                                    <input type="text" class="form-control" name="vendor_name" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Vendor Code</label>
+                                    <input type="text" class="form-control" name="vendor_code" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Vendor Type</label>
+                                    <select class="form-control form-select" name="product_type" required>
+                                        <option value="" disabled selected hidden>------- Select Vendor Type -------</option>
+                                        {% for i in productTypesData %}
+                                            <option value="{{i.product_type}}">{{ i.product_type }} </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Vendor Company</label>
+                                    <input type="text" class="form-control" name="vendor_company" required>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Contact No.</label>
+                                    <input type="text" class="form-control" name="contactNo" required>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Alt. Contact No.</label>
+                                    <input type="text" class="form-control" name="alt_contactNo" required>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Address</label>
+                                    <input type="text" class="form-control" name="address" required>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Status..</label>
+                                    <select class="form-control form-select" placeholder="Enter Flexible Rate" name="status" required>
+                                        <option>------- Select -------</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">Add Vendor</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

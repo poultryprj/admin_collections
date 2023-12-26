@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="content container-fluid">
+
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title">Add Vehicle Permit Detail</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="">Vehicle Permit</a></li>
+                    <li class="breadcrumb-item active">Add Permit Detail</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    {% include "includes/message.html" %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <form action="{% url 'vehicle_permit_add' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-12">
+                                <h5 class="form-title"><span>Vehicle Permit Details</span></h5>
+                            </div>
+
+
+                            <div class="col-12 col-sm-6 mb-3">
+                                <label>Vehicle Id</label>
+                                <div class="input-group">
+                                    <select class="form-control form-select" placeholder=""
+                                        name="vehicle_id" required>
+                                        <option value="" disabled selected>------- Select Vehicle Id -------</option>
+                                        {% for i in vehicleData %}
+                                        <option value="{{i.vehicle_id}}">{{ i.vehicle_id }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group mb-3"> <!-- Added mb-3 class for bottom margin -->
+                                    <label class="mb-2">Vehicle Permit From Date</label> <!-- Added mb-2 class for bottom margin -->
+                                    <input type="date" class="form-control" name="permit_from_date" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group mb-3"> <!-- Added mb-3 class for bottom margin -->
+                                    <label class="mb-2">Vehicle Permit To Date</label> <!-- Added mb-2 class for bottom margin -->
+                                    <input type="date" class="form-control" name="permit_to_date" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <label>Vehicle Permit</label>
+                                <div class="input-group">
+                                    <select class="form-control form-select" placeholder=""
+                                        name="permit_type" required>
+                                        <option value="" disabled selected>------- Select Permit Type -------</option>
+                                        {% for permit in TypeOfPermit %}
+                                        <option value="{{permit}}">{{ permit }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div> 
+
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Vehicle Permit No.</label>
+                                    <input type="text" class="form-control" name="vehicle_permit_id_no" placeholder="Enter Vehicle Permit No." required>
+                                </div>
+                            </div>          
+                            
+                            
+                            <div class="col-12"> 
+                                <button type="submit" class="btn btn-primary"> Add Details </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}

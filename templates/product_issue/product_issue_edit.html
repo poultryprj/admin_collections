@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="content container-fluid">
+
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title">Product Issue</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="">Product Issue</a></li>
+                    <li class="breadcrumb-item active">Product Issue Edit</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+{% include "includes/message.html" %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <form action="{% url 'product_issue_edit' productIssueEdit.product_issue_id %}" method="POST" >
+                        {% csrf_token %}
+                        <div class="row">
+
+                            <div class="col-12">
+                                <h5 class="form-title"><span>Product Issue Details</span></h5>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Issue Date</label>
+                                   
+                                    <input type="date" class="form-control" name="issue_date" value="{% if productIssueEdit.issue_date %}{{ productIssueEdit.issue_date|date:'Y-m-d' }}{% endif %}" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Name</label>
+                                    <select class="form-control form-select" name="shop_id" required>
+                                        <option  disabled>------- Select Shop Name -------</option>
+                                        <option value="{{productIssueEdit.shopId.shop_id}}">{{ productIssueEdit.shopId }} </option>
+                                        {% for i in ShopData %}
+                                            <option value="{{i.shop_id}}" {% if productIssueEdit.shopId.shop_id == i.shop_id %} style="display:none" {% endif %}>{{ i.shop_name }} </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group">
+                                    <label>Paper Rate</label>
+                                    <input type="text" class="form-control" name="paper_rate" value="{{productIssueEdit.paper_rate}}" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group">
+                                    <label>Boiler Size</label>
+                                    <input type="text" class="form-control" name="boiler_size" value="{{productIssueEdit.boiler_size}}" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group">
+                                    <label>Issue Birds</label>
+                                    <input type="text" class="form-control" name="issue_birds" value="{{productIssueEdit.issue_birds}}" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group">
+                                    <label>Birds Weight</label>
+                                    <input type="text" class="form-control" name="birds_weight" value="{{productIssueEdit.birds_weight}}" required>
+                                </div>
+                            </div>
+                          
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group">
+                                    <label>Daily Rate</label>
+                                    <input type="text" class="form-control" name="daily_rate" value="{{productIssueEdit.daily_rate}}" required>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group">
+                                    <label>Issue Amount</label>
+                                    <input type="text" class="form-control" name="issue_amount" value="{{productIssueEdit.issue_amount}}" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Vehicle Owner Name</label>
+                                    <select class="form-control form-select" name="vehicle_id" required>
+                                        <option disabled >------- Select Owner Vehicle -------</option>
+                                        <option value="{{productIssueEdit.vehicleId.vehicle_id}}">{{ productIssueEdit.vehicleId.owner_name }} </option>
+                                        {% for i in vehicleData %}
+                                            <option value="{{i.vehicle_id}}" {% if productIssueEdit.vehicleId.vehicle_id == i.vehicle_id %} style="display:none" {% endif %}>{{ i.owner_name }} </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Driver Name</label>
+                                    <select class="form-control form-select" name="driver_id" required>
+                                        <option disabled >------- Select Driver Name -------</option>
+                                        <option value="{{productIssueEdit.driverId.user_id}}">{{productIssueEdit.driverId}} </option>
+                                        {% for i in userModelData %}
+                                            <option value="{{i.user_id}}" {% if productIssueEdit.driverId.user_id == i.user_id %} style="display:none" {% endif %}>{{ i.user_name }} </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group">
+                                    <label>Entry Source</label>
+                                    <input type="text" class="form-control" name="entry_source" value="{{productIssueEdit.entry_source}}" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group">
+                                    <label>Latitude</label>
+                                    <input type="text" class="form-control" name="latitude" value="{{productIssueEdit.latitude}}" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group">
+                                    <label>Longitude</label>
+                                    <input type="text" class="form-control" name="longitude" value="{{productIssueEdit.longtitude}}" required>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Product Type</label>
+                                    <select class="form-control form-select" name="product_type_id" required>
+                                        <option  disabled >------- Select Product Type -------</option>
+                                        <option value="{{productIssueEdit.product_typeId.product_type_id}}">{{productIssueEdit.product_typeId}} </option>
+                                        {% for i in productTypesData %}
+                                            <option value="{{i.product_type_id}}" {% if productIssueEdit.product_typeId.product_type_id == i.product_type_id %} style="display:none" {% endif %}>{{ i.product_type }} </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">Update Details</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

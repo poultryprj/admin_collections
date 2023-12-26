@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="content container-fluid">
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title">Product Isuue</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'Index' %}">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Product Isuue</li>
+                </ul>
+            </div>
+            <div class="col-auto text-right float-right ml-auto">
+                <a href="{% url 'product_issue_add' %}" class="btn btn-primary"><i class="fas fa-plus"></i></a>
+            </div>
+        </div>
+    </div>
+
+    {% include "includes/message.html" %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card card-table mb-5">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table id="table_id" class="table table-hover table-center mb-0  no-footer"
+                                        id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
+                                        <thead>
+                                            <tr role="row">
+                                                <th class="sorting_asc" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1" aria-sort="ascending"
+                                                    aria-label="ID: activate to sort column descending"
+                                                    style="width: 50.5px;">Sr.No</th>
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Name: activate to sort column ascending"
+                                                    style="width: 130.4px;">Issue Date</th>
+                                                    <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Name: activate to sort column ascending"
+                                                    style="width: 130.4px;">Shop Name</th>
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Class: activate to sort column ascending"
+                                                    style="width: 70.7px;">Paper Rate</th>
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Gender: activate to sort column ascending"
+                                                    style="width: 100.025px;">Boiler Size</th>
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Gender: activate to sort column ascending"
+                                                    style="width: 56.025px;">Issue Birds</th>
+                                                <th class="sorting" tabindex="0"                    aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Gender: activate to sort column ascending"
+                                                    style="width: 36.025px;">Birds Weight</th>
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                rowspan="1" colspan="1"
+                                                aria-label="Gender: activate to sort column ascending"
+                                                style="width: 56.025px;">Daily Rate</th>
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                rowspan="1" colspan="1"
+                                                aria-label="Gender: activate to sort column ascending"
+                                                style="width: 20.025px;">Issue Amount</th>
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                rowspan="1" colspan="1"
+                                                aria-label="Gender: activate to sort column ascending"
+                                                style="width: 20.025px;">Vehicle Name</th>
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                rowspan="1" colspan="1"
+                                                aria-label="Gender: activate to sort column ascending"
+                                                style="width: 20.025px;">Driver Name</th>
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                rowspan="1" colspan="1"
+                                                aria-label="Gender: activate to sort column ascending"
+                                                style="width: 20.025px;">Entry Source</th>
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                rowspan="1" colspan="1"
+                                                aria-label="Gender: activate to sort column ascending"
+                                                style="width: 56.025px;">Location</th>
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                rowspan="1" colspan="1"
+                                                aria-label="Gender: activate to sort column ascending"
+                                                style="width: 20.025px;">Product Type</th>
+                                                
+                                                <th class="text-right sorting" tabindex="0"
+                                                    aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+                                                    aria-label="Action: activate to sort column ascending"
+                                                    style="width: 54.7px;">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            {% for productIssueList in productIssueLists %}
+
+                                            <tr role="row" class="odd">
+
+                                                <td class="sorting_1">{{forloop.counter}}</td>
+                                                <td>{{productIssueList.issue_date}}</td>
+                                                <td>{{productIssueList.shopId}}</td>
+                                                <td>{{productIssueList.paper_rate}}</td>
+                                                <td>{{productIssueList.boiler_size}}</td>
+                                                <td>{{productIssueList.issue_birds}}</td>
+                                                <td>{{productIssueList.birds_weight}}</td>
+                                                <td>{{productIssueList.daily_rate}}</td>
+                                                <td>{{productIssueList.issue_amount}}</td>
+                                                <td>{{productIssueList.vehicleId.owner_name}}</td>
+                                                <td>{{productIssueList.driverId}}</td>
+                                                <td>{{productIssueList.entry_source}}</td>
+                                                <td><button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-location-dot"></i></button></td>
+                                                <td>{{productIssueList.product_typeId}}</td>
+                                               
+                                                <td class="text-right">
+                                                    <div class="actions">
+                                                        <a href="{% url 'product_issue_edit' productIssueList.product_issue_id %}"
+                                                            class="btn btn-warning btn-sm mr-2">
+                                                            <i class="fas fa-pen"></i>
+                                                        </a>
+                                                        <a href="{% url 'product_issue_delete' productIssueList.product_issue_id %}"  onclick="return confirm('Are you sure you want to delete this?')"
+                                                            class="btn btn-danger btn-sm">
+                                                            <i class="fas fa-trash"></i>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            {% endfor %}    
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="content container-fluid">
+
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title">Edit Vehicle Insurance Details</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="">Vehicles</a></li>
+                    <li class="breadcrumb-item active">Vehicle Insurance</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+{% include "includes/message.html" %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <form action="{% url 'vehicle_insurance_update' %}" method="POST" >
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-12">
+                                <h5 class="form-title"><span>Vehicle Insurance Details</span></h5>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Vehicle Id</label>
+                                    <input type="text" class="form-control" name="vehicle_id" value="{{vehicleDetailEdit.vehicle_id}}" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Insurance Id</label>
+                                    <input type="text" class="form-control" name="insurance_id" value="{{vehicleInsuranceData.insurance_id}}" readonly>
+                                </div>
+                            </div>
+                            
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label for="insurance_company_name">Vehicle Insurance Company</label>
+                                    <select class="form-control form-select" name="insurance_company_name" id="insurance_company" required>
+                                        <option value="" disabled>------- Select Insurance Company -------</option>
+                                        {% for company in insuranceCompanyData %}
+                                            <option value="{{ company.insurance_company_name }}" {% if vehicleInsuranceData.insurance_company.insurance_id == company.insurance_id %} selected {% endif %}>
+                                                {{ company.insurance_company_name }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            
+                            
+
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Owner Name</label>
+                                    <input type="text" class="form-control" name="owner_name" value="{{vehicleDetailEdit.owner_name}}" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group">
+                                    <label>Vehicle Insurance From Date</label>
+                                    <input type="date" class="form-control" name="insurance_from_date" value="{% if vehicleInsuranceData.insurance_from_date %}{{ vehicleInsuranceData.insurance_from_date|date:'Y-m-d' }}{% endif %}" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group">
+                                    <label>Vehicle Insurance To Date</label>
+                                    <input type="date" class="form-control" name="insurance_to_date" value="{% if vehicleInsuranceData.insurance_to_date %}{{ vehicleInsuranceData.insurance_to_date|date:'Y-m-d' }}{% endif %}" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group">
+                                    <label>Insurance Amount</label>
+                                    <input type="text" class="form-control" name="insurance_amount" value="{{vehicleInsuranceData.insurance_amount}}" required>
+                                </div>
+                            </div>
+
+                            
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group">
+                                    <label>Insurance Paid Amount</label>
+                                    <input type="text" class="form-control" name="insurance_paid_amount" value="{{vehicleInsuranceData.insurance_paid_amount}}" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">Update Details</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

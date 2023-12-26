@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="content container-fluid">
+
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title">Edit Shop</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="">Shops</a></li>
+                    <li class="breadcrumb-item active">Edit Shop</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+{% include "includes/message.html" %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <form action="{% url 'shop_update' %}" method="POST" >
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-12">
+                                <h5 class="form-title"><span>Shop Details</span></h5>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Id</label>
+                                    <input type="text" class="form-control" name="shop_id" value="{{shopEdit.shop_id}}" readonly>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Code</label>
+                                    <input type="text" class="form-control" name="shop_code" value="{{shopEdit.shop_code}}" required>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Name</label>
+                                    <input type="text" class="form-control" name="shop_name" value="{{shopEdit.shop_name}}" required>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Area</label>
+                                    <select class="form-control form-select" placeholder="Enter Shop Area" name="shop_area" required>
+                                        <option disabled>------- Select Shop Area -------</option>
+                                        <option value="{{shopEdit.shop_area}}">{{ shopEdit.shop_area }}</option>
+                                        <option value="area 1" {% if shopEdit.shop_area == "area 1" %} style="display: none;" {% endif %}>area 1</option>
+                                        <option value="area 2" {% if shopEdit.shop_area == "area 2" %} style="display: none;" {% endif %}>area 2</option>
+                                        <option value="area 3" {% if shopEdit.shop_area == "area 3" %} style="display: none;" {% endif %}>area 3</option>
+                                        <option value="area 4" {% if shopEdit.shop_area == "area 4" %} style="display: none;" {% endif %}>area 4</option>
+                                        <option value="area 5" {% if shopEdit.shop_area == "area 5" %} style="display: none;" {% endif %}>area 5</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group">
+                                    <label>Shop Latitude</label>
+                                    <input type="text" class="form-control" name="shop_latitude" value="{{shopEdit.shop_latitude}}" required>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group">
+                                    <label>Shop Longitude</label>
+                                    <input type="text" class="form-control" name="shop_longitude" value="{{shopEdit.shop_longitude}}" required>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Address</label>
+                                    <input type="text" class="form-control" name="shop_address" value="{{shopEdit.shop_address}}" required>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group">
+                                    <label>Shop Pincode</label>
+                                    <input type="text" class="form-control" name="shop_pincode" value="{{shopEdit.shop_pincode}}" required>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group">
+                                    <label>Shop Distance</label>
+                                    <input type="text" class="form-control" name="shop_distance" value="{{shopEdit.shop_distance}}" required>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Mobile No</label>
+                                    <input type="text" class="form-control" name="shop_mobileNo" value="{{shopEdit.shop_mobileNo}}" required>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Alternate No</label>
+                                    <input type="text" class="form-control" name="shop_alternateNo" value="{{shopEdit.shop_alternateNo}}" required>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Owner</label>
+                                    <select class="form-control form-select" placeholder="Enter Owner Id" name="shop_ownerId"  required>
+                                        <option disabled>------- Select Shop Owner -------</option>
+                                        <option value="{{shopEdit.shop_ownerId.owner_id}}">{{shopEdit.shop_ownerId}}</option>
+                                        {% for i in shopOwnerData %}
+                                        <option value="{{i.owner_id}}" {% if shopEdit.shop_ownerId.owner_id == i.owner_id %} style="display:none" {% endif %}>{{i.owner_name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                           
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Type</label>
+                                    <select class="form-control form-select" placeholder="Enter Shop Type" name="shop_type"  required>
+                                        <option disabled>------- Select Shop Type -------</option>
+                                        <option value="{{shopEdit.shop_type}}">{{shopEdit.shop_type}}</option>
+                                        <option value="shop type 1" {% if shopEdit.shop_type == "shop type 1" %} style="display: none;" {% endif %}>shop type 1</option>
+                                        <option value="shop type 2" {% if shopEdit.shop_type == "shop type 2" %} style="display: none;" {% endif %}>shop type 2</option>
+                                        <option value="shop type 3" {% if shopEdit.shop_type == "shop type 3" %} style="display: none;" {% endif %}>shop type 3</option>
+                                        <option value="shop type 4" {% if shopEdit.shop_type == "shop type 4" %} style="display: none;" {% endif %}>shop type 4</option>
+                                        <option value="shop type 5" {% if shopEdit.shop_type == "shop type 5" %} style="display: none;" {% endif %}>shop type 5</option>
+                                    
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Shop Status</label>
+                                    <select class="form-control form-select" placeholder="Enter Shop Area" name="shop_status" required>
+                                        <option disabled>------- Select Shop Status -------</option>
+                                        <option value="{{shopEdit.shop_status}}">{{shopEdit.shop_status}}</option>
+                                        <option value="Active" {% if shopEdit.shop_status == "Active" %} style="display: none;" {% endif %}>Active</option>
+                                        <option value="In active" {% if shopEdit.shop_status == "In active" %} style="display: none;" {% endif %}>In Active</option>
+                                        
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">Update Shop</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
