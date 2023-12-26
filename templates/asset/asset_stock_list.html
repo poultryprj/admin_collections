@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="content container-fluid">
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title">Assets Stock</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'Index' %}">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Assets Stock Details</li>
+                </ul>
+            </div>
+            <div class="col-auto text-right float-right ml-auto">
+                <a href="{% url 'asset_stock_add' %}" class="btn btn-primary"><i class="fas fa-plus"></i></a>
+            </div>
+        </div>
+    </div>
+
+    {% include "includes/message.html" %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card card-table mb-5">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-center mb-0 no-footer" id="table_id">
+                            <thead>
+                                <tr>
+                                    <th class="sorting_asc" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-sort="ascending" aria-label="ID: activate to sort column descending" style="width: 50.5px;">Sr.No</th>
+                                    <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Gender: activate to sort column ascending" style="width: 36.025px;">Asset Stock Quantity</th>
+                                    <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Gender: activate to sort column ascending" style="width: 36.025px;">Asset Stock Weight</th>
+                                    <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Gender: activate to sort column ascending" style="width: 36.025px;">Asset</th>
+                                    <th class="text-right sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Action: activate to sort column ascending" style="width: 54.7px;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for asset_stock in asset_stock_list %}
+                                    <tr role="row" class="odd">
+                                        <td class="sorting_1">{{ forloop.counter }}</td>
+                                        <td>{{ asset_stock.asset_stock_quantity }}</td>
+                                        <td>{{ asset_stock.asset_stock_weight }}</td>
+                                        <td>{{ asset_stock.asset_Id.asset_name }}</td>
+                                        <td class="text-right">
+                                            <div class="actions">
+                                                <a href="{% url 'asset_stock_edit' asset_stock.stock_id %}" class="btn btn-warning btn-sm mr-2">
+                                                    <i class="fas fa-pen"></i>
+                                                </a>
+                                                <a href="{% url 'asset_stock_delete' asset_stock.stock_id %}" onclick="return confirm('Are you sure you want to delete this?')" class="btn btn-danger btn-sm">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

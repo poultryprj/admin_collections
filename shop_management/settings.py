@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'vendor1',
     'rest_framework',
     'collection_api',
-    'storages',
+    'asset',
 ]
 
 MIDDLEWARE = [
@@ -148,6 +148,8 @@ MESSAGE_TAGS = {
     messages.INFO: "",
     messages.ERROR: "danger"
 }
+
+
 
 AWS_ACCESS_KEY_ID = 'AKIA6AL6FGIVCDBX5BHU'
 AWS_SECRET_ACCESS_KEY = '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'

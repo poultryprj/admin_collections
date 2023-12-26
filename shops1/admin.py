@@ -1,6 +1,8 @@
 from django.contrib import admin
 from .models import ProductIssue, ProductRecieve, ShopBalance, ShopFlexibleRate, ShopModel, ShopOwner, ShopRoute, ProductTypes, ProductCategories, ProductMaster, Associations, ShopProductRates
 
+
+
 # Register your models here.
 
 

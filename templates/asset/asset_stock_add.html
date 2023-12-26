@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="content container-fluid">
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title">Add Asset Stock Detail</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="">Asset Stock</a></li>
+                    <li class="breadcrumb-item active">Add Asset Stock Detail</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    {% include "includes/message.html" %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <form action="{% url 'asset_stock_add' %}" method="POST" onsubmit="return validateForm()">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-12">
+                                <h5 class="form-title"><span>Asset Stock Details</span></h5>
+                            </div>
+                            
+
+                            <div class="col-12 col-sm-3 mb-3">
+                                <label for="asset_id">Asset ID</label>
+                                <div class="input-group">
+                                    <select class="form-control form-select" id="asset_id" name="asset_id" required>
+                                        <option value="" disabled selected>------- Select Asset ID -------</option>
+                                        {% for asset in assetData %}
+                                            <option value="{{ asset.asset_id }}">{{ asset.asset_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group mb-3">
+                                    <label class="mb-2">Asset Stock Quantity</label>
+                                    <input type="text" class="form-control" name="asset_stock_quantity" required>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group mb-3">
+                                    <label class="mb-2">Asset Stock Weight</label>
+                                    <input type="text" class="form-control" name="asset_stock_weight" required>
+                                </div>
+                            </div>
+
+                        
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary"> Add Details </button>
+                            </div>
+
+                            <div class="col-12 mt-3">
+                                <div class="alert alert-danger" id="error-message" role="alert" style="display: none;">
+                                    Please fill out all required fields.
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

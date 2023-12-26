@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="content container-fluid">
+
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title">Edit Asset Stock Details</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="">Asset Stock</a></li>
+                    <li class="breadcrumb-item active">Asset Stock Details</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+{% include "includes/message.html" %}
+
+    <div class="row">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form action="{% url 'asset_stock_update' %}" method="POST" >
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-12">
+                                    <h5 class="form-title"><span>Asset Stock Details</span></h5>
+                                </div>
+    
+                                <div class="col-12 col-sm-3">
+                                    <div class="form-group">
+                                        <label>Asset Stock Id</label>
+                                        <input type="text" class="form-control" name="stock_id" value="{{ assetStockData.stock_id }}" readonly>
+                                    </div>
+                                </div>
+
+    
+                                <div class="col-12 col-sm-3">
+                                    <div class="form-group">
+                                        <label>Assets</label>
+                                        <select class="form-control form-select" name="asset_id" required>
+                                            <option value="" disabled>------- Select Asset -------</option>
+                                            {% for asset in assetData %}
+                                                <option value="{{ asset.asset_id }}"
+                                                    {% if assetStockData.asset_Id.asset_id == asset.asset_id %}
+                                                        selected
+                                                    {% endif %}
+                                                >
+                                                    {{ asset.asset_name }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                
+
+                                <div class="col-12 col-sm-3">
+                                    <div class="form-group">
+                                        <label>Asset Quantity</label>
+                                        <input type="text" class="form-control" name="asset_stock_quantity" value="{{ assetStockData.asset_stock_quantity }}" required>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-sm-3">
+                                    <div class="form-group">
+                                        <label>Asset Stock Weight</label>
+                                        <input type="text" class="form-control" name="asset_stock_weight" value="{{ assetStockData.asset_stock_weight }}" required>
+                                    </div>
+                                </div>
+                                
+    
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary">Update Details</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

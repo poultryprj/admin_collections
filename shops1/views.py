@@ -1,11 +1,8 @@
 import json
 from django.http import JsonResponse
-from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import render, redirect
 from django.contrib import messages
 from user.models import UserModel
-
 from vehicle2.models import Vehicle, Vendor
 from .models import  Associations, ProductIssue, ProductRecieve, ShopBalance, ShopFlexibleRate, ShopModel, ShopOwner, ShopProductRates, ShopRoute, ProductTypes, ProductCategories, ProductMaster
 from routes.models import RouteModel
@@ -256,20 +253,6 @@ def ShopRouteList(request):
         return JsonResponse(context)
 
     return render(request, 'shop_routes/shop_route.html', context)
-
-
-
-
-
-# def selected_shops(request):
-#     if request.method == "POST":
-#         selected_shop_ids = request.POST.getlist("selected_shops")
-#         print(selected_shop_ids)
-#         return render(request, 'shop_routes/shop_route.html',{'selected_shops': selected_shops})  
-
-#     return render(request, 'shop_routes/shop_route.html')  
-
-
 
 # *************************************** Product Type *************************************************
 
@@ -1138,3 +1121,4 @@ def ProductIssueDelete(request,id):
     return redirect('product_issue_list')
 
     
+        

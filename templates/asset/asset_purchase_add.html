@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="content container-fluid">
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title">Add Asset Purchase Detail</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="">Asset Purchase</a></li>
+                    <li class="breadcrumb-item active">Add Asset Purchase Detail</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    {% include "includes/message.html" %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <form action="{% url 'asset_purchase_add' %}" method="POST" onsubmit="return validateForm()">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-12">
+                                <h5 class="form-title"><span>Asset Purchase Details</span></h5>
+                            </div>
+
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group mb-3">
+                                    <label class="mb-2">Asset Purchase Date</label>
+                                    <input type="date" class="form-control" name="purchase_date" required>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group mb-3">
+                                    <label class="mb-2">Asset Purchase Time</label>
+                                    <input type="time" class="form-control" name="purchase_time" required>
+                                </div>
+                            </div>
+                            
+
+
+                            <div class="col-12 col-sm-3 mb-3">
+                                <label>Vendor</label>
+                                <div class="input-group">
+                                    <select class="form-control form-select" placeholder=""
+                                        name="vendor_id" required>
+                                        <option value="" disabled selected>------- Select Vendor -------</option>
+                                        {% for i in vendorData %}
+                                        <option value="{{i.vendor_id}}">{{ i.vendor_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            
+
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group mb-3">
+                                    <label class="mb-2">Assets</label>
+                                    <select class="form-select" name="asset_id" required>
+                                        <option value="" selected disabled>Select An Asset</option>
+                                        {% for asset in assetData %}
+                                            <option value="{{ asset.asset_id }}">{{ asset.asset_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            
+                            
+                            
+
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group mb-3">
+                                    <label class="mb-2">Quantity</label>
+                                    <input type="text" class="form-control" name="quantity" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group mb-3">
+                                    <label class="mb-2">Weight</label>
+                                    <input type="text" class="form-control" name="weight" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group mb-3">
+                                    <label class="mb-2">Rate</label>
+                                    <input type="text" class="form-control" name="rate" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-3">
+                                <div class="form-group mb-3">
+                                    <label class="mb-2">Amount</label>
+                                    <input type="text" class="form-control" name="amount" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group mb-3">
+                                    <label class="mb-2">Remarks</label>
+                                    <input type="text" class="form-control" name="remarks" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary"> Add Details </button>
+                            </div>
+
+                            <div class="col-12 mt-3">
+                                <div class="alert alert-danger" id="error-message" role="alert" style="display: none;">
+                                    Please fill out all required fields.
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

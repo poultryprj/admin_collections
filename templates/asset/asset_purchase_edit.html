@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="content container-fluid">
+
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title">Edit Asset Purchase Details</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="">Asset Purchase</a></li>
+                    <li class="breadcrumb-item active">Asset Purchase Details</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+{% include "includes/message.html" %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <form action="{% url 'asset_purchase_update' %}" method="POST" >
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-12">
+                                <h5 class="form-title"><span>Asset Purchase Details</span></h5>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Asset Purchase Id</label>
+                                    <input type="text" class="form-control" name="asset_purchase_id" value="{{assetPurchaseData.asset_purchase_id}}" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group mb-3">
+                                    <label class="mb-2">Asset Purchase Date</label>
+                                    <input type="date" class="form-control" name="purchase_date" value="{{ purchase_date }}" required>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group mb-3">
+                                    <label class="mb-2">Asset Purchase Time</label>
+                                    <input type="time" class="form-control" name="purchase_time" value="{{ purchase_time }}" required>
+                                </div>
+                            </div>
+
+                             
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Vendors</label>
+                                    <select class="form-control form-select" name="vendor_id" required>
+                                        <option value="" disabled>------- Select Vendor -------</option>
+                                        {% for vendor in vendorData %}
+                                            <option value="{{ vendor.vendor_id }}"
+                                                {% if assetPurchaseData.vendor_Id_id == vendor.vendor_id %}
+                                                    selected
+                                                {% endif %}
+                                            >
+                                                {{ vendor.vendor_name }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Assets</label>
+                                    <select class="form-control form-select" name="asset_id" required>
+                                        <option value="" disabled>------- Select Asset -------</option>
+                                        {% for asset in assetData %}
+                                            <option value="{{ asset.asset_id }}"
+                                                {% if assetPurchaseData.asset_Id_id == asset.asset_id %}
+                                                    selected
+                                                {% endif %}
+                                            >
+                                                {{ asset.asset_name }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Quantity</label>
+                                    <input type="text" class="form-control" name="quantity" value="{{assetPurchaseData.quantity}}">
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Weight</label>
+                                    <input type="text" class="form-control" name="weight" value="{{assetPurchaseData.weight}}">
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Rate</label>
+                                    <input type="text" class="form-control" name="rate" value="{{assetPurchaseData.rate}}">
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Amount</label>
+                                    <input type="text" class="form-control" name="amount" value="{{assetPurchaseData.amount}}">  
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Remarks</label>
+                                    <input type="text" class="form-control" name="remarks" value="{{assetPurchaseData.remarks}}">  
+                                </div>
+                            </div>
+                            
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">Update Details</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

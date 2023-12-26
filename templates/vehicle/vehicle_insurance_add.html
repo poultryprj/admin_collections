@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="content container-fluid">
+
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title">Add Vehicle Insurance Detail</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="">Vehicle Insurance</a></li>
+                    <li class="breadcrumb-item active">Add Insurance Detail</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    {% include "includes/message.html" %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <form action="{% url 'vehicle_insurance_add' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-12">
+                                <h5 class="form-title"><span>Vehicle Insurance Details</span></h5>
+                            </div>
+
+
+                            <div class="col-12 col-sm-6">
+                                <label>Vehicle Id</label>
+                                <div class="input-group">
+                                    <select class="form-control form-select" placeholder=""
+                                        name="vehicle_id" required>
+                                        <option value="" disabled selected>------- Select Vehicle Id -------</option>
+                                        {% for i in vehicleData %}
+                                        <option value="{{i.vehicle_id}}">{{ i.vehicle_id }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+
+
+
+                            <div class="col-12 col-sm-6">
+                                <label>Insurance Company</label>
+                                <div class="input-group">
+                                    <select class="form-control form-select" placeholder=""
+                                    name="insurance_company_name" required>
+                                    <option value="" disabled selected>------- Select Insurance Company -------</option>
+                                    {% for company in insuranceCompanies %}
+                                    <option value="{{company.insurance_company_name}}">{{ company.insurance_company_name }}</option>
+                                    {% endfor %}
+                                </select>
+                                
+
+
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal" data-bs-whatever="@mdo"> <i
+                                            class="fa-solid fa-square-plus"></i></button>
+
+                                  
+
+                                    <div class="modal fade" id="exampleModal" tabindex="-1"
+                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add New Insurance Company</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="mb-3">
+                                                        <label for="recipient-name"
+                                                            class="col-form-label">Insurance Company:</label>
+                                                        <input type="text" class="form-control" id="recipient-name">
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Close</button>
+                                                    <a onClick='addInsuranceCompany()'
+                                                        class="btn btn-primary">Add</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+
+
+
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group mb-3"> <!-- Added mb-3 class for bottom margin -->
+                                    <label class="mb-2">Vehicle Insurance From Date</label> <!-- Added mb-2 class for bottom margin -->
+                                    <input type="date" class="form-control" name="insurance_from_date" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group mb-3"> <!-- Added mb-3 class for bottom margin -->
+                                    <label class="mb-2">Vehicle Insurance To Date</label> <!-- Added mb-2 class for bottom margin -->
+                                    <input type="date" class="form-control" name="insurance_to_date" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Insurance Amount</label>
+                                    <input type="text" class="form-control" name="insurance_amount" placeholder="Enter Insurance Amount" required>
+                                </div>
+                            </div>
+
+                            
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Insurance Paid Amount</label>
+                                    <input type="text" class="form-control" name="insurance_paid_amount" placeholder="Enter Insurance Paid Amount" required>
+                                </div>
+                            </div>
+                            
+                            
+
+                            <div class="col-12"> 
+                                <button type="submit" class="btn btn-primary"> Add Details </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Your existing form and script -->
+
+<script>
+    // Insurance Company
+    function addInsuranceCompany() {
+        const newName = $('#recipient-name').val();
+        
+        // Check if the option already exists in the dropdown
+        if (!$(`select[name="insurance_company_name"] option[value="${newName}"]`).length) {
+            const select = $('select[name="insurance_company_name"]');
+            const option = $('<option></option>').attr('value', newName).text(newName);
+            select.append(option);
+
+            // Set the new option as selected
+            select.val(newName);
+
+            // Hide the modal and clear input after successful addition
+            $('#exampleModal').modal('hide');
+            $('#recipient-name').val('');
+        } else {
+            // Handle case where the option already exists
+            alert('Insurance company already exists in the dropdown.');
+        }
+    }
+
+    // Rest of your script remains the same
+</script>
+
+
+
+{% endblock content %}

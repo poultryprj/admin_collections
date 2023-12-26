@@ -37,4 +37,6 @@ urlpatterns = [
 
     path('api/', include('collection_api.urls')),
     
+    path('asset/', include('asset.urls')),
+    
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
