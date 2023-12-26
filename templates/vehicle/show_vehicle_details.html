@@ -91,8 +91,7 @@
                                 <input type="date" class="form-control" name="registration_date" value="{% if vehicleDetailEdit.registration_date %}{{ vehicleDetailEdit.registration_date|date:'Y-m-d' }}{% endif %}" readonly>
                             </div>
                         </div>
-                        {% comment %} Fitness Data {% endcomment %}
-
+                    </div>
                         {% if vehicleFitnessData %}
                             <div class="row">
                                 <div class="col-12">
@@ -124,8 +123,6 @@
                             <p>No fitness data available for this vehicle.</p>
                         {% endif %}
 
-                        {% comment %} VehicleInsuranceData {% endcomment %}
-                        <!-- Other vehicle details -->
 
                         {% if insuranceDetails %}
                         <div class="row">
@@ -134,7 +131,7 @@
                             </div>
 
                             {% for insurance in insuranceDetails %}
-                            <div class="row">
+                          
                                 <div class="col-12">
                                     <h5 class="form-title"><span>Insurance Record. {{ forloop.counter }}</span></h5>
                                 </div>
@@ -143,7 +140,7 @@
                                         <label>Insurance Id</label>
                                         <input type="text" class="form-control" name="insurance_id" value="{{ insurance.insurance_id }}" readonly>
                                     </div>
-                                    <!-- Display other insurance details here -->
+            
                                 </div>
                                 <div class="col-12 col-sm-3">
                                     <div class="form-group">
@@ -179,14 +176,13 @@
                                         <input type="text" class="form-control" name="insurance_company" value="{{ insurance.insurance_paid_amount }}" readonly>
                                     </div>
                                 </div>
-                            </div>
+                    
                             {% endfor %}
                         </div>
                         {% else %}
                         <p>No Insurance data available for this vehicle.</p>
                         {% endif %}
 
-                        {% comment %} Vehicle permit details {% endcomment %}
                         {% if permitDetailList %}
                         <div class="row">
                             <div class="col-12">
@@ -194,7 +190,7 @@
                             </div>
 
                             {% for permit in permitDetailList %}
-                            <div class="row">
+                            
                                 <div class="col-12">
                                     <h5 class="form-title"><span>Permit Record. {{ forloop.counter }}</span></h5>
                                 </div>
@@ -232,14 +228,14 @@
                                         <input type="text" class="form-control" name="vehicle_permit_id" value="{{ permit.vehicle_permit_id }}" readonly>
                                     </div>
                                 </div>
-                            </div>
+                   
                             {% endfor %}
                         </div>
                         {% else %}
                         <p>No Permit data available for this vehicle.</p>
                         {% endif %}
 
-                        {% comment %} Vehicle pollution details {% endcomment %}
+
                         {% if pollutionDetailList %}
                         <div class="row">
                             <div class="col-12">
@@ -247,7 +243,7 @@
                             </div>
 
                             {% for pollution in pollutionDetailList %}
-                            <div class="row">
+                 
                                 <div class="col-12">
                                     <h5 class="form-title"><span>Pollution Record. {{ forloop.counter }}</span></h5>
                                 </div>
@@ -279,13 +275,13 @@
                                         <input type="text" class="form-control" name="vehicle_pollution_value" value="{{ pollution.vehicle_pollution_value }}" readonly>
                                     </div>
                                 </div>
-                            </div>
+                  
                             {% endfor %}
                         </div>
                         {% else %}
                         <p>No Pollution data available for this vehicle.</p>
                         {% endif %}
-                        {% comment %} Vehicle Tax Details {% endcomment %}
+     
 
                         {% if vehicleTaxDetailList %}
                         <div class="row">
@@ -294,7 +290,7 @@
                             </div>
 
                             {% for tax in vehicleTaxDetailList %}
-                            <div class="row">
+                     
                                 <div class="col-12">
                                     <h5 class="form-title"><span>Tax Record. {{ forloop.counter }}</span></h5>
                                 </div>
@@ -343,7 +339,6 @@
                                 </div>
 
 
-                            </div>
                             {% endfor %}
                         </div>
                         {% else %}
@@ -358,7 +353,7 @@
                                 <button type="submit" class="btn btn-dark">Back</button>
                             </form>
                         </div>
-                    </div>
+                   
                 </div>
             </div>
         </div>
