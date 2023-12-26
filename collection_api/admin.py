@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 
-from .models import Collection, CollectionMode, Complaint, SkipShop
+from .models import Collection, CollectionMode
 
 class CollectionAdmin(admin.ModelAdmin):
     list_display = ('collection_id', 'collection_date', 'collection_time', 'shopId', 'cashierId', 'total_amount')
@@ -14,27 +14,7 @@ class CollectionModeAdmin(admin.ModelAdmin):
     list_filter = ('collection_mode_id', 'payment_mode', 'payment_amount', 'upload_image')
     search_fields = ('collection_mode_id', 'payment_mode', 'payment_amount', 'upload_image')  # Add fields for search
 
-class SkipShopAdmin(admin.ModelAdmin):
-    list_display = ('skip_shop_id', 'skip_shop_date', 'skip_shop_time', 'shopId', 'cashierId',
-                     'approve_yn', 'remark', 'approve_byId', 'created_on', 'created_by', 'last_modified_on',
-                     'last_modified_by')
-    list_filter = ('skip_shop_id', 'skip_shop_date', 'skip_shop_time',
-                     'approve_yn', 'remark', 'created_on', 'last_modified_on')
-    search_fields = ('skip_shop_id', 'skip_shop_date', 'skip_shop_time',
-                     'approve_yn', 'remark', 'created_on', 'last_modified_on')  # Add fields for search
-    
-
-class ComplaintAdmin(admin.ModelAdmin):
-    list_display = ('complaint_id', 'complaint_date', 'complaint_time', 'shopId', 'cashierId',
-                     'approve_yn', 'remark', 'approve_byId', 'created_on', 'created_by', 'last_modified_on',
-                     'last_modified_by')
-    list_filter = ('complaint_id', 'complaint_date', 'complaint_time',
-                     'approve_yn', 'remark', 'created_on', 'last_modified_on')
-    search_fields = ('complaint_id', 'complaint_date', 'complaint_time',
-                     'approve_yn', 'remark', 'created_on', 'last_modified_on') 
 
 
 admin.site.register(Collection, CollectionAdmin)
 admin.site.register(CollectionMode, CollectionModeAdmin)
-admin.site.register(SkipShop, SkipShopAdmin)
-admin.site.register(Complaint, ComplaintAdmin)

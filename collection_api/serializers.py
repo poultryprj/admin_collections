@@ -1,7 +1,9 @@
 from rest_framework import serializers
-
+from django.contrib.auth.models import Group
 from routes.models import RouteModel
-from .models import Collection, CollectionMode, Complaint, ShopModel, ShopModel, SkipShop
+from shops1.models import ProductRecieve
+from vehicle2.models import Vehicle
+from .models import Collection, CollectionMode, ShopModel, ShopModel
 from django.contrib.auth.models import User
 
 
@@ -36,12 +38,30 @@ class CollectionModeSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class SkipShopSerializer(serializers.ModelSerializer):
+
+class GroupSerializer(serializers.ModelSerializer):
     class Meta:
-        model = SkipShop
+        model = Group
         fields = '__all__'
 
-class ComplaintSerializer(serializers.ModelSerializer):
+
+
+class VehicleSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Complaint
+        model = Vehicle
+        fields = '__all__'
+
+
+class ProductRecieveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductRecieve
+        fields = '__all__'
+
+
+
+from shops1.models import ProductIssue
+
+class ProductIssueSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductIssue
         fields = '__all__'

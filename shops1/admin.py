@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ProductRecieve, ShopBalance, ShopFlexibleRate, ShopModel, ShopOwner, ShopRoute, ProductTypes, ProductCategories, ProductMaster, Associations, ShopProductRates
+from .models import ProductIssue, ProductRecieve, ShopBalance, ShopFlexibleRate, ShopModel, ShopOwner, ShopRoute, ProductTypes, ProductCategories, ProductMaster, Associations, ShopProductRates
 
 # Register your models here.
 
@@ -106,6 +106,15 @@ class ProductRecieveModelAdmin(admin.ModelAdmin):
 
 
 
+class ProductIssueAdmin(admin.ModelAdmin):
+    list_display = ('product_issue_id', 'issue_date', 'shopId', 'paper_rate', 'boiler_size', 'issue_birds', 'birds_weight', 'daily_rate', 'issue_amount', 'vehicleId', 'driverId','entry_source', 'latitude', 'longtitude', 'product_typeId', 'created_on', 'created_by', 'last_modified_on', 'last_modified_by', 'is_deleted', 'deleted_by')
+
+    search_fields = ('product_issue_id', 'issue_date', 'shopId', 'paper_rate', 'boiler_size', 'issue_birds', 'birds_weight', 'daily_rate', 'issue_amount', 'vehicleId', 'driverId','entry_source', 'latitude', 'longtitude', 'product_typeId', 'created_on', 'created_by', 'last_modified_on', 'last_modified_by', 'is_deleted', 'deleted_by')
+
+    list_display_links = ('product_issue_id', 'issue_date', 'shopId', 'paper_rate', 'boiler_size', 'issue_birds', 'birds_weight', 'daily_rate', 'issue_amount', 'vehicleId', 'driverId','entry_source', 'latitude', 'longtitude', 'product_typeId')
+
+
+
 
 admin.site.register(ShopOwner, ShopOwnerModelAdmin)
 admin.site.register(ShopModel,ShopModelAdmin)
@@ -118,3 +127,4 @@ admin.site.register(ShopProductRates,ShopProductRatesAdmin)
 admin.site.register(ShopBalance,ShopBalanceAdmin)
 admin.site.register(ShopFlexibleRate,ShopFlexibleRateAdmin)
 admin.site.register(ProductRecieve,ProductRecieveModelAdmin)
+admin.site.register(ProductIssue,ProductIssueAdmin)

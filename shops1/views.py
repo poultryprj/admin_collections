@@ -7,7 +7,7 @@ from django.contrib import messages
 from user.models import UserModel
 
 from vehicle2.models import Vehicle, Vendor
-from .models import  Associations, ProductRecieve, ShopBalance, ShopFlexibleRate, ShopModel, ShopOwner, ShopProductRates, ShopRoute, ProductTypes, ProductCategories, ProductMaster
+from .models import  Associations, ProductIssue, ProductRecieve, ShopBalance, ShopFlexibleRate, ShopModel, ShopOwner, ShopProductRates, ShopRoute, ProductTypes, ProductCategories, ProductMaster
 from routes.models import RouteModel
 from django.core.exceptions import ValidationError
 
@@ -975,8 +975,6 @@ def ProductReceivedUpdate(request):
 ############## Product Received Delete
 def product_received_delete(request, id):
     if request.method == 'POST':
-        print("HGJHGJHBVJHB")
-        print(id)
         try:
             data = json.loads(request.body.decode('utf-8'))
             delete_reason = data.get('delete_reason')  # Assuming you're using POST method to send data
@@ -994,3 +992,149 @@ def product_received_delete(request, id):
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
         
+
+        
+# ***************************** Product Issues ***********************************
+
+
+def ProductIssueList(request):
+    productIssueLists = ProductIssue.objects.filter(is_deleted=False)
+    context ={
+        'productIssueLists' : productIssueLists
+    }
+    return render(request, "product_issue/product_issue_list.html", context)
+
+
+
+def ProductIssueAdd(request):
+    ShopData = ShopModel.objects.all()
+    productTypesData = ProductTypes.objects.all()
+    vehicleData = Vehicle.objects.all()
+    userModelData = UserModel.objects.all()
+
+    if request.method == "POST":
+        issueDate = request.POST['issue_date']
+        shopId = request.POST['shop_id']
+        paperRate = request.POST['paper_rate']
+        boilerSize = request.POST['boiler_size']
+        issueBirds = request.POST['issue_birds']  
+        birdsWeight = request.POST['birds_weight']  
+        dailyRate = request.POST['daily_rate']
+        issueAmount = request.POST['issue_amount']
+        vehicleId = request.POST['vehicle_id']
+        driverId = request.POST['driver_id']
+        entrySource = request.POST['entry_source']
+        latitude = request.POST['latitude']
+        longitude = request.POST['longitude']
+        productTypeId = request.POST['product_type_id']
+
+        shopId = ShopModel.objects.get(shop_id=shopId)
+        productTypesId = ProductTypes.objects.get(product_type_id=productTypeId)
+        vehicleId = Vehicle.objects.get(vehicle_id=vehicleId)
+        userModelId = UserModel.objects.get(user_id=driverId)
+
+        productIssueAdd = ProductIssue(
+            issue_date = issueDate,
+            shopId = shopId,
+            paper_rate = paperRate,
+            boiler_size = boilerSize,
+            issue_birds = issueBirds,
+            birds_weight = birdsWeight,
+            daily_rate = dailyRate,
+            issue_amount = issueAmount,
+            vehicleId = vehicleId,
+            driverId = userModelId,
+            entry_source = entrySource,
+            latitude = latitude,
+            longtitude = longitude,
+            product_typeId = productTypesId,
+            created_by = request.user
+        ) 
+        productIssueAdd.save()
+
+        messages.success(request, "Product Issue Add Successfully..!!")
+        return redirect('product_issue_list')
+
+    context = {
+        "ShopData" : ShopData,
+        "productTypesData" : productTypesData,
+        "vehicleData" : vehicleData,
+        "userModelData" : userModelData
+
+    }
+    return render(request, "product_issue/product_issue_add.html", context)    
+
+
+
+def ProductIssueEdit(request,id):
+    ShopData = ShopModel.objects.all()
+    productTypesData = ProductTypes.objects.all()
+    vehicleData = Vehicle.objects.all()
+    userModelData = UserModel.objects.all()
+
+    productIssueEdit = ProductIssue.objects.get(product_issue_id = id)
+
+    if request.method == "POST":
+        issueDate = request.POST['issue_date']
+        shopId = request.POST['shop_id']
+        paperRate = request.POST['paper_rate']
+        boilerSize = request.POST['boiler_size']
+        issueBirds = request.POST['issue_birds']  
+        birdsWeight = request.POST['birds_weight']  
+        dailyRate = request.POST['daily_rate']
+        issueAmount = request.POST['issue_amount']
+        vehicleId = request.POST['vehicle_id']
+        driverId = request.POST['driver_id']
+        entrySource = request.POST['entry_source']
+        latitude = request.POST['latitude']
+        longitude = request.POST['longitude']
+        productTypeId = request.POST['product_type_id']
+
+        shopId = ShopModel.objects.get(shop_id=shopId)
+        productTypesId = ProductTypes.objects.get(product_type_id=productTypeId)
+        vehicleId = Vehicle.objects.get(vehicle_id=vehicleId)
+        userModelId = UserModel.objects.get(user_id=driverId)
+
+        productIssueEdit. issue_date = issueDate
+        productIssueEdit.shopId = shopId
+        productIssueEdit.paper_rate = paperRate
+        productIssueEdit.boiler_size = boilerSize
+        productIssueEdit.issue_birds = issueBirds
+        productIssueEdit.birds_weight = birdsWeight
+        productIssueEdit.daily_rate = dailyRate
+        productIssueEdit.issue_amount = issueAmount
+        productIssueEdit.vehicleId = vehicleId
+        productIssueEdit.driverId = userModelId
+        productIssueEdit.entry_source = entrySource
+        productIssueEdit.latitude = latitude
+        productIssueEdit.longtitude = longitude
+        productIssueEdit.product_typeId = productTypesId
+        productIssueEdit.last_modified_by = request.user
+        productIssueEdit.save()
+
+        messages.success(request, "Product Issue Update Successfully..!!")
+        return redirect('product_issue_list')
+   
+    context = {
+        "ShopData" : ShopData,
+        "productTypesData" : productTypesData,
+        "vehicleData" : vehicleData,
+        "userModelData" : userModelData,
+        "productIssueEdit" : productIssueEdit
+
+    }
+    return render(request, "product_issue/product_issue_edit.html", context)
+
+
+
+def ProductIssueDelete(request,id):
+    productIssueDelete = ProductIssue.objects.get(product_issue_id = id)
+
+    productIssueDelete.is_deleted  = True
+    productIssueDelete.deleted_by  = request.user
+    productIssueDelete.save()
+
+    messages.success(request, "Product Issue Deleted Successfully..!!")
+    return redirect('product_issue_list')
+
+    

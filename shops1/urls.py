@@ -100,7 +100,7 @@ urlpatterns = [
     path('shop_flexible_rate_delete/<int:id>', views.ShopFlexibleRateDelete, name='shop_flexible_rate_delete'),
 
 
-    #######
+    # Product Received
     path('product_received_list/', views.ProductReceivedList, name='product_received_list'),
 
     path('product_received_add/', views.ProductReceivedAdd, name='product_received_add'),
@@ -109,4 +109,15 @@ urlpatterns = [
     path('product_received_update/', views.ProductReceivedUpdate, name='product_received_update'),
     
     path('product_received_delete/<int:id>/', views.product_received_delete, name='product_received_delete'),
+
+
+    # Product Issue
+    path('product_issue_list/', views.ProductIssueList, name='product_issue_list'),
+
+    path('product_issue_add/', views.ProductIssueAdd, name='product_issue_add'),
+
+    path('product_issue_edit/<int:id>', views.ProductIssueEdit, name='product_issue_edit'),
+
+    path('product_issue_delete/<int:id>', views.ProductIssueDelete, name='product_issue_delete'),
+
 ]
