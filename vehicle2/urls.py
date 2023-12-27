@@ -19,7 +19,7 @@ urlpatterns = [
 
 
 # =====================================Fitness=============================================
-    path('vehicle_fitness_add/', views.VehicleFitnessAdd, name='vehicle_fitness_add'),
+    path('vehicle_fitness_add/<int:vehicle_id>', views.VehicleFitnessAdd, name='vehicle_fitness_add'),
     path('vehicle_fitness_list/', views.VehicleFitnessList, name='vehicle_fitness_list'),
     path('vehicle_fitness_edit/<int:id>/', views.VehicleFitnessEdit, name='vehicle_fitness_edit'),
 

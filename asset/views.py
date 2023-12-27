@@ -60,6 +60,7 @@ def AssetEdit(request, id):
         context = {
             'assetTypes': assetTypes,
             'selectedAssetType': selected_asset_type,
+            'assetData' : asset_data
         }
         return render(request, "asset/asset_edit.html", context)
     except Exception as e:

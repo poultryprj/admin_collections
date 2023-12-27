@@ -161,7 +161,7 @@ def VehicleDetailsUpdate(request):
 
 ######################## Vehicle Fitness ##############################################################################
 ############## Vehicle Fitness Add
-def VehicleFitnessAdd(request):
+def VehicleFitnessAdd(request, vehicle_id):
     vehicleData = Vehicle.objects.all()
 
     if request.method == "POST":
@@ -170,7 +170,7 @@ def VehicleFitnessAdd(request):
         vehicleFitnessToDate = request.POST['vehicle_fitness_to_date']
 
         # Check if the vehicle ID exists
-        existing_vehicle = Vehicle.objects.filter(vehicle_id=vehicleId).first()
+        existing_vehicle = Vehicle.objects.filter(vehicle_id=vehicle_id).first()
 
         if existing_vehicle:
             try:
@@ -179,6 +179,7 @@ def VehicleFitnessAdd(request):
                 if existing_fitness:
                     messages.error(request, "Fitness details already exist for this vehicle.")
                 else:
+                    vehicleId = Vehicle.objects.get(vehicle_id=vehicle_id)
                     vehicleFitnessDetaildAdd = Fitness(
                         vehicle_id=existing_vehicle,
                         vehicle_fitness_from_date=vehicleFitnessFromDate,
@@ -209,7 +210,8 @@ def VehicleFitnessAdd(request):
                 messages.error(request, str(e))
 
     context = {
-        'vehicleData': vehicleData
+        'vehicleData': vehicleData,
+        'vehicleId': vehicle_id
     }
 
     return render(request, 'vehicle/vehicle_fitness_add.html', context)
