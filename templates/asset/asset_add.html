@@ -39,44 +39,13 @@
                                 <label>Asset Types</label>
                                 <div class="input-group">
                                     <select class="form-control form-select" placeholder=""
-                                            name="asset_types">
+                                            name="asset_types" required>
                                         <option value="" disabled selected>------- Select Asset Type -------</option>
-                                        {% for asset in assetTypes %}
-                                            <option value="{{asset}}">{{ asset }}</option>
-                                        {% endfor %}
+                                        <option value="Slowly Finished Product">Slowly Finished Product</option>
+                                        <option value="Long Lasting Products">Long Lasting Products</option>
                                     </select>
                                 </div>
                             </div>
-
-                            {% if 'Slowly_Finished_Product' in assetTypes %}
-                            <div class="col-12 col-sm-6" id="slowly_finished_product_div" style="display: none;">
-                                <label>Slowly Finished Product</label>
-                                <div class="input-group mb-3">
-                                    <select class="form-control form-select" placeholder=""
-                                            name="slowly_finished_product">
-                                        <option value="" disabled selected>------- Select Slowly Finished Product Type -------</option>
-                                        {% for asset in slowly_finished_product_types %}
-                                            <option value="{{asset}}">{{ asset }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
-                            {% endif %}
-
-                            {% if 'Long_Lasting_Products' in assetTypes %}
-                            <div class="col-12 col-sm-6" id="long_lasting_product_div" style="display: none;">
-                                <label>Long Lasting Product</label>
-                                <div class="input-group mb-3">
-                                    <select class="form-control form-select" placeholder=""
-                                            name="long_lasting_products">
-                                        <option value="" disabled selected>------- Select Long Lasting Product Type -------</option>
-                                        {% for asset in long_lasting_products_types %}
-                                            <option value="{{asset}}">{{ asset }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
-                            {% endif %}
 
                             <div class="col-12">
                                 <button type="submit" class="btn btn-primary"> Add Details </button>
@@ -94,43 +63,5 @@
         </div>
     </div>
 </div>
-
-<script>
-    function validateForm() {
-        const assetName = document.querySelector('input[name="asset_name"]').value.trim();
-        const assetTypes = document.querySelector('select[name="asset_types"]').value;
-        const slowlyFinishedProduct = document.querySelector('select[name="slowly_finished_product"]').value;
-        const longLastingProducts = document.querySelector('select[name="long_lasting_products"]').value;
-
-        if (!assetName || !assetTypes || (assetTypes === 'Slowly_Finished_Product' && !slowlyFinishedProduct) || (assetTypes === 'Long_Lasting_Products' && !longLastingProducts)) {
-            document.getElementById('error-message').style.display = 'block';
-            setTimeout(function () {
-                document.getElementById('error-message').style.display = 'none';
-            }, 4000); // 4 seconds timeout
-            return false;
-        }
-
-        return true;
-    }
-
-    document.addEventListener("DOMContentLoaded", function () {
-        // Add event listener for asset types selection change
-        document.querySelector('select[name="asset_types"]').addEventListener('change', function () {
-            var selectedValue = this.value;
-
-            // Show/hide respective product selection based on asset type selected
-            if (selectedValue === 'Slowly_Finished_Product') {
-                document.getElementById('slowly_finished_product_div').style.display = 'block';
-                document.getElementById('long_lasting_product_div').style.display = 'none';
-            } else if (selectedValue === 'Long_Lasting_Products') {
-                document.getElementById('slowly_finished_product_div').style.display = 'none';
-                document.getElementById('long_lasting_product_div').style.display = 'block';
-            } else {
-                document.getElementById('slowly_finished_product_div').style.display = 'none';
-                document.getElementById('long_lasting_product_div').style.display = 'none';
-            }
-        });
-    });
-</script>
 
 {% endblock content %}

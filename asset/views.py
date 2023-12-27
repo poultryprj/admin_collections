@@ -8,139 +8,101 @@ from .models import AssetPurchase, AssetStock, Assets, Vendor, AssetDistribution
 from datetime import datetime
 from django.contrib.auth.models import Group
 from django.utils import timezone
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from .models import Assets
 
-##################################### Assets Add ###################################################
-################# Assets Add #################
+################# Asset Add view ###################
 def AssetAdd(request):
     if request.method == "POST":
         assetName = request.POST.get('asset_name')
         assetTypes = request.POST.get('asset_types')
-        slowlyFinishedProduct = request.POST.get('slowly_finished_product')
-        longLastingProducts = request.POST.get('long_lasting_products')
 
-        # Determine which product field to populate based on the asset type selected
-        if assetTypes == 'Slowly_Finished_Product':
-            selectedProduct = slowlyFinishedProduct
+        # Logic to determine selectedProduct based on assetTypes
+        if assetTypes == 'Slowly Finished Product':
+            selectedProduct = 'Slowly Finished Product'
         else:
-            selectedProduct = longLastingProducts
+            selectedProduct = 'Long Lasting Products'
 
-        # Save the asset detail based on the selected product
-        AssetsDetailAdd = Assets(
+        asset = Assets(
             asset_name=assetName,
             asset_types=assetTypes,
             created_by=request.user,
         )
 
-        if assetTypes == 'Slowly_Finished_Product':
-            AssetsDetailAdd.slowly_finished_product = selectedProduct
+        if assetTypes == 'Slowly Finished Product':
+            asset.slowly_finished_product = selectedProduct
         else:
-            AssetsDetailAdd.long_lasting_products = selectedProduct
+            asset.long_lasting_products = selectedProduct
         
-        print(AssetsDetailAdd.asset_name,
-              AssetsDetailAdd.asset_types,
-              AssetsDetailAdd.slowly_finished_product,
-              AssetsDetailAdd.long_lasting_products,
-              AssetsDetailAdd.created_by)
-        AssetsDetailAdd.save()
-
+        asset.save()
         messages.success(request, "Asset Detail Added Successfully..!!")
-        return redirect('asset_list')  # Redirect to a success page or the same page
+        return redirect('asset_list')  # Redirect to the asset list view
 
-    assetTypes = ['Slowly_Finished_Product', 'Long_Lasting_Products']
-    slowly_finished_product_types = ['Polyethylene_Bags', 'Paper_Bags']
-    long_lasting_products_types = ['T-Shirt', 'Eggs_Tray', 'Dustbin']
-    context = {
-        'slowly_finished_product_types': slowly_finished_product_types,
-        'long_lasting_products_types': long_lasting_products_types,
-        'assetTypes': assetTypes
-    }
-
+    assetTypes = ['Slowly Finished Product', 'Long Lasting Products']
+    context = {'assetTypes': assetTypes}
     return render(request, 'asset/asset_add.html', context)
 
-
-################# Asset List #################
+######################## Asset List view ###############
 def AssetList(request):
-    AssetsList = Assets.objects.filter(is_deleted=False).order_by('-asset_id')
-
-    context = {
-        'AssetsList': AssetsList
-    }
+    assets_list = Assets.objects.filter(is_deleted=False).order_by('-asset_id')
+    context = {'AssetsList': assets_list}
     return render(request, 'asset/asset_list.html', context)
 
-
-################# Asset Edit #################
+######################## Asset Edit view ###############
 def AssetEdit(request, id):
     try:
-        assetData = get_object_or_404(Assets, asset_id=id)
+        asset_data = get_object_or_404(Assets, asset_id=id)
+        assetTypes = ['Slowly Finished Product', 'Long Lasting Products']
 
-        assetTypes = ['Slowly_Finished_Product', 'Long_Lasting_Products']
-        slowly_finished_product_types = ['Polyethylene_Bags', 'Paper_Bags']
-        long_lasting_products_types = ['T-Shirt', 'Eggs_Tray', 'Dustbin']
+        selected_asset_type = asset_data.asset_types
+
         context = {
-            'slowly_finished_product_types': slowly_finished_product_types,
-            'long_lasting_products_types': long_lasting_products_types,
             'assetTypes': assetTypes,
-            'assetData' : assetData
+            'selectedAssetType': selected_asset_type,
         }
         return render(request, "asset/asset_edit.html", context)
     except Exception as e:
         print(e)
-    
-    
-################# Asset Update #################
+
+########################## Asset Update view ################
 def AssetUpdate(request):
     if request.method == "POST":
+        asset_id = request.POST.get('asset_id')
+        asset = get_object_or_404(Assets, asset_id=asset_id)
         assetName = request.POST.get('asset_name')
         assetTypes = request.POST.get('asset_types')
-        slowlyFinishedProduct = request.POST.get('slowly_finished_product')
-        longLastingProducts = request.POST.get('long_lasting_products')
 
-        # Determine which product field to populate based on the asset type selected
-        if assetTypes == 'Slowly_Finished_Product':
-            selectedProduct = slowlyFinishedProduct
+        # Update the asset details with the selected asset type
+        asset.asset_name = assetName
+        asset.asset_types = assetTypes
+        asset.created_by = request.user
+
+        # Check the asset type and update accordingly
+        if assetTypes == 'Slowly Finished Product':
+            asset.slowly_finished_product = 'Slowly Finished Product'
+            asset.long_lasting_products = ''  # Set to an empty string or any appropriate value
         else:
-            selectedProduct = longLastingProducts
+            asset.slowly_finished_product = ''  # Set to an empty string or any appropriate value
+            asset.long_lasting_products = 'Long Lasting Products'
 
-        # Save the asset detail based on the selected product
-        AssetsDetailAdd = Assets(
-            asset_name=assetName,
-            asset_types=assetTypes,
-            created_by=request.user,
-            last_modified_by=request.user,
-        )
-
-        if assetTypes == 'Slowly_Finished_Product':
-            AssetsDetailAdd.slowly_finished_product = selectedProduct
-        else:
-            AssetsDetailAdd.long_lasting_products = selectedProduct
-        
-        AssetsDetailAdd.save()
-
+        asset.save()
         messages.success(request, "Asset Detail Updated Successfully..!!")
-        return redirect('asset_list')  # Redirect to a success page or the same page
+        return redirect('asset_list')  # Redirect to the asset list view
 
-    assetTypes = ['Slowly_Finished_Product', 'Long_Lasting_Products']
-    slowly_finished_product_types = ['Polyethylene_Bags', 'Paper_Bags']
-    long_lasting_products_types = ['T-Shirt', 'Eggs_Tray', 'Dustbin']
-    context = {
-        'slowly_finished_product_types': slowly_finished_product_types,
-        'long_lasting_products_types': long_lasting_products_types,
-        'assetTypes': assetTypes
-    }
-
+    assetTypes = ['Slowly Finished Product', 'Long Lasting Products']
+    context = {'assetTypes': assetTypes}
     return render(request, 'asset/asset_list.html', context)
 
 
-################# Asset delete #################
+#################### Asset Delete view #################
 def AssetDelete(request, id):
-    assetData = get_object_or_404(Assets, asset_id=id)
-    assetData.is_deleted = True
-    assetData.deleted_by = request.user
-    assetData.save()
-    assetList = Assets.objects.filter(is_deleted=False)  # Filter non-deleted items
+    asset = get_object_or_404(Assets, asset_id=id)
+    asset.is_deleted = True
+    asset.deleted_by = request.user
+    asset.save()
     messages.success(request, "Asset Details Deleted Successfully..!!")
-    return render(request, 'asset/asset_list.html', {'AssetsList': assetList})
-
+    return redirect('asset_list')  # Redirect to the asset list view
 
 
 ##################################### AssetPurchase ###################################################
