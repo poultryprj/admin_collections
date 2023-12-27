@@ -61,9 +61,10 @@
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h1 class="modal-title fs-5" id="editModalLabel">Edit Product Category</h1>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                    aria-label="Close"></button>
+                                                <h5 class="modal-title" id="exampleModalLabel">Edit Product Category</h5>
+                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
                                             </div>
                                             <div class="modal-body">
                                                 <form action="{% url 'product_category_edit' productCategory.product_category_id %}"
@@ -107,8 +108,11 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Add Product Category</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+               
+                <h5 class="modal-title" id="exampleModalLabel">Add Product Category</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
             </div>
             <div class="modal-body">
                 <form action="{% url 'product_categories_add' %}" method="POST">

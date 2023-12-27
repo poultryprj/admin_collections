@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import get_object_or_404, render, redirect, HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -15,23 +15,29 @@ def RouteList(request):
 
 def RouteAdd(request):
     if request.method == "POST":
-        routeName = request.POST['route_name']
+        routeName = request.POST['route_name'].capitalize()
         routeStartPoint = request.POST['route_start_point']
         routeEndPoint = request.POST['route_end_point']
         routeAreas = request.POST['route_areas']
 
-        addRoute = RouteModel(
-        route_name = routeName,
-        route_start_point = routeStartPoint,
-        route_end_point = routeEndPoint,
-        route_areas = routeAreas,
-        created_by = request.user,
-        last_modified_by = request.user
-        )
-        addRoute.save()
+        existing_route = RouteModel.objects.filter(route_name=routeName).first()
 
-        messages.success(request, "Route Name: {} Add in the database.".format(routeName))
-        return redirect("route_list")
+        if existing_route:
+            messages.error(request, "Route with name {} already exists.".format(routeName))
+            return redirect("route_list")  
+        else:
+            addRoute = RouteModel(
+                route_name=routeName,
+                route_start_point=routeStartPoint,
+                route_end_point=routeEndPoint,
+                route_areas=routeAreas,
+                created_by=request.user,
+                last_modified_by=request.user
+            )
+            addRoute.save()
+
+            messages.success(request, "Route Name: {} added to the database.".format(routeName))
+            return redirect("route_list")
 
     return render(request, 'routes/route_add.html')
 
@@ -48,22 +54,31 @@ def RouteUpdate(request):
     if request.method == "POST":
         routePk = request.POST['routePk']
         routeId = int(request.POST['route_id'])
-        routeName = request.POST['route_name']
+        routeName = request.POST['route_name'].capitalize()
         routeStartPoint = request.POST['route_start_point']
         routeEndPoint = request.POST['route_end_point']
         routeAreas = request.POST['route_areas']
         user = request.user.username
 
-        routeUpdate = RouteModel.objects.get(route_id=routeId)
-        routeUpdate.route_name = routeName
-        routeUpdate.route_start_point = routeStartPoint
-        routeUpdate.route_end_point = routeEndPoint
-        routeUpdate.route_areas = routeAreas
-        routeUpdate.last_modified_by = user
-        routeUpdate.save()
-    
-        messages.success(request, "Route ID {} Update in the database.".format(routeId))
-        return redirect('route_list')
+        routeUpdate = get_object_or_404(RouteModel, route_id=routeId)
+        
+        existing_route = RouteModel.objects.filter(route_name__iexact=routeName).exclude(route_id=routeId).first()
+        
+        if existing_route:
+            messages.error(request, "Route with name '{}' already exists.".format(routeName))
+            return redirect("route_list") 
+        else:
+            routeUpdate.route_name = routeName
+            routeUpdate.route_start_point = routeStartPoint
+            routeUpdate.route_end_point = routeEndPoint
+            routeUpdate.route_areas = routeAreas
+            routeUpdate.last_modified_by = user
+            routeUpdate.save()
+
+            messages.success(request, "Route ID {} updated in the database.".format(routeId))
+            return redirect('route_list')
+
+    return render(request, 'routes/route_list.html')
 
 
 

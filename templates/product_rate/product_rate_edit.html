@@ -38,9 +38,9 @@
                             
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
-                                    <label>Shop Id</label>
+                                    <label>Shop Name</label>
                                     <select class="form-control form-select" name="shop_codeId" required>
-                                        <option disabled>------- Select Shop Code -------</option>
+                                        <option disabled>------- Select Shop Name -------</option>
                                         <option value="{{productRateEdit.shopId.shop_id}}">{{productRateEdit.shopId}}</option>
                                         {% for i in shopModalData %}
                                             <option value="{{i.shop_id}}" {% if productRateEdit.shopId.shop_id == i.shop_id %} style="display:none" {% endif %}>{{ i.shop_name }} </option>
@@ -50,7 +50,7 @@
                             </div>
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
-                                    <label>Association Id</label>
+                                    <label>Association </label>
                                     <select class="form-control form-select" name="associationId" required>
                                         <option disabled>------- Select Association -------</option>
                                         <option value="{{productRateEdit.associationId.association_id}}">{{productRateEdit.associationId}}</option>
@@ -63,7 +63,7 @@
                             
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
-                                    <label>Product Id</label>
+                                    <label>Product</label>
                                     <select class="form-control form-select" name="productId" required>
                                         <option disabled>------- Select Product -------</option>
                                         <option value="{{productRateEdit.ProductId.product_id}}">{{productRateEdit.ProductId}}</option>

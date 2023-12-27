@@ -32,9 +32,9 @@
                             
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
-                                    <label>Shop Id</label>
+                                    <label>Shop Name</label>
                                     <select class="form-control form-select" name="shop_codeId" required>
-                                        <option>------- Select Shop Code -------</option>
+                                        <option>------- Select Shop Name -------</option>
                                         {% for i in shopModelData %}
                                             <option value="{{i.shop_id}}">{{ i.shop_name }} </option>
                                         {% endfor %}
@@ -44,7 +44,7 @@
                             
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
-                                    <label>Association Id</label>
+                                    <label>Association </label>
                                     <select class="form-control form-select" name="associationId" required>
                                         <option>------- Select Association -------</option>
                                         {% for i in associationData %}
@@ -56,7 +56,7 @@
                             
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
-                                    <label>Product Id</label>
+                                    <label>Product</label>
                                     <select class="form-control form-select" name="productId" required>
                                         <option>------- Select Product -------</option>
                                         {% for i in productMasterData %}

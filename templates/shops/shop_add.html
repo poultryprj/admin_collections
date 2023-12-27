@@ -100,9 +100,9 @@
                             </div>
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
-                                    <label>Shop Owner Id</label>
+                                    <label>Shop Owner Name</label>
                                     <select class="form-control form-select" name="shop_ownerId" required>
-                                        <option value="">------- Select Owner Id -------</option>
+                                        <option value="">------- Select Owner Name -------</option>
                                         {% for i in shopOwnerData %}
                                             <option value="{{i.owner_id}}">{{ i.owner_name }} </option>
                                         {% endfor %}
@@ -114,7 +114,7 @@
                                 <div class="form-group">
                                     <label>Shop Type</label>
                                     <select class="form-control form-select" placeholder="Enter Shop Type" name="shop_type" required>
-                                        <option value="">------- Select Shop Area -------</option>
+                                        <option value="">------- Select Shop Type -------</option>
                                         <option value="shop type 1">shop type 1</option>
                                         <option value="shop type 2">shop type 2</option>
                                         <option value="shop type 3">shop type 3</option>

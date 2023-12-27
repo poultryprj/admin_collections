@@ -1657,6 +1657,7 @@ footer p {
     margin: 0px -15px;
     padding-left: 30px;
 }
+
 .sidebar-menu li.active > a::before {
     width: 5px;
     content: "";

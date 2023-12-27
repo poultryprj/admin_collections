@@ -50,7 +50,7 @@
                                 <div class="form-group">
                                     <label>Product Type</label>
                                     <select class="form-control form-select" name="product_type_id" required>
-                                        <option value="" disabled selected hidden>------- Select Shop Name -------</option>
+                                        <option value="" disabled selected hidden>------- Select Product Type -------</option>
                                         {% for i in productTypeData %}
                                             <option value="{{i.product_type_id}}">{{ i.product_type }} </option>
                                         {% endfor %}
