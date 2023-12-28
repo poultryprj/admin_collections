@@ -28,17 +28,17 @@ urlpatterns = [
 
 # ******************* 
 
-    path('users/by-group/', views.UserListByGroup, name='user-list-by-group'),
+    path('users_by-group_api/', views.UserListByGroup, name='user-list-by-group'),
 
-    path('groups/', views.GroupList, name='group-list'),
+    path('groups_api/', views.GroupList, name='group-list'),
 
-    path('vehicles/', views.vehicleList, name='vehicle-list'),
+    path('vehicles_api/', views.vehicleList, name='vehicle-list'),
 
-    path('received-products/', views.ReceivedProductsByDate, name='received-products-by-date'),
+    path('received-products_api/', views.ReceivedProductsByDate, name='received-products-by-date'),
 
-    path('issue-products/', views.IssueProductsByDate, name='issue-products-by-date'),
+    path('issue-products_api/', views.IssueProductsByDate, name='issue-products-by-date'),
 
-    path('issue-products_by_date_driver_vehicle/', views.IssueProductsByDateDriverVechicle, name='issue-products_by_date_driver_vehicle/'),
+    path('issue-products_by_date_driver_vehicle_api/', views.IssueProductsByDateDriverVechicle, name='issue-products_by_date_driver_vehicle/'),
     #################################### Skip Shop ############################################
      
     path('skip_shop_add/', views.SkipShopAdd, name="skip_shop_add"),
@@ -47,8 +47,14 @@ urlpatterns = [
 #################################### Complaint ############################################
 
     path('complaint_add/', views.ComplaintAdd, name="complaint_add"),
-    path('complaint_view/', views.ComplaintListView, name="complaint_view")
-    
+    path('complaint_view/', views.ComplaintListView, name="complaint_view"),
+
+
+
+
+    path('approve_collection_api/', views.ApproveCollection, name='approve_collection'),  
+
+    path('get_shop_collections_mode_api/', views.GetShopCollections, name='get_shop_collections_mode'),
 ]
 
 

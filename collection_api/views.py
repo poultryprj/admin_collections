@@ -749,3 +749,85 @@ def IssueProductsByDateDriverVechicle(request):
             "message_data": "No products issued on this date",
         }, status=status.HTTP_404_NOT_FOUND)
 
+
+
+@api_view(['GET'])  
+def ApproveCollection(request):
+    collection_date = request.data.get('collection_date')
+    cashier_id = request.data.get('cashierId')
+
+    if collection_date and cashier_id:
+        try:
+            collection_instances = Collection.objects.filter(collection_date=collection_date, cashierId=cashier_id)
+
+            cashier_user = User.objects.get(pk=cashier_id)
+
+            for collection_instance in collection_instances:
+
+                if collection_instance.collections_status == "0":
+                    collection_instance.collections_status = 1
+                    collection_instance.fanialize_by = cashier_user 
+
+                    collection_instance.save()  
+
+            response_data = {
+                "message_text": "Success",
+                "message_code": 1000,
+                "message_data": "Collection approved successfully.",
+            }
+            return Response(response_data, status=status.HTTP_200_OK)
+
+        except Collection.DoesNotExist:
+            return Response({
+                "message_text": "Failure",
+                "message_code": 999,
+                "message_data": "Collection not found.",
+            }, status=status.HTTP_404_NOT_FOUND)
+        
+        except User.DoesNotExist:
+            return Response({'message': 'Cashier not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+    return Response({'message': 'Invalid or missing parameters.'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+@api_view(['GET'])
+def GetShopCollections(request):
+    shop_id = request.data.get('shop_id')
+    cashier_id = request.data.get('cashier_id')
+    collection_date = request.data.get('collection_date')
+
+    collections = Collection.objects.filter(
+        shopId=shop_id,
+        cashierId=cashier_id,
+        collection_date=collection_date,
+        collections_status='0'
+    )
+
+    if not collections.exists():
+        response_data = {
+            "message_text": "No data found for the given criteria.",
+            "message_code": 404,
+            "message_data": []  
+        }
+        return Response(response_data, status=status.HTTP_404_NOT_FOUND)
+
+    collection_modes = CollectionMode.objects.filter(collectionId__in=collections)
+
+    if not collection_modes.exists():
+        response_data = {
+            "message_text": "No payment modes found for the given criteria.",
+            "message_code": 404,
+            "message_data": []  
+        }
+        return Response(response_data, status=status.HTTP_404_NOT_FOUND)
+
+    payment_modes_amounts = collection_modes.values('payment_mode').annotate(total_amount=Sum('payment_amount'))
+
+    response_data = {
+        "message_text": "Success",
+        "message_code": 1000,
+        "message_data":payment_modes_amounts
+    }
+    return Response(response_data, status=status.HTTP_200_OK)

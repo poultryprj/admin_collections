@@ -13,6 +13,7 @@ class Collection(models.Model):
     latitude = models.DecimalField(max_digits=20, decimal_places=5,null=True)
     longtitude = models.DecimalField(max_digits=20, decimal_places=5,null=True)
     total_amount = models.FloatField()
+    collections_status = models.CharField(max_length=10, default='0')
     fanialize_on = models.DateTimeField(auto_now=True)
     fanialize_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
