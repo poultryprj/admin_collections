@@ -53,7 +53,7 @@ class VehicleTypeModelAdmin(admin.ModelAdmin):
 
 
 class FitnessAdmin(admin.ModelAdmin):
-    list_display = ('fitness_id', 'vehicle_id', 'vehicle_fitness_from_date', 'vehicle_fitness_to_date', 'created_by_id', 'last_modified_by_id', 'created_on', 'last_modified_on')
+    list_display = ('fitness_id', 'vehicle_id', 'vehicle_fitness_from_date', 'vehicle_fitness_to_date', 'created_by_id', 'last_modified_by_id', 'created_on', 'last_modified_on', 'deleted_by', 'is_deleted')
 
     search_fields = ('fitness_id', 'vehicle_fitness_from_date', 'vehicle_fitness_to_date',)
 

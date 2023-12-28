@@ -85,7 +85,12 @@
                                                 <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
                                                     rowspan="1" colspan="1"
                                                     aria-label="Gender: activate to sort column ascending"
-                                                    style="width: 20.025px;">Vehicle Fitness</th>
+                                                    style="width: 20.025px;">Add Fitness</th>
+
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Gender: activate to sort column ascending"
+                                                    style="width: 20.025px;">Add Insurance</th>
 
                                                 <th class="text-right sorting" tabindex="0"
                                                     aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
@@ -121,7 +126,15 @@
                                                     <div class="actions">
                                                         <a href="{% url 'vehicle_fitness_add' vehicle.vehicle_id %}"
                                                             class="btn btn-warning btn-sm ms-2">
-                                                            <i title="Vehicle Fitness Add" class="fas fa-plus" data-bs-toggle="tooltip"></i>
+                                                            <i title="Vehicle Fitness Add" class="fa fa-medkit" data-bs-toggle="tooltip"></i>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="actions">
+                                                        <a href="{% url 'vehicle_insurance_add' vehicle.vehicle_id %}"
+                                                            class="btn btn-warning btn-sm ms-2">
+                                                            <i title="Vehicle Insurance Add" class="fa fa-info" data-bs-toggle="tooltip"></i>
                                                         </a>
                                                     </div>
                                                 </td>

@@ -219,30 +219,39 @@ def VehicleFitnessAdd(request, vehicle_id):
 ############## Vehicle Fitness View List
 def VehicleFitnessList(request):
     # Filter out deleted fitness details
+    vehicleData = Vehicle.objects.all()
     fitnessDetailList = Fitness.objects.filter(is_deleted=False).order_by('-fitness_id')
 
     context = {
+        'vehicleData': vehicleData,
         'fitnessDetailList': fitnessDetailList
     }
     return render(request, 'vehicle/vehicle_fitness_list.html', context)
 
 
 ############## Vehicle Fitness Edit
+from django.shortcuts import get_object_or_404
+
 def VehicleFitnessEdit(request, id):
+    vehicleData = Vehicle.objects.all()
     try:
         vehicleFitnessData = get_object_or_404(Fitness, fitness_id=id)
-        vehicleDetailEdit = vehicleFitnessData.vehicle_id  
+        vehicleDetailEdit = vehicleFitnessData.vehicle_id
 
         context = {
-            "vehicleDetailEdit": vehicleDetailEdit,
+            'vehicleData': vehicleData,
+            'vehicleDetailEdit': vehicleDetailEdit,
             'vehicleFitnessData': vehicleFitnessData,
         }
         return render(request, "vehicle/vehicle_fitness_edit.html", context)
     except Fitness.DoesNotExist:
         messages.error(request, "Fitness record not found.")
-        return redirect('error_page')     
+        return redirect('error_page')
+
 
 ############## Vehicle Fitness Update
+from django.shortcuts import get_object_or_404
+
 def VehicleFitnessDetailsUpdate(request):
     if request.method == "POST":
         fitness_id = request.POST['fitness_id']
@@ -252,7 +261,7 @@ def VehicleFitnessDetailsUpdate(request):
         # Assuming the Fitness model has a field called 'fitness_id'
         vehicleFitnessDetailsUpdate = get_object_or_404(Fitness, fitness_id=fitness_id)
 
-        # vehicleFitnessDetailsUpdate.registration_no = registrationNo
+        # Update the fields
         vehicleFitnessDetailsUpdate.vehicle_fitness_from_date = vehicleFitnessFromDate
         vehicleFitnessDetailsUpdate.vehicle_fitness_to_date = vehicleFitnessToDate
        
@@ -266,15 +275,15 @@ def VehicleFitnessDetailsUpdate(request):
 
 
 ############## Vehicle Fitness Delete
+from django.shortcuts import get_object_or_404
+
 def VehicleFitnessDetailsdelete(request, id):
     fitnessDetailData = get_object_or_404(Fitness, fitness_id=id)
     fitnessDetailData.is_deleted = True
     fitnessDetailData.deleted_by = request.user
     fitnessDetailData.save()
-    fitnessDetailList = Fitness.objects.filter(is_deleted=False)  # Filter non-deleted items
     messages.success(request, "Vehicle Fitness Details Deleted Successfully..!!")
-    return render(request, 'vehicle/vehicle_fitness_list.html', {'fitnessDetailList': fitnessDetailList})
-
+    return redirect('vehicle_fitness_list')
 
 ###########################################################################################################################################################################
 ######## Show Vehicle All Details in single form
@@ -334,9 +343,13 @@ def ShowVehicleDetail(request, id):
 
 #########Vehicle Insurance#################################################################################################################
 ########### Vehicle Insurance Add
-def VehicleInsuranceAdd(request):
+from django.shortcuts import get_object_or_404
+
+def VehicleInsuranceAdd(request, vehicle_id):
     vehicleData = Vehicle.objects.all()
     InsuranceCompanyData = InsuranceCompany.objects.all()
+
+    vehicleId = get_object_or_404(Vehicle, vehicle_id=vehicle_id)
 
     if request.method == "POST":
         vehiclenewId = request.POST['vehicle_id']
@@ -345,8 +358,6 @@ def VehicleInsuranceAdd(request):
         insuranceToDate = request.POST['insurance_to_date']
         insuranceAmount = request.POST['insurance_amount']
         insurancePaidAmount = request.POST['insurance_paid_amount']
-
-        vehicleId = get_object_or_404(Vehicle, vehicle_id=vehiclenewId)
 
         try:
             # Get or create an instance of InsuranceCompany
@@ -375,6 +386,7 @@ def VehicleInsuranceAdd(request):
             messages.error(request, str(e))
 
     context = {
+        'vehicleId': vehicleId,
         'vehicleData': vehicleData,
         'insuranceCompanies': InsuranceCompanyData,
     }
@@ -409,10 +421,12 @@ def VehicleInsuranceCompanyAddList(request):
 
 ########### Vehicle Insurance List View
 def VehicleInsuranceList(request):
+    vehicleData = Vehicle.objects.all()
     vehicleInsuranceList = VehicleInsurance.objects.filter(is_deleted=False).order_by('-insurance_id')
 
     context = {
-        'vehicleInsuranceList': vehicleInsuranceList
+        'vehicleInsuranceList': vehicleInsuranceList,
+        'vehicleData': vehicleData
     }
     return render(request, 'vehicle/vehicle_insurance_list.html', context)
 
@@ -463,9 +477,9 @@ def vehicleInsuranceDelete(request, id):
     vehicleInsuranceData.is_deleted = True
     vehicleInsuranceData.deleted_by = request.user
     vehicleInsuranceData.save()
-    vehicleInsuranceList = VehicleInsurance.objects.filter(is_deleted=False)  # Filter non-deleted items
+
     messages.success(request, "Vehicle Insurance Details Deleted Successfully..!!")
-    return render(request, 'vehicle/vehicle_insurance_list.html', {'vehicleInsuranceList': vehicleInsuranceList})
+    return redirect('vehicle_insurance_list')
 
 
 ################# Vehicle Permit #########################################################################################################

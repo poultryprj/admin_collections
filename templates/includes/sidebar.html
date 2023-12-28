@@ -113,17 +113,17 @@
                         <li class=""><a href="{% url 'product_issue_add' %}">Product Issue Add</a></li>
                     </ul>
                 </li>
-                <li class="submenu ">
+                {% comment %} <li class="submenu ">
                     <a href="#"><i class="fa fa-medkit"></i> <span> Vehicle Fitness</span> <span
                             class="menu-arrow"></span></a>
                    <ul>
                         
-                        {% comment %} <li class=""><a href="{% url 'vehicle_fitness_add' %}">Vehicle Fitness Add</a></li> {% endcomment %}
-                        {% comment %} <li class=""><a href="{% url 'vehicle_fitness_list' %}">Vehicle Fitness List</a></li> {% endcomment %}
+                        <li class=""><a href="{% url 'vehicle_fitness_add' %}">Vehicle Fitness Add</a></li> 
+                        <li class=""><a href="{% url 'vehicle_fitness_list' %}">Vehicle Fitness List</a></li>
                     </ul>
-                </li>
+                </li> {% endcomment %}
 
-                <li class="submenu ">
+                {% comment %} <li class="submenu ">
                     <a href="#"><i class="fa fa-info"></i> <span> Vehicle Insurance</span> <span
                             class="menu-arrow"></span></a>
                     <ul>
@@ -131,7 +131,7 @@
                         <li class=""><a href="{% url 'vehicle_insurance_add' %}">Vehicle Insurance Add</a></li>
                         <li class=""><a href="{% url 'vehicle_insurance_list' %}">Vehicle Insurance List</a></li>
                     </ul>
-                </li>
+                </li> {% endcomment %}
 
                 <li class="submenu ">
                     <a href="#"><i class="fas fa-tty"></i> <span> Vehicle Permit</span> <span

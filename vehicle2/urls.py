@@ -19,7 +19,7 @@ urlpatterns = [
 
 
 # =====================================Fitness=============================================
-    path('vehicle_fitness_add/<int:vehicle_id>', views.VehicleFitnessAdd, name='vehicle_fitness_add'),
+    path('vehicle_fitness_add/<int:vehicle_id>/', views.VehicleFitnessAdd, name='vehicle_fitness_add'),
     path('vehicle_fitness_list/', views.VehicleFitnessList, name='vehicle_fitness_list'),
     path('vehicle_fitness_edit/<int:id>/', views.VehicleFitnessEdit, name='vehicle_fitness_edit'),
 
@@ -31,7 +31,7 @@ urlpatterns = [
     path('show_vehicle_details/<int:id>/', views.ShowVehicleDetail, name='show_vehicle_details'),
 
 # =========================================Vehicle insurance================================================
-    path('vehicle_insurance_add/', views.VehicleInsuranceAdd, name='vehicle_insurance_add'),
+    path('vehicle_insurance_add/<int:vehicle_id>/', views.VehicleInsuranceAdd, name='vehicle_insurance_add'),
 
     path('vehicle_insurance_company_add/', views.VehicleInsuranceCompanyAdd, name='vehicle_insurance_company_add'),  ##dropdown
     path('vehicle_insurance_company_list/', views.VehicleInsuranceCompanyAddList, name='vehicle_insurance_company_list'), ##dropdown
