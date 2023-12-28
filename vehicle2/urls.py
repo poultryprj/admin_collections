@@ -51,7 +51,7 @@ urlpatterns = [
 
 # ======================================= Vehicle Pollution =========================================================
 
-    path('vehicle_pollution_add/', views.VehiclePollutionAdd, name='vehicle_pollution_add'),
+    path('vehicle_pollution_add/<int:vehicle_id>/', views.VehiclePollutionAdd, name='vehicle_pollution_add'),
     path('vehicle_pollution_list/', views.VehiclePollutionList, name='vehicle_pollution_list'),
     path('vehicle_pollution_edit/<int:id>/', views.VehiclePollutionEdit, name='vehicle_pollution_edit'),
     path('vehicle_pollution_update/', views.vehiclePollutionUpdate, name='vehicle_pollution_update'),

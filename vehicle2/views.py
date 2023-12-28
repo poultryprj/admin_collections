@@ -11,7 +11,7 @@ from .models import Fitness, InsuranceCompany,VehicleInsurance, VehiclePermit, V
 from django.db import IntegrityError
 from .models import Vehicle, InsuranceCompany, VehicleInsurance
 from .models import InsuranceCompany, VehicleInsurance, Vehicle
-
+from django.urls import reverse
 ############## Vehicle ######################################################################
 
 def vehicle(request):
@@ -230,7 +230,6 @@ def VehicleFitnessList(request):
 
 
 ############## Vehicle Fitness Edit
-from django.shortcuts import get_object_or_404
 
 def VehicleFitnessEdit(request, id):
     vehicleData = Vehicle.objects.all()
@@ -250,7 +249,6 @@ def VehicleFitnessEdit(request, id):
 
 
 ############## Vehicle Fitness Update
-from django.shortcuts import get_object_or_404
 
 def VehicleFitnessDetailsUpdate(request):
     if request.method == "POST":
@@ -275,7 +273,6 @@ def VehicleFitnessDetailsUpdate(request):
 
 
 ############## Vehicle Fitness Delete
-from django.shortcuts import get_object_or_404
 
 def VehicleFitnessDetailsdelete(request, id):
     fitnessDetailData = get_object_or_404(Fitness, fitness_id=id)
@@ -343,7 +340,6 @@ def ShowVehicleDetail(request, id):
 
 #########Vehicle Insurance#################################################################################################################
 ########### Vehicle Insurance Add
-from django.shortcuts import get_object_or_404
 
 def VehicleInsuranceAdd(request, vehicle_id):
     vehicleData = Vehicle.objects.all()
@@ -573,7 +569,6 @@ def vehiclePermitUpdate(request):
     return render(request, 'vehicle/vehicle_permit_list.html',)
 
 ################# Vehicle permit delete
-from django.urls import reverse
 def vehiclePermitdelete(request, id):
     vehiclePermitData = get_object_or_404(VehiclePermit, permit_id=id)
     vehiclePermitData.is_deleted = True
@@ -584,16 +579,14 @@ def vehiclePermitdelete(request, id):
 
 ###############################################################################################################
 ################# Vehicle Pollution ADD
-def VehiclePollutionAdd(request):
+def VehiclePollutionAdd(request, vehicle_id):
     vehicleData = Vehicle.objects.all()
-
+    vehicleId = get_object_or_404(Vehicle, vehicle_id=vehicle_id)
     if request.method == "POST":
         vehiclenewId = request.POST['vehicle_id']
         vehiclePollutionFromDate = request.POST['vehicle_pollution_from_Date']
         vehiclePollutionToDate = request.POST['vehicle_pollution_to_Date']
         vehiclePollutionValue = request.POST['vehicle_pollution_value']
-
-        vehicleId = get_object_or_404(Vehicle, vehicle_id=vehiclenewId)
 
         try:
 
@@ -609,12 +602,12 @@ def VehiclePollutionAdd(request):
             vehiclePollutionDetailAdd.save()
 
             messages.success(request, "Vehicle Pollution Detail Added.")
-            return redirect('vehicle_pollution_list')  # Redirect to a success page or the same page
-
+            return redirect('vehicle_pollution_list')
         except IntegrityError as e:
             messages.error(request, str(e))
 
     context = {
+        'vehicleId': vehicleId,
         'vehicleData': vehicleData,
     }
 
@@ -622,10 +615,12 @@ def VehiclePollutionAdd(request):
 
 ################# Vehicle Pollution list
 def VehiclePollutionList(request):
+    vehicleData = Vehicle.objects.all()
     vehiclePollutionList = VehiclePollution.objects.filter(is_deleted=False).order_by('-pollution_id')
 
     context = {
-        'vehiclePollutionList': vehiclePollutionList
+        'vehiclePollutionList': vehiclePollutionList,
+        'vehicleData':vehicleData
     }
     return render(request, 'vehicle/vehicle_pollution_list.html', context)
 
@@ -670,9 +665,8 @@ def vehiclePollutiondelete(request, id):
     vehiclePollutionData.is_deleted = True
     vehiclePollutionData.deleted_by = request.user
     vehiclePollutionData.save()
-    vehiclePollutionList = VehiclePollution.objects.filter(is_deleted=False)  # Filter non-deleted items
     messages.success(request, "Vehicle Pollution Details Deleted Successfully..!!")
-    return render(request, 'vehicle/vehicle_pollution_list.html', {'vehiclePollutionList': vehiclePollutionList})
+    return redirect('vehicle_pollution_list')
 
 
 ##################################### Vehicle Tax ###################################################
