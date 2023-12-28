@@ -59,7 +59,7 @@ urlpatterns = [
 
 # ======================================= Vehicle Tax =========================================================
 
-    path('vehicle_tax_add/', views.VehicleTaxAdd, name='vehicle_tax_add'),
+    path('vehicle_tax_add/<int:vehicle_id>/', views.VehicleTaxAdd, name='vehicle_tax_add'),
     path('vehicle_tax_list/', views.VehicleTaxList, name='vehicle_tax_list'),
     path('vehicle_tax_edit/<int:id>/', views.VehicleTaxEdit, name='vehicle_tax_edit'),
     path('vehicle_tax_update/', views.vehicleTaxUpdate, name='vehicle_tax_update'),

@@ -103,6 +103,11 @@
                                                     aria-label="Gender: activate to sort column ascending"
                                                     style="width: 20.025px;">Pollution</th>
 
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Gender: activate to sort column ascending"
+                                                    style="width: 20.025px;">Tax</th>
+
                                                 <th class="text-right sorting" tabindex="0"
                                                     aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
                                                     aria-label="Action: activate to sort column ascending"
@@ -162,6 +167,14 @@
                                                         <a href="{% url 'vehicle_pollution_add' vehicle.vehicle_id %}"
                                                             class="btn btn-warning btn-sm ms-2">
                                                             <i title="Vehicle Pollution Add" class="fa fa-industry" data-bs-toggle="tooltip"></i>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="actions">
+                                                        <a href="{% url 'vehicle_tax_add' vehicle.vehicle_id %}"
+                                                            class="btn btn-warning btn-sm ms-2">
+                                                            <i title="Vehicle Tax Add" class="fa-regular fa-money-bill-1" data-bs-toggle="tooltip"></i>
                                                         </a>
                                                     </div>
                                                 </td>

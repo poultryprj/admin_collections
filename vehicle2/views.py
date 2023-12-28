@@ -671,9 +671,9 @@ def vehiclePollutiondelete(request, id):
 
 ##################################### Vehicle Tax ###################################################
 ################# Vehicle Tax Add
-def VehicleTaxAdd(request):
+def VehicleTaxAdd(request,vehicle_id):
     vehicleData = Vehicle.objects.all()
-
+    vehicleId = get_object_or_404(Vehicle, vehicle_id=vehicle_id)
     if request.method == "POST":
         vehiclenewId = request.POST['vehicle_id']
         vehicleTaxFromDate = request.POST['vehicle_tax_from_Date']
@@ -682,7 +682,7 @@ def VehicleTaxAdd(request):
         vehicleEnvironmentTax = request.POST['vehicle_environment_tax']
         vehicleProfessionalTax = request.POST['vehicle_professional_tax']
 
-        vehicleId = get_object_or_404(Vehicle, vehicle_id=vehiclenewId)
+
 
         try:
 
@@ -707,6 +707,7 @@ def VehicleTaxAdd(request):
             messages.error(request, str(e))
     vehicleTaxTypes = ['Private', 'Transport']
     context = {
+        'vehicleId': vehicleId,
         'vehicleData': vehicleData,
         'vehicleTaxTypes' : vehicleTaxTypes,
     }
@@ -716,10 +717,12 @@ def VehicleTaxAdd(request):
 
 ################# Vehicle Tax List
 def VehicleTaxList(request):
+    vehicleData = Vehicle.objects.all()
     vehicleTaxList = VehicleTax.objects.filter(is_deleted=False).order_by('-tax_id')
 
     context = {
-        'vehicleTaxList': vehicleTaxList
+        'vehicleTaxList': vehicleTaxList,
+        'vehicleData': vehicleData,
     }
     return render(request, 'vehicle/vehicle_tax_list.html', context)
 
@@ -769,6 +772,5 @@ def vehicleTaxdelete(request, id):
     vehicleTaxData.is_deleted = True
     vehicleTaxData.deleted_by = request.user
     vehicleTaxData.save()
-    vehicleTaxList = VehicleTax.objects.filter(is_deleted=False)  # Filter non-deleted items
     messages.success(request, "Vehicle Tax Details Deleted Successfully..!!")
-    return render(request, 'vehicle/vehicle_tax_list.html', {'vehicleTaxList': vehicleTaxList})
+    return redirect('vehicle_tax_list')
