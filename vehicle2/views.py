@@ -294,14 +294,14 @@ def ShowVehicleDetail(request, id):
 
         insuranceCompanyData = InsuranceCompany.objects.all()
         
-        fitnessDetailList = Fitness.objects.filter(is_deleted=False).order_by('-fitness_id')
+        fitnessDetailList = Fitness.objects.filter(is_deleted=False)
         vehicleFitnessData = fitnessDetailList.filter(vehicle_id=vehicleDetailEdit).first()
 
-        insuranceDetailList = VehicleInsurance.objects.filter(vehicle_id=vehicleDetailEdit, is_deleted=False).order_by('-insurance_id')
+        insuranceDetailList = VehicleInsurance.objects.filter(vehicle_id=vehicleDetailEdit, is_deleted=False)
 
-        permitDetailList = VehiclePermit.objects.filter(vehicle_id=vehicleDetailEdit, is_deleted=False).order_by('-permit_id')
-        pollutionDetailList = VehiclePollution.objects.filter(vehicle_id=vehicleDetailEdit, is_deleted=False).order_by('-pollution_id')
-        vehicleTaxDetailList = VehicleTax.objects.filter(vehicle_id=vehicleDetailEdit, is_deleted=False).order_by('-tax_id')
+        permitDetailList = VehiclePermit.objects.filter(vehicle_id=vehicleDetailEdit, is_deleted=False)
+        pollutionDetailList = VehiclePollution.objects.filter(vehicle_id=vehicleDetailEdit, is_deleted=False)
+        vehicleTaxDetailList = VehicleTax.objects.filter(vehicle_id=vehicleDetailEdit, is_deleted=False)
         
         context = {
             "vehicleDetailEdit": vehicleDetailEdit,
@@ -336,7 +336,6 @@ def ShowVehicleDetail(request, id):
         'vehicleTaxDetailList' : [],
     }
     return render(request, 'vehicle/show_vehicle_details.html', context)
-
 
 #########Vehicle Insurance#################################################################################################################
 ########### Vehicle Insurance Add
@@ -480,21 +479,18 @@ def vehicleInsuranceDelete(request, id):
 
 ################# Vehicle Permit #########################################################################################################
 ################# Vehicle Permit ADD
-
-def VehiclePermitAdd(request,vehicle_id):
+def VehiclePermitAdd(request, vehicle_id):
     vehicleData = Vehicle.objects.all()
-    vehicleId = get_object_or_404(Vehicle, vehicle_id=vehicle_id)
+    vehicle = get_object_or_404(Vehicle, vehicle_id=vehicle_id)
 
     if request.method == "POST":
-        vehiclenewId = request.POST['vehicle_id']
         vehiclePermitFromDate = request.POST['permit_from_date']
         vehiclePermitToDate = request.POST['permit_to_date']
         vehiclePermitType = request.POST['permit_type']
         vehiclePermitId = request.POST['vehicle_permit_id_no']
         try:
-
             vehicleInsuranceDetailAdd = VehiclePermit(
-                vehicle_id=vehicleId,
+                vehicle_id=vehicle,  # Assign the Vehicle instance, not just the ID
                 vehicle_permit_from_Date=vehiclePermitFromDate,
                 vehicle_permit_to_Date=vehiclePermitToDate,
                 vehicle_permit_type=vehiclePermitType,
@@ -502,7 +498,6 @@ def VehiclePermitAdd(request,vehicle_id):
                 created_by_id=request.user,
                 last_modified_by_id=request.user,
             )
-            
             vehicleInsuranceDetailAdd.save()
 
             messages.success(request, "Vehicle Permit Detail Added...")
@@ -513,12 +508,13 @@ def VehiclePermitAdd(request,vehicle_id):
 
     TypeOfPermit = ['Private', 'Transport']
     context = {
-        'vehicleId': vehicleId,
+        'vehicleId': vehicle_id,
         'vehicleData': vehicleData,
         'TypeOfPermit': TypeOfPermit,
     }
 
     return render(request, 'vehicle/vehicle_permit_add.html', context)
+
 
 ################# Vehicle Permit ADD
 def VehiclePermitList(request):

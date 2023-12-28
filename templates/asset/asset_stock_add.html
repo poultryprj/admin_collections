@@ -29,31 +29,31 @@
                             </div>
                             
 
-                            <div class="col-12 col-sm-3 mb-3">
-                                <label for="asset_id">Asset ID</label>
+                            <div class="col-12 col-sm-6 mb-3">
+                                <label for="asset_id">Asset Name</label>
                                 <div class="input-group">
                                     <select class="form-control form-select" id="asset_id" name="asset_id" required>
-                                        <option value="" disabled selected>------- Select Asset ID -------</option>
+                                        <option value="" disabled selected>------- Select Asset Name -------</option>
                                         {% for asset in assetData %}
                                             <option value="{{ asset.asset_id }}">{{ asset.asset_name }}</option>
                                         {% endfor %}
                                     </select>
                                 </div>
                             </div>
-
+                        </div>
+                        <div class="row">
                             <div class="col-12 col-sm-6">
                                 <div class="form-group mb-3">
                                     <label class="mb-2">Asset Stock Quantity</label>
-                                    <input type="text" class="form-control" name="asset_stock_quantity" required>
+                                    <input type="text" class="form-control" name="asset_stock_quantity" value="0" placeholder="Add Quantity" required>
                                 </div>
                             </div>
                             <div class="col-12 col-sm-6">
                                 <div class="form-group mb-3">
                                     <label class="mb-2">Asset Stock Weight</label>
-                                    <input type="text" class="form-control" name="asset_stock_weight" required>
+                                    <input type="text" class="form-control" name="asset_stock_weight" value="0" placeholder="Add Weight For Ex. 0.00" required>
                                 </div>
-                            </div>
-
+                            </div>                            
                         
                             <div class="col-12">
                                 <button type="submit" class="btn btn-primary"> Add Details </button>

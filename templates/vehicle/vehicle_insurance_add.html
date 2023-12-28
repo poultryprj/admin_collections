@@ -22,7 +22,7 @@
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-body">
-                    <form action="{% url 'vehicle_insurance_add' vehicleData.first %}" method="POST">
+                    <form action="{% url 'vehicle_insurance_add' vehicleId %}" method="POST">
                         {% csrf_token %}
                         <div class="row">
                             <div class="col-12">

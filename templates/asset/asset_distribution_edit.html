@@ -30,35 +30,29 @@
                                     <h5 class="form-title"><span>Asset Distribution Details</span></h5>
                                 </div>
     
-                                <div class="col-12 col-sm-3">
+                                <div class="col-12 col-sm-6">
                                     <div class="form-group">
                                         <label>Asset Distribution Id</label>
                                         <input type="text" class="form-control" name="asset_distribution_id" value="{{ assetDistributionData.asset_distribution_id }}" readonly>
                                     </div>
                                 </div>
-    
+                            </div>
+                            <div class="row">
                                 <div class="col-12 col-sm-3">
-                                    <div class="form-group mb-3">
-                                        <label class="mb-2">Asset Distribution Date</label>
-                                        <input type="date" class="form-control" name="distribution_date" value="{{ distribution_date }}" required>
+                                    <div class="form-group">
+                                        <label>Consumer's ID</label>
+                                        <input type="text" class="form-control" name="distribution_to_id" placeholder="Add Consumer's ID" value="{{ assetDistributionData.distribution_to_id }}" required>
                                     </div>
                                 </div>
-    
-                                <div class="col-12 col-sm-3">
-                                    <div class="form-group mb-3">
-                                        <label class="mb-2">Asset Distribution Time</label>
-                                        <input type="time" class="form-control" name="distribution_time" value="{{ distribution_time }}" required>
-                                    </div>
-                                </div>
-    
+
                                 <div class="col-12 col-sm-3">
                                     <div class="form-group">
                                         <label>Assets Consumer</label>
-                                        <input type="text" class="form-control" name="assets_consumer_type" value="{{ assetDistributionData.assets_consumer_type }}" required>
+                                        <input type="text" class="form-control" name="assets_consumer_type" placeholder="Write Consumer's Name" value="{{ assetDistributionData.assets_consumer_type }}" required>
                                     </div>
                                 </div>
-    
-                                <div class="col-12 col-sm-3 mb-3">
+
+                                <div class="col-12 col-sm-6 mb-3">
                                     <label>User Group</label>
                                     <div class="input-group">
                                         <select class="form-control form-select" name="group_id" required>
@@ -75,32 +69,39 @@
                                         </select>
                                     </div>
                                 </div>
-
-                                <div class="col-12 col-sm-3">
-                                    <div class="form-group">
-                                        <label>Distribution To ID</label>
-                                        <input type="text" class="form-control" name="distribution_to_id" value="{{ assetDistributionData.distribution_to_id }}" required>
+    
+                                <div class="col-12 col-sm-6">
+                                    <div class="form-group mb-3">
+                                        <label class="mb-2">Asset Distribution Date</label>
+                                        <input type="date" class="form-control" name="distribution_date" value="{{ distribution_date }}" required>
+                                    </div>
+                                </div>
+    
+                                <div class="col-12 col-sm-6">
+                                    <div class="form-group mb-3">
+                                        <label class="mb-2">Asset Distribution Time</label>
+                                        <input type="time" class="form-control" name="distribution_time" value="{{ distribution_time }}" required>
                                     </div>
                                 </div>
 
-                                <div class="col-12 col-sm-3">
+                                <div class="col-12 col-sm-6">
                                     <div class="form-group">
                                         <label>Quantity</label>
-                                        <input type="text" class="form-control" name="quantity" value="{{ assetDistributionData.quantity }}" required>
+                                        <input type="text" class="form-control" name="quantity" placeholder="Add Quantity" value="{{ assetDistributionData.quantity }}" required>
                                     </div>
                                 </div>
 
-                                <div class="col-12 col-sm-3">
+                                <div class="col-12 col-sm-6">
                                     <div class="form-group">
                                         <label>Weight</label>
-                                        <input type="text" class="form-control" name="weight" value="{{ assetDistributionData.weight }}" required>
+                                        <input type="text" class="form-control" name="weight" placeholder="Add Weight" value="{{ assetDistributionData.weight }}" required>
                                     </div>
                                 </div>
 
-                                <div class="col-12 col-sm-3">
+                                <div class="col-12 col-sm-6">
                                     <div class="form-group">
                                         <label>Remarks</label>
-                                        <input type="text" class="form-control" name="remarks" value="{{ assetDistributionData.remarks }}" required>
+                                        <input type="text" class="form-control" name="remarks" placeholder="Write Remarks" value="{{ assetDistributionData.remarks }}" required>
                                     </div>
                                 </div>
                                 

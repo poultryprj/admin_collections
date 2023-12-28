@@ -129,9 +129,7 @@
                             <div class="col-12">
                                 <h5 class="form-title"><span>Vehicle Insurance Details</span></h5>
                             </div>
-
                             {% for insurance in insuranceDetails %}
-                          
                                 <div class="col-12">
                                     <h5 class="form-title"><span>Insurance Record. {{ forloop.counter }}</span></h5>
                                 </div>
@@ -140,7 +138,6 @@
                                         <label>Insurance Id</label>
                                         <input type="text" class="form-control" name="insurance_id" value="{{ insurance.insurance_id }}" readonly>
                                     </div>
-            
                                 </div>
                                 <div class="col-12 col-sm-3">
                                     <div class="form-group">
@@ -148,49 +145,42 @@
                                         <input type="date" class="form-control" name="insurance_from_date" value="{% if insurance.insurance_from_date %}{{ insurance.insurance_from_date|date:'Y-m-d' }}{% endif %}" readonly>
                                     </div>
                                 </div>
-    
                                 <div class="col-12 col-sm-3">
                                     <div class="form-group">
                                         <label>Vehicle Insurance To Date</label>
                                         <input type="date" class="form-control" name="insurance_to_date" value="{% if insurance.insurance_to_date %}{{ insurance.insurance_to_date|date:'Y-m-d' }}{% endif %}" readonly>
                                     </div>
                                 </div>
-    
                                 <div class="col-12 col-sm-3">
                                     <div class="form-group">
                                         <label>Insurance Company</label>
                                         <input type="text" class="form-control" name="insurance_company" value="{{ insurance.insurance_company }}" readonly>
                                     </div>
                                 </div>
-
                                 <div class="col-12 col-sm-3">
                                     <div class="form-group">
                                         <label>Insurance Amount</label>
-                                        <input type="text" class="form-control" name="insurance_company" value="{{ insurance.insurance_amount }}" readonly>
+                                        <input type="text" class="form-control" name="insurance_amount" value="{{ insurance.insurance_amount }}" readonly>
                                     </div>
                                 </div>
-
                                 <div class="col-12 col-sm-3">
                                     <div class="form-group">
                                         <label>Insurance Paid Amount</label>
-                                        <input type="text" class="form-control" name="insurance_company" value="{{ insurance.insurance_paid_amount }}" readonly>
+                                        <input type="text" class="form-control" name="insurance_paid_amount" value="{{ insurance.insurance_paid_amount }}" readonly>
                                     </div>
                                 </div>
-                    
                             {% endfor %}
                         </div>
-                        {% else %}
+                    {% else %}
                         <p>No Insurance data available for this vehicle.</p>
-                        {% endif %}
-
-                        {% if permitDetailList %}
+                    {% endif %}
+                    
+                    {% if permitDetailList %}
                         <div class="row">
                             <div class="col-12">
                                 <h5 class="form-title"><span>Vehicle Permit Details</span></h5>
                             </div>
-
                             {% for permit in permitDetailList %}
-                            
                                 <div class="col-12">
                                     <h5 class="form-title"><span>Permit Record. {{ forloop.counter }}</span></h5>
                                 </div>
@@ -199,42 +189,37 @@
                                         <label>Permit Id</label>
                                         <input type="text" class="form-control" name="permit_id" value="{{ permit.permit_id }}" readonly>
                                     </div>
-                              
                                 </div>
                                 <div class="col-12 col-sm-3">
                                     <div class="form-group">
                                         <label>Vehicle Permit From Date</label>
-                                        <input type="date" class="form-control" name="vehicle_permit_from_Date" value="{% if permit.vehicle_permit_from_Date %}{{ permit.vehicle_permit_from_Date|date:'Y-m-d' }}{% endif %}" readonly>
+                                        <input type="date" class="form-control" name="vehicle_permit_from_date" value="{% if permit.vehicle_permit_from_date %}{{ permit.vehicle_permit_from_date|date:'Y-m-d' }}{% endif %}" readonly>
                                     </div>
                                 </div>
-    
                                 <div class="col-12 col-sm-3">
                                     <div class="form-group">
                                         <label>Vehicle Permit To Date</label>
-                                        <input type="date" class="form-control" name="vehicle_permit_to_Date" value="{% if permit.vehicle_permit_to_Date %}{{ permit.vehicle_permit_to_Date|date:'Y-m-d' }}{% endif %}" readonly>
+                                        <input type="date" class="form-control" name="vehicle_permit_to_date" value="{% if permit.vehicle_permit_to_date %}{{ permit.vehicle_permit_to_date|date:'Y-m-d' }}{% endif %}" readonly>
                                     </div>
                                 </div>
-    
                                 <div class="col-12 col-sm-3">
                                     <div class="form-group">
                                         <label>Vehicle Permit Type</label>
                                         <input type="text" class="form-control" name="vehicle_permit_type" value="{{ permit.vehicle_permit_type }}" readonly>
                                     </div>
                                 </div>
-
                                 <div class="col-12 col-sm-3">
                                     <div class="form-group">
-                                        <label>Vehicle Permit No.</label>
+                                        <label>Vehicle Permit ID</label>
                                         <input type="text" class="form-control" name="vehicle_permit_id" value="{{ permit.vehicle_permit_id }}" readonly>
                                     </div>
                                 </div>
-                   
                             {% endfor %}
                         </div>
-                        {% else %}
+                    {% else %}
                         <p>No Permit data available for this vehicle.</p>
-                        {% endif %}
-
+                    {% endif %}
+                    
 
                         {% if pollutionDetailList %}
                         <div class="row">

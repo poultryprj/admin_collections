@@ -163,42 +163,59 @@
                     </ul>
                 </li> {% endcomment %}
 
-                <li class="submenu ">
-                    <a href="#"><i class="fa fa-archive"></i> <span> Assets </span> <span
-                            class="menu-arrow"></span></a>
+                <li class="submenu">
+                    <a href="#"><i class="fa-solid fa-compass-drafting"></i> <span> Assets Management </span> <span class="menu-arrow"></span></a>
                     <ul>
-                        
-                        <li class=""><a href="{% url 'asset_add' %}">Assets Add</a></li>
-                        <li class=""><a href="{% url 'asset_list' %}">Assets List</a></li>
-                    </ul>
-                </li>
+                        <li class="submenu">
+                            <a href="#"><i class="fa-solid fa-store"></i> <span> Assets </span> <span class="menu-arrow"></span></a>
+                            <ul>
+                                <li class="">
+                                    <a href="{% url 'asset_add' %}">Assets Add</a>
+                                </li>
+                                <li class="">
+                                    <a href="{% url 'asset_list' %}">Assets List</a>
+                                </li>
+                            </ul>
+                        </li>
 
-                <li class="submenu ">
-                    <a href="#"><i class="fa-solid fa-store"></i> <span> Asset Purchase </span> <span
-                            class="menu-arrow"></span></a>
-                    <ul>
-                        <li class=""><a href="{% url 'asset_purchase_add' %}">Assets Purchase Add</a></li>
-                        <li class=""><a href="{% url 'asset_purchase_list' %}">Assets Purchase List</a></li>
-                    </ul>
-                </li>
 
-                <li class="submenu ">
-                    <a href="#"><i class="fa-solid fa-building-circle-arrow-right"></i><span> Asset Distribution </span> <span
-                            class="menu-arrow"></span></a>
-                    <ul>
-                        <li class=""><a href="{% url 'asset_distribution_add' %}">Assets Distribution Add</a></li>
-                        <li class=""><a href="{% url 'asset_distribution_list' %}">Assets Distribution List</a></li>
-                    </ul>
-                </li>
 
-                <li class="submenu ">
-                    <a href="#"><i class="fa-solid fa-arrow-trend-up"></i><span> Asset Stock </span> <span
-                            class="menu-arrow"></span></a>
-                    <ul>
-                        <li class=""><a href="{% url 'asset_stock_add' %}">Assets Stock Add</a></li>
-                        <li class=""><a href="{% url 'asset_stock_list' %}">Assets Stock List</a></li>
+                        <li class="submenu">
+                            <a href="#"><i class="fa-solid fa-store"></i> <span> Asset Purchase </span> <span class="menu-arrow"></span></a>
+                            <ul>
+                                <li class="">
+                                    <a href="{% url 'asset_purchase_add' %}">Assets Purchase Add</a>
+                                </li>
+                                <li class="">
+                                    <a href="{% url 'asset_purchase_list' %}">Assets Purchase List</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="#"><i class="fa-solid fa-building-circle-arrow-right"></i><span> Asset Distribution </span> <span class="menu-arrow"></span></a>
+                            <ul>
+                                <li class="">
+                                    <a href="{% url 'asset_distribution_add' %}">Assets Distribution Add</a>
+                                </li>
+                                <li class="">
+                                    <a href="{% url 'asset_distribution_list' %}">Assets Distribution List</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="#"><i class="fa-solid fa-arrow-trend-up"></i><span> Asset Stock </span> <span class="menu-arrow"></span></a>
+                            <ul>
+                                <li class="">
+                                    <a href="{% url 'asset_stock_add' %}">Assets Stock Add</a>
+                                </li>
+                                <li class="">
+                                    <a href="{% url 'asset_stock_list' %}">Assets Stock List</a>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                 </li>
+                
 
           
 

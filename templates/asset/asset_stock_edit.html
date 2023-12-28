@@ -19,7 +19,6 @@
 {% include "includes/message.html" %}
 
     <div class="row">
-        <div class="row">
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-body">
@@ -30,15 +29,16 @@
                                     <h5 class="form-title"><span>Asset Stock Details</span></h5>
                                 </div>
     
-                                <div class="col-12 col-sm-3">
+                                <div class="col-12 col-sm-6">
                                     <div class="form-group">
                                         <label>Asset Stock Id</label>
                                         <input type="text" class="form-control" name="stock_id" value="{{ assetStockData.stock_id }}" readonly>
                                     </div>
                                 </div>
+                            </div>
 
-    
-                                <div class="col-12 col-sm-3">
+                            <div class="row">
+                                <div class="col-12 col-sm-6">
                                     <div class="form-group">
                                         <label>Assets</label>
                                         <select class="form-control form-select" name="asset_id" required>
@@ -55,20 +55,21 @@
                                         </select>
                                     </div>
                                 </div>
-                                
+                            </div>
+                            <div class="row">                               
                                 
 
-                                <div class="col-12 col-sm-3">
+                                <div class="col-12 col-sm-6">
                                     <div class="form-group">
                                         <label>Asset Quantity</label>
-                                        <input type="text" class="form-control" name="asset_stock_quantity" value="{{ assetStockData.asset_stock_quantity }}" required>
+                                        <input type="text" class="form-control" name="asset_stock_quantity" placeholder="Add Quantity" value="{{ assetStockData.asset_stock_quantity }}" required>
                                     </div>
                                 </div>
 
-                                <div class="col-12 col-sm-3">
+                                <div class="col-12 col-sm-6">
                                     <div class="form-group">
                                         <label>Asset Stock Weight</label>
-                                        <input type="text" class="form-control" name="asset_stock_weight" value="{{ assetStockData.asset_stock_weight }}" required>
+                                        <input type="text" class="form-control" name="asset_stock_weight" placeholder="Add Weight For Ex. 0.00" value="{{ assetStockData.asset_stock_weight }}" required>
                                     </div>
                                 </div>
                                 
@@ -79,7 +80,6 @@
                             </div>
                         </form>
                     </div>
-                </div>
             </div>
         </div>
     </div>
