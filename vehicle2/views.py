@@ -484,8 +484,10 @@ def vehicleInsuranceDelete(request, id):
 
 ################# Vehicle Permit #########################################################################################################
 ################# Vehicle Permit ADD
-def VehiclePermitAdd(request):
+
+def VehiclePermitAdd(request,vehicle_id):
     vehicleData = Vehicle.objects.all()
+    vehicleId = get_object_or_404(Vehicle, vehicle_id=vehicle_id)
 
     if request.method == "POST":
         vehiclenewId = request.POST['vehicle_id']
@@ -493,9 +495,6 @@ def VehiclePermitAdd(request):
         vehiclePermitToDate = request.POST['permit_to_date']
         vehiclePermitType = request.POST['permit_type']
         vehiclePermitId = request.POST['vehicle_permit_id_no']
-
-        vehicleId = get_object_or_404(Vehicle, vehicle_id=vehiclenewId)
-
         try:
 
             vehicleInsuranceDetailAdd = VehiclePermit(
@@ -510,7 +509,7 @@ def VehiclePermitAdd(request):
             
             vehicleInsuranceDetailAdd.save()
 
-            messages.success(request, "Vehicle Permit Detail Added.")
+            messages.success(request, "Vehicle Permit Detail Added...")
             return redirect('vehicle_permit_list')  # Redirect to a success page or the same page
 
         except IntegrityError as e:
@@ -518,6 +517,7 @@ def VehiclePermitAdd(request):
 
     TypeOfPermit = ['Private', 'Transport']
     context = {
+        'vehicleId': vehicleId,
         'vehicleData': vehicleData,
         'TypeOfPermit': TypeOfPermit,
     }
@@ -526,10 +526,12 @@ def VehiclePermitAdd(request):
 
 ################# Vehicle Permit ADD
 def VehiclePermitList(request):
+    vehicleData = Vehicle.objects.all()
     vehiclePermitList = VehiclePermit.objects.filter(is_deleted=False).order_by('-permit_id')
 
     context = {
-        'vehiclePermitList': vehiclePermitList
+        'vehiclePermitList': vehiclePermitList,
+        'vehicleData': vehicleData
     }
     return render(request, 'vehicle/vehicle_permit_list.html', context)
 
@@ -571,14 +573,14 @@ def vehiclePermitUpdate(request):
     return render(request, 'vehicle/vehicle_permit_list.html',)
 
 ################# Vehicle permit delete
+from django.urls import reverse
 def vehiclePermitdelete(request, id):
     vehiclePermitData = get_object_or_404(VehiclePermit, permit_id=id)
     vehiclePermitData.is_deleted = True
     vehiclePermitData.deleted_by = request.user
     vehiclePermitData.save()
-    vehiclePermitList = VehiclePermit.objects.filter(is_deleted=False)  # Filter non-deleted items
     messages.success(request, "Vehicle Permit Details Deleted Successfully..!!")
-    return render(request, 'vehicle/vehicle_permit_list.html', {'vehiclePermitList': vehiclePermitList})
+    return redirect('vehicle_permit_list')
 
 ###############################################################################################################
 ################# Vehicle Pollution ADD

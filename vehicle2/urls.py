@@ -43,7 +43,7 @@ urlpatterns = [
 
 # ======================================= Vehicle Permit ===================================================
 
-    path('vehicle_permit_add/', views.VehiclePermitAdd, name='vehicle_permit_add'),
+    path('vehicle_permit_add/<int:vehicle_id>/', views.VehiclePermitAdd, name='vehicle_permit_add'),
     path('vehicle_permit_list/', views.VehiclePermitList, name='vehicle_permit_list'),
     path('vehicle_permit_edit/<int:id>/', views.VehiclePermitEdit, name='vehicle_permit_edit'),
     path('vehicle_permit_update/', views.vehiclePermitUpdate, name='vehicle_permit_update'),
