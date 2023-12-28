@@ -38,6 +38,13 @@
 
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
+                                    <label>Owner Name</label>
+                                    <input type="text" class="form-control" name="owner_name" value="{{vehicleDetailEdit.owner_name}}" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
                                     <label>Insurance Id</label>
                                     <input type="text" class="form-control" name="insurance_id" value="{{vehicleInsuranceData.insurance_id}}" readonly>
                                 </div>
@@ -57,33 +64,22 @@
                                     </select>
                                 </div>
                             </div>
-                            
-                            
-                            
-
 
                             <div class="col-12 col-sm-6">
-                                <div class="form-group">
-                                    <label>Owner Name</label>
-                                    <input type="text" class="form-control" name="owner_name" value="{{vehicleDetailEdit.owner_name}}" readonly>
-                                </div>
-                            </div>
-
-                            <div class="col-12 col-sm-3">
                                 <div class="form-group">
                                     <label>Vehicle Insurance From Date</label>
                                     <input type="date" class="form-control" name="insurance_from_date" value="{% if vehicleInsuranceData.insurance_from_date %}{{ vehicleInsuranceData.insurance_from_date|date:'Y-m-d' }}{% endif %}" required>
                                 </div>
                             </div>
 
-                            <div class="col-12 col-sm-3">
+                            <div class="col-12 col-sm-6">
                                 <div class="form-group">
                                     <label>Vehicle Insurance To Date</label>
                                     <input type="date" class="form-control" name="insurance_to_date" value="{% if vehicleInsuranceData.insurance_to_date %}{{ vehicleInsuranceData.insurance_to_date|date:'Y-m-d' }}{% endif %}" required>
                                 </div>
                             </div>
 
-                            <div class="col-12 col-sm-3">
+                            <div class="col-12 col-sm-6">
                                 <div class="form-group">
                                     <label>Insurance Amount</label>
                                     <input type="text" class="form-control" name="insurance_amount" value="{{vehicleInsuranceData.insurance_amount}}" required>
@@ -91,7 +87,7 @@
                             </div>
 
                             
-                            <div class="col-12 col-sm-3">
+                            <div class="col-12 col-sm-6">
                                 <div class="form-group">
                                     <label>Insurance Paid Amount</label>
                                     <input type="text" class="form-control" name="insurance_paid_amount" value="{{vehicleInsuranceData.insurance_paid_amount}}" required>

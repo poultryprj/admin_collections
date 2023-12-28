@@ -38,26 +38,33 @@
 
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
+                                    <label>Owner Name</label>
+                                    <input type="text" class="form-control" name="owner_name" value="{{vehicleDetailEdit.owner_name}}" readonly>
+                                </div>
+                            </div>    
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
                                     <label>Permit Id</label>
                                     <input type="text" class="form-control" name="permit_id" value="{{vehiclePermitData.permit_id}}" readonly>
                                 </div>
                             </div>
-
+                            
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
-                                    <label>Owner Name</label>
-                                    <input type="text" class="form-control" name="owner_name" value="{{vehicleDetailEdit.owner_name}}" readonly>
+                                    <label>Vehicle Permit No.</label>
+                                    <input type="text" class="form-control" name="vehicle_permit_id" value="{{vehiclePermitData.vehicle_permit_id}}" required>
                                 </div>
-                            </div>                       
+                            </div>
 
-                            <div class="col-12 col-sm-3">
+                            <div class="col-12 col-sm-6">
                                 <div class="form-group">
                                     <label>Vehicle Permit From Date</label>
                                     <input type="date" class="form-control" name="vehicle_permit_from_Date" value="{% if vehiclePermitData.vehicle_permit_from_Date %}{{ vehiclePermitData.vehicle_permit_from_Date|date:'Y-m-d' }}{% endif %}" required>
                                 </div>
                             </div>
 
-                            <div class="col-12 col-sm-3">
+                            <div class="col-12 col-sm-6">
                                 <div class="form-group">
                                     <label>Vehicle Permit To Date</label>
                                     <input type="date" class="form-control" name="vehicle_permit_to_Date" value="{% if vehiclePermitData.vehicle_permit_to_Date %}{{ vehiclePermitData.vehicle_permit_to_Date|date:'Y-m-d' }}{% endif %}" required>
@@ -75,14 +82,6 @@
                                             </option>
                                         {% endfor %}
                                     </select>
-                                </div>
-                            </div>
-                            
-
-                            <div class="col-12 col-sm-3">
-                                <div class="form-group">
-                                    <label>Vehicle Permit No.</label>
-                                    <input type="text" class="form-control" name="vehicle_permit_id" value="{{vehiclePermitData.vehicle_permit_id}}" required>
                                 </div>
                             </div>
                             

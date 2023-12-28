@@ -38,32 +38,17 @@
 
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
-                                    <label>Tax Id</label>
-                                    <input type="text" class="form-control" name="tax_id" value="{{vehicleTaxData.tax_id}}" readonly>
-                                </div>
-                            </div>
-
-                            <div class="col-12 col-sm-6">
-                                <div class="form-group">
                                     <label>Owner Name</label>
                                     <input type="text" class="form-control" name="owner_name" value="{{vehicleDetailEdit.owner_name}}" readonly>
                                 </div>
-                            </div>                       
+                            </div>       
 
-                            <div class="col-12 col-sm-3">
+                            <div class="col-12 col-sm-6">
                                 <div class="form-group">
-                                    <label>Vehicle Tax From Date</label>
-                                    <input type="date" class="form-control" name="vehicle_tax_from_Date" value="{% if vehicleTaxData.vehicle_tax_from_Date %}{{ vehicleTaxData.vehicle_tax_from_Date|date:'Y-m-d' }}{% endif %}" required>
+                                    <label>Tax Id</label>
+                                    <input type="text" class="form-control" name="tax_id" value="{{vehicleTaxData.tax_id}}" readonly>
                                 </div>
-                            </div>
-
-                            <div class="col-12 col-sm-3">
-                                <div class="form-group">
-                                    <label>Vehicle Tax To Date</label>
-                                    <input type="date" class="form-control" name="vehicle_tax_to_Date" value="{% if vehicleTaxData.vehicle_tax_to_Date %}{{ vehicleTaxData.vehicle_tax_to_Date|date:'Y-m-d' }}{% endif %}" required>
-                                </div>
-                            </div>
-
+                            </div>     
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
                                     <label>Vehicle Tax Types</label>
@@ -76,17 +61,30 @@
                                     </select>
                                 </div>
                             </div>
-                            
-                            
+                        </div>         
+                        <div class="row"> 
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Vehicle Tax From Date</label>
+                                    <input type="date" class="form-control" name="vehicle_tax_from_Date" value="{% if vehicleTaxData.vehicle_tax_from_Date %}{{ vehicleTaxData.vehicle_tax_from_Date|date:'Y-m-d' }}{% endif %}" required>
+                                </div>
+                            </div>
 
-                            <div class="col-12 col-sm-3">
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Vehicle Tax To Date</label>
+                                    <input type="date" class="form-control" name="vehicle_tax_to_Date" value="{% if vehicleTaxData.vehicle_tax_to_Date %}{{ vehicleTaxData.vehicle_tax_to_Date|date:'Y-m-d' }}{% endif %}" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
                                 <div class="form-group">
                                     <label>Vehicle Environment Tax</label>
                                     <input type="text" class="form-control" name="vehicle_environment_tax" value="{{vehicleTaxData.vehicle_environment_tax}}" required>
                                 </div>
                             </div>
 
-                            <div class="col-12 col-sm-3">
+                            <div class="col-12 col-sm-6">
                                 <div class="form-group">
                                     <label>Vehicle Professional Tax</label>
                                     <input type="text" class="form-control" name="vehicle_professional_tax" value="{{vehicleTaxData.vehicle_professional_tax}}" required>
