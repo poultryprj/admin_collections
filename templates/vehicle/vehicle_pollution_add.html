@@ -22,7 +22,7 @@
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-body">
-                    <form action="{% url 'vehicle_pollution_add' %}" method="POST">
+                    <form action="{% url 'vehicle_pollution_add' vehicleId %}" method="POST">
                         {% csrf_token %}
                         <div class="row">
                             <div class="col-12">
@@ -30,7 +30,7 @@
                             </div>
 
 
-                            <div class="col-12 col-sm-6 mb-3">
+                            {% comment %} <div class="col-12 col-sm-6 mb-3">
                                 <label>Vehicle Id</label>
                                 <div class="input-group">
                                     <select class="form-control form-select" placeholder=""
@@ -41,8 +41,15 @@
                                         {% endfor %}
                                     </select>
                                 </div>
+                            </div> {% endcomment %}
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group mb-3"> <!-- Added mb-3 class for bottom margin -->
+                                    <label class="mb-2">Vehicle ID</label> <!-- Added mb-2 class for bottom margin -->
+                                    <input type="text" class="form-control" name="vehicle_id" value="{{vehicleId}}" readonly>
+                                </div>
                             </div>
-
+                        </div>
+                        <div class="row">
 
                             <div class="col-12 col-sm-6">
                                 <div class="form-group mb-3"> <!-- Added mb-3 class for bottom margin -->

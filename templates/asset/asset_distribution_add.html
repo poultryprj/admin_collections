@@ -28,27 +28,21 @@
                                 <h5 class="form-title"><span>Asset Distribution Details</span></h5>
                             </div>
 
-                            <div class="col-12 col-sm-3">
+                            <div class="col-12 col-sm-6">
                                 <div class="form-group mb-3">
-                                    <label class="mb-2">Distribution Date</label>
-                                    <input type="date" class="form-control" name="distribution_date" required>
-                                </div>
-                            </div>
-                            <div class="col-12 col-sm-3">
-                                <div class="form-group mb-3">
-                                    <label class="mb-2">Distribution Time</label>
-                                    <input type="time" class="form-control" name="distribution_time" required>
+                                    <label class="mb-2">Consumer's ID</label>
+                                    <input type="text" class="form-control" name="distribution_to_id" placeholder="Add Consumer's ID" required>
                                 </div>
                             </div>
 
-                            <div class="col-12 col-sm-3">
+                            <div class="col-12 col-sm-6">
                                 <div class="form-group mb-3">
                                     <label class="mb-2">Assets Consumer</label>
-                                    <input type="text" class="form-control" name="assets_consumer_type" required>
+                                    <input type="text" class="form-control" name="assets_consumer_type" placeholder="Write Consumer's Name" required>
                                 </div>
                             </div>
 
-                            <div class="col-12 col-sm-3 mb-3">
+                            <div class="col-12 col-sm-6 mb-3">
                                 <label>User Group</label>
                                 <div class="input-group">
                                     <select class="form-control form-select" placeholder="" name="group_id" required>
@@ -59,37 +53,42 @@
                                     </select>
                                 </div>
                             </div>
-                            
 
-                            <div class="col-12 col-sm-3">
+                            <div class="col-12 col-sm-6">
                                 <div class="form-group mb-3">
-                                    <label class="mb-2">Distribution To ID</label>
-                                    <input type="text" class="form-control" name="distribution_to_id" required>
+                                    <label class="mb-2">Distribution Date</label>
+                                    <input type="date" class="form-control" name="distribution_date" required>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group mb-3">
+                                    <label class="mb-2">Distribution Time</label>
+                                    <input type="time" class="form-control" name="distribution_time" required>
                                 </div>
                             </div>
 
-                            <div class="col-12 col-sm-3">
+                            <div class="col-12 col-sm-6">
                                 <div class="form-group mb-3">
                                     <label class="mb-2">Quantity</label>
-                                    <input type="text" class="form-control" name="quantity" pattern=".{1,}|.*\S" required value="0">
+                                    <input type="text" class="form-control" name="quantity" placeholder="Add Quantity" pattern=".{1,}|.*\S" required value="0">
                                     <!-- pattern=".{1,}|.*\S" ensures at least one character or non-whitespace character -->
                                 </div>
                             </div>
                             
-                            <div class="col-12 col-sm-3">
+                            <div class="col-12 col-sm-6">
                                 <div class="form-group mb-3">
                                     <label class="mb-2">Weight</label>
-                                    <input type="text" class="form-control" name="weight" pattern=".{1,}|.*\S" required value="0">
+                                    <input type="text" class="form-control" name="weight" placeholder="Add Weight" pattern=".{1,}|.*\S" required value="0">
                                     <!-- pattern=".{1,}|.*\S" ensures at least one character or non-whitespace character -->
                                 </div>
                             </div>
                             
                             
 
-                            <div class="col-12 col-sm-3">
+                            <div class="col-12 col-sm-6">
                                 <div class="form-group mb-3">
                                     <label class="mb-2">Remarks</label>
-                                    <input type="text" class="form-control" name="remarks" required>
+                                    <input type="text" class="form-control" name="remarks" placeholder="Write Remarks" required>
                                 </div>
                             </div>
 

@@ -22,7 +22,8 @@
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-body">
-                    <form action="{% url 'vehicle_fitness_add' %}" method="POST">
+                    <form action="{% url 'vehicle_fitness_add' vehicleId %}" method="POST"> 
+                        {% comment %} {% url 'vehicle_fitness_add' vehicleId %} {% endcomment %}
                         {% csrf_token %}
                         <div class="row">
                             <div class="col-12">
@@ -30,7 +31,7 @@
                             </div>
 
 
-                            <div class="col-12 col-sm-6">
+                            {% comment %} <div class="col-12 col-sm-6">
                                 <label>Vehicle Id</label>
                                 <div class="input-group">
                                     <select class="form-control form-select" placeholder="Enter Shop Area"
@@ -41,16 +42,25 @@
                                         {% endfor %}
                                     </select>
                                 </div>
-                            </div>
+                            </div> {% endcomment %}
 
-                            <div class="col-12 col-sm-3">
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
+                                    <label>Vehicle Id</label>
+                                    <input type="text" class="form-control" name="vehicle_id" value="{{vehicleId}}" readonly>
+                                </div>
+                            </div>
+                        </div>
+               
+                    <div class="row">                    
+                            <div class="col-12 col-sm-6">
                                 <div class="form-group">
                                     <label>Vehicle Fitness From Date</label>
                                     <input type="date" class="form-control" name="vehicle_fitness_from_date" required>
                                 </div>
                             </div>
 
-                            <div class="col-12 col-sm-3">
+                            <div class="col-12 col-sm-6">
                                 <div class="form-group">
                                     <label>Vehicle Fitness To Date</label>
                                     <input type="date" class="form-control" name="vehicle_fitness_to_date" required>

@@ -35,39 +35,9 @@
                                     <input type="text" class="form-control" name="asset_purchase_id" value="{{assetPurchaseData.asset_purchase_id}}" readonly>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="col-12 col-sm-6">
-                                <div class="form-group mb-3">
-                                    <label class="mb-2">Asset Purchase Date</label>
-                                    <input type="date" class="form-control" name="purchase_date" value="{{ purchase_date }}" required>
-                                </div>
-                            </div>
-                            <div class="col-12 col-sm-6">
-                                <div class="form-group mb-3">
-                                    <label class="mb-2">Asset Purchase Time</label>
-                                    <input type="time" class="form-control" name="purchase_time" value="{{ purchase_time }}" required>
-                                </div>
-                            </div>
-
-                             
-                            <div class="col-12 col-sm-6">
-                                <div class="form-group">
-                                    <label>Vendors</label>
-                                    <select class="form-control form-select" name="vendor_id" required>
-                                        <option value="" disabled>------- Select Vendor -------</option>
-                                        {% for vendor in vendorData %}
-                                            <option value="{{ vendor.vendor_id }}"
-                                                {% if assetPurchaseData.vendor_Id_id == vendor.vendor_id %}
-                                                    selected
-                                                {% endif %}
-                                            >
-                                                {{ vendor.vendor_name }}
-                                            </option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
-
+                        <div class="row">
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
                                     <label>Assets</label>
@@ -88,36 +58,67 @@
 
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
+                                    <label>Vendors</label>
+                                    <select class="form-control form-select" name="vendor_id" required>
+                                        <option value="" disabled>------- Select Vendor -------</option>
+                                        {% for vendor in vendorData %}
+                                            <option value="{{ vendor.vendor_id }}"
+                                                {% if assetPurchaseData.vendor_Id_id == vendor.vendor_id %}
+                                                    selected
+                                                {% endif %}
+                                            >
+                                                {{ vendor.vendor_name }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group mb-3">
+                                    <label class="mb-2">Asset Purchase Date</label>
+                                    <input type="date" class="form-control" name="purchase_date" value="{{ purchase_date }}" required>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group mb-3">
+                                    <label class="mb-2">Asset Purchase Time</label>
+                                    <input type="time" class="form-control" name="purchase_time" value="{{ purchase_time }}" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group">
                                     <label>Quantity</label>
-                                    <input type="text" class="form-control" name="quantity" value="{{assetPurchaseData.quantity}}">
+                                    <input type="text" class="form-control" name="quantity" placeholder="Add Quantity" value="{{assetPurchaseData.quantity}}">
                                 </div>
                             </div>
 
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
                                     <label>Weight</label>
-                                    <input type="text" class="form-control" name="weight" value="{{assetPurchaseData.weight}}">
+                                    <input type="text" class="form-control" name="weight" placeholder="Add Weight" value="{{assetPurchaseData.weight}}">
                                 </div>
                             </div>
 
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
                                     <label>Rate</label>
-                                    <input type="text" class="form-control" name="rate" value="{{assetPurchaseData.rate}}">
+                                    <input type="text" class="form-control" name="rate" placeholder="Add Rate" value="{{assetPurchaseData.rate}}">
                                 </div>
                             </div>
 
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
                                     <label>Amount</label>
-                                    <input type="text" class="form-control" name="amount" value="{{assetPurchaseData.amount}}">  
+                                    <input type="text" class="form-control" name="amount" placeholder="Add Amount" value="{{assetPurchaseData.amount}}">  
                                 </div>
                             </div>
 
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
                                     <label>Remarks</label>
-                                    <input type="text" class="form-control" name="remarks" value="{{assetPurchaseData.remarks}}">  
+                                    <input type="text" class="form-control" name="remarks" placeholder="Write Remarks" value="{{assetPurchaseData.remarks}}">  
                                 </div>
                             </div>
                             

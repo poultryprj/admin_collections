@@ -48,10 +48,10 @@
                                                     aria-label="Gender: activate to sort column ascending"
                                                     style="width: 36.025px;">Vendor id</th>
 
-                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                {% comment %} <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
                                                     rowspan="1" colspan="1"
                                                     aria-label="Gender: activate to sort column ascending"
-                                                    style="width: 36.025px;">Asset Id</th>
+                                                    style="width: 36.025px;">Asset Id</th> {% endcomment %}
 
                                                 <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
                                                     rowspan="1" colspan="1"
@@ -77,7 +77,7 @@
                                                 <td class="sorting_1">{{forloop.counter}}</td>   
                                                 <td>{{asset.purchase_on}}</td>                                             
                                                 <td>{{asset.vendor_Id}}</td>
-                                                <td>{{asset.asset_Id}}</td>
+                                                {% comment %} <td>{{asset.asset_id}}</td> {% endcomment %}
                                                 <td>{{asset.quantity}}</td>
                                                 <td>{{asset.weight}}</td>
                                             

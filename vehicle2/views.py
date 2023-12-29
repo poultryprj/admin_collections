@@ -11,7 +11,7 @@ from .models import Fitness, InsuranceCompany,VehicleInsurance, VehiclePermit, V
 from django.db import IntegrityError
 from .models import Vehicle, InsuranceCompany, VehicleInsurance
 from .models import InsuranceCompany, VehicleInsurance, Vehicle
-
+from django.urls import reverse
 ############## Vehicle ######################################################################
 
 def vehicle(request):
@@ -161,7 +161,7 @@ def VehicleDetailsUpdate(request):
 
 ######################## Vehicle Fitness ##############################################################################
 ############## Vehicle Fitness Add
-def VehicleFitnessAdd(request):
+def VehicleFitnessAdd(request, vehicle_id):
     vehicleData = Vehicle.objects.all()
 
     if request.method == "POST":
@@ -170,7 +170,7 @@ def VehicleFitnessAdd(request):
         vehicleFitnessToDate = request.POST['vehicle_fitness_to_date']
 
         # Check if the vehicle ID exists
-        existing_vehicle = Vehicle.objects.filter(vehicle_id=vehicleId).first()
+        existing_vehicle = Vehicle.objects.filter(vehicle_id=vehicle_id).first()
 
         if existing_vehicle:
             try:
@@ -179,6 +179,7 @@ def VehicleFitnessAdd(request):
                 if existing_fitness:
                     messages.error(request, "Fitness details already exist for this vehicle.")
                 else:
+                    vehicleId = Vehicle.objects.get(vehicle_id=vehicle_id)
                     vehicleFitnessDetaildAdd = Fitness(
                         vehicle_id=existing_vehicle,
                         vehicle_fitness_from_date=vehicleFitnessFromDate,
@@ -188,7 +189,8 @@ def VehicleFitnessAdd(request):
                     )
                     vehicleFitnessDetaildAdd.save()
                     messages.success(request, "Vehicle Fitness Details Added...")
-                    return redirect('vehicle_fitness_list')
+                    # return redirect('vehicle_fitness_list')
+                    return redirect('vehicle_detail_list')
             except IntegrityError as e:
                 messages.error(request, str(e))
         else:
@@ -209,7 +211,8 @@ def VehicleFitnessAdd(request):
                 messages.error(request, str(e))
 
     context = {
-        'vehicleData': vehicleData
+        'vehicleData': vehicleData,
+        'vehicleId': vehicle_id
     }
 
     return render(request, 'vehicle/vehicle_fitness_add.html', context)
@@ -217,30 +220,37 @@ def VehicleFitnessAdd(request):
 ############## Vehicle Fitness View List
 def VehicleFitnessList(request):
     # Filter out deleted fitness details
+    vehicleData = Vehicle.objects.all()
     fitnessDetailList = Fitness.objects.filter(is_deleted=False).order_by('-fitness_id')
 
     context = {
+        'vehicleData': vehicleData,
         'fitnessDetailList': fitnessDetailList
     }
     return render(request, 'vehicle/vehicle_fitness_list.html', context)
 
 
 ############## Vehicle Fitness Edit
+
 def VehicleFitnessEdit(request, id):
+    vehicleData = Vehicle.objects.all()
     try:
         vehicleFitnessData = get_object_or_404(Fitness, fitness_id=id)
-        vehicleDetailEdit = vehicleFitnessData.vehicle_id  
+        vehicleDetailEdit = vehicleFitnessData.vehicle_id
 
         context = {
-            "vehicleDetailEdit": vehicleDetailEdit,
+            'vehicleData': vehicleData,
+            'vehicleDetailEdit': vehicleDetailEdit,
             'vehicleFitnessData': vehicleFitnessData,
         }
         return render(request, "vehicle/vehicle_fitness_edit.html", context)
     except Fitness.DoesNotExist:
         messages.error(request, "Fitness record not found.")
-        return redirect('error_page')     
+        return redirect('error_page')
+
 
 ############## Vehicle Fitness Update
+
 def VehicleFitnessDetailsUpdate(request):
     if request.method == "POST":
         fitness_id = request.POST['fitness_id']
@@ -250,7 +260,7 @@ def VehicleFitnessDetailsUpdate(request):
         # Assuming the Fitness model has a field called 'fitness_id'
         vehicleFitnessDetailsUpdate = get_object_or_404(Fitness, fitness_id=fitness_id)
 
-        # vehicleFitnessDetailsUpdate.registration_no = registrationNo
+        # Update the fields
         vehicleFitnessDetailsUpdate.vehicle_fitness_from_date = vehicleFitnessFromDate
         vehicleFitnessDetailsUpdate.vehicle_fitness_to_date = vehicleFitnessToDate
        
@@ -264,15 +274,14 @@ def VehicleFitnessDetailsUpdate(request):
 
 
 ############## Vehicle Fitness Delete
+
 def VehicleFitnessDetailsdelete(request, id):
     fitnessDetailData = get_object_or_404(Fitness, fitness_id=id)
     fitnessDetailData.is_deleted = True
     fitnessDetailData.deleted_by = request.user
     fitnessDetailData.save()
-    fitnessDetailList = Fitness.objects.filter(is_deleted=False)  # Filter non-deleted items
     messages.success(request, "Vehicle Fitness Details Deleted Successfully..!!")
-    return render(request, 'vehicle/vehicle_fitness_list.html', {'fitnessDetailList': fitnessDetailList})
-
+    return redirect('vehicle_fitness_list')
 
 ###########################################################################################################################################################################
 ######## Show Vehicle All Details in single form
@@ -286,14 +295,14 @@ def ShowVehicleDetail(request, id):
 
         insuranceCompanyData = InsuranceCompany.objects.all()
         
-        fitnessDetailList = Fitness.objects.filter(is_deleted=False).order_by('-fitness_id')
+        fitnessDetailList = Fitness.objects.filter(is_deleted=False)
         vehicleFitnessData = fitnessDetailList.filter(vehicle_id=vehicleDetailEdit).first()
 
-        insuranceDetailList = VehicleInsurance.objects.filter(vehicle_id=vehicleDetailEdit, is_deleted=False).order_by('-insurance_id')
+        insuranceDetailList = VehicleInsurance.objects.filter(vehicle_id=vehicleDetailEdit, is_deleted=False)
 
-        permitDetailList = VehiclePermit.objects.filter(vehicle_id=vehicleDetailEdit, is_deleted=False).order_by('-permit_id')
-        pollutionDetailList = VehiclePollution.objects.filter(vehicle_id=vehicleDetailEdit, is_deleted=False).order_by('-pollution_id')
-        vehicleTaxDetailList = VehicleTax.objects.filter(vehicle_id=vehicleDetailEdit, is_deleted=False).order_by('-tax_id')
+        permitDetailList = VehiclePermit.objects.filter(vehicle_id=vehicleDetailEdit, is_deleted=False)
+        pollutionDetailList = VehiclePollution.objects.filter(vehicle_id=vehicleDetailEdit, is_deleted=False)
+        vehicleTaxDetailList = VehicleTax.objects.filter(vehicle_id=vehicleDetailEdit, is_deleted=False)
         
         context = {
             "vehicleDetailEdit": vehicleDetailEdit,
@@ -329,12 +338,14 @@ def ShowVehicleDetail(request, id):
     }
     return render(request, 'vehicle/show_vehicle_details.html', context)
 
-
 #########Vehicle Insurance#################################################################################################################
 ########### Vehicle Insurance Add
-def VehicleInsuranceAdd(request):
+
+def VehicleInsuranceAdd(request, vehicle_id):
     vehicleData = Vehicle.objects.all()
     InsuranceCompanyData = InsuranceCompany.objects.all()
+
+    vehicleId = get_object_or_404(Vehicle, vehicle_id=vehicle_id)
 
     if request.method == "POST":
         vehiclenewId = request.POST['vehicle_id']
@@ -343,8 +354,6 @@ def VehicleInsuranceAdd(request):
         insuranceToDate = request.POST['insurance_to_date']
         insuranceAmount = request.POST['insurance_amount']
         insurancePaidAmount = request.POST['insurance_paid_amount']
-
-        vehicleId = get_object_or_404(Vehicle, vehicle_id=vehiclenewId)
 
         try:
             # Get or create an instance of InsuranceCompany
@@ -367,12 +376,14 @@ def VehicleInsuranceAdd(request):
             vehicleInsuranceDetailAdd.save()
 
             messages.success(request, "Vehicle Insurance Detail Added.")
-            return redirect('vehicle_insurance_list')  # Redirect to a success page or the same page
+            # return redirect('vehicle_insurance_list')  # Redirect to a success page or the same page
+            return redirect('vehicle_detail_list')
 
         except IntegrityError as e:
             messages.error(request, str(e))
 
     context = {
+        'vehicleId': vehicleId,
         'vehicleData': vehicleData,
         'insuranceCompanies': InsuranceCompanyData,
     }
@@ -407,10 +418,12 @@ def VehicleInsuranceCompanyAddList(request):
 
 ########### Vehicle Insurance List View
 def VehicleInsuranceList(request):
+    vehicleData = Vehicle.objects.all()
     vehicleInsuranceList = VehicleInsurance.objects.filter(is_deleted=False).order_by('-insurance_id')
 
     context = {
-        'vehicleInsuranceList': vehicleInsuranceList
+        'vehicleInsuranceList': vehicleInsuranceList,
+        'vehicleData': vehicleData
     }
     return render(request, 'vehicle/vehicle_insurance_list.html', context)
 
@@ -461,29 +474,25 @@ def vehicleInsuranceDelete(request, id):
     vehicleInsuranceData.is_deleted = True
     vehicleInsuranceData.deleted_by = request.user
     vehicleInsuranceData.save()
-    vehicleInsuranceList = VehicleInsurance.objects.filter(is_deleted=False)  # Filter non-deleted items
+
     messages.success(request, "Vehicle Insurance Details Deleted Successfully..!!")
-    return render(request, 'vehicle/vehicle_insurance_list.html', {'vehicleInsuranceList': vehicleInsuranceList})
+    return redirect('vehicle_insurance_list')
 
 
 ################# Vehicle Permit #########################################################################################################
 ################# Vehicle Permit ADD
-def VehiclePermitAdd(request):
+def VehiclePermitAdd(request, vehicle_id):
     vehicleData = Vehicle.objects.all()
+    vehicle = get_object_or_404(Vehicle, vehicle_id=vehicle_id)
 
     if request.method == "POST":
-        vehiclenewId = request.POST['vehicle_id']
         vehiclePermitFromDate = request.POST['permit_from_date']
         vehiclePermitToDate = request.POST['permit_to_date']
         vehiclePermitType = request.POST['permit_type']
         vehiclePermitId = request.POST['vehicle_permit_id_no']
-
-        vehicleId = get_object_or_404(Vehicle, vehicle_id=vehiclenewId)
-
         try:
-
             vehicleInsuranceDetailAdd = VehiclePermit(
-                vehicle_id=vehicleId,
+                vehicle_id=vehicle,  # Assign the Vehicle instance, not just the ID
                 vehicle_permit_from_Date=vehiclePermitFromDate,
                 vehicle_permit_to_Date=vehiclePermitToDate,
                 vehicle_permit_type=vehiclePermitType,
@@ -491,29 +500,33 @@ def VehiclePermitAdd(request):
                 created_by_id=request.user,
                 last_modified_by_id=request.user,
             )
-            
             vehicleInsuranceDetailAdd.save()
 
-            messages.success(request, "Vehicle Permit Detail Added.")
-            return redirect('vehicle_permit_list')  # Redirect to a success page or the same page
+            messages.success(request, "Vehicle Permit Detail Added...")
+            # return redirect('vehicle_permit_list')  # Redirect to a success page or the same page
+            return redirect('vehicle_detail_list')
 
         except IntegrityError as e:
             messages.error(request, str(e))
 
     TypeOfPermit = ['Private', 'Transport']
     context = {
+        'vehicleId': vehicle_id,
         'vehicleData': vehicleData,
         'TypeOfPermit': TypeOfPermit,
     }
 
     return render(request, 'vehicle/vehicle_permit_add.html', context)
 
+
 ################# Vehicle Permit ADD
 def VehiclePermitList(request):
+    vehicleData = Vehicle.objects.all()
     vehiclePermitList = VehiclePermit.objects.filter(is_deleted=False).order_by('-permit_id')
 
     context = {
-        'vehiclePermitList': vehiclePermitList
+        'vehiclePermitList': vehiclePermitList,
+        'vehicleData': vehicleData
     }
     return render(request, 'vehicle/vehicle_permit_list.html', context)
 
@@ -560,22 +573,19 @@ def vehiclePermitdelete(request, id):
     vehiclePermitData.is_deleted = True
     vehiclePermitData.deleted_by = request.user
     vehiclePermitData.save()
-    vehiclePermitList = VehiclePermit.objects.filter(is_deleted=False)  # Filter non-deleted items
     messages.success(request, "Vehicle Permit Details Deleted Successfully..!!")
-    return render(request, 'vehicle/vehicle_permit_list.html', {'vehiclePermitList': vehiclePermitList})
+    return redirect('vehicle_permit_list')
 
 ###############################################################################################################
 ################# Vehicle Pollution ADD
-def VehiclePollutionAdd(request):
+def VehiclePollutionAdd(request, vehicle_id):
     vehicleData = Vehicle.objects.all()
-
+    vehicleId = get_object_or_404(Vehicle, vehicle_id=vehicle_id)
     if request.method == "POST":
         vehiclenewId = request.POST['vehicle_id']
         vehiclePollutionFromDate = request.POST['vehicle_pollution_from_Date']
         vehiclePollutionToDate = request.POST['vehicle_pollution_to_Date']
         vehiclePollutionValue = request.POST['vehicle_pollution_value']
-
-        vehicleId = get_object_or_404(Vehicle, vehicle_id=vehiclenewId)
 
         try:
 
@@ -591,12 +601,13 @@ def VehiclePollutionAdd(request):
             vehiclePollutionDetailAdd.save()
 
             messages.success(request, "Vehicle Pollution Detail Added.")
-            return redirect('vehicle_pollution_list')  # Redirect to a success page or the same page
-
+            # return redirect('vehicle_pollution_list')
+            return redirect('vehicle_detail_list')
         except IntegrityError as e:
             messages.error(request, str(e))
 
     context = {
+        'vehicleId': vehicleId,
         'vehicleData': vehicleData,
     }
 
@@ -604,10 +615,12 @@ def VehiclePollutionAdd(request):
 
 ################# Vehicle Pollution list
 def VehiclePollutionList(request):
+    vehicleData = Vehicle.objects.all()
     vehiclePollutionList = VehiclePollution.objects.filter(is_deleted=False).order_by('-pollution_id')
 
     context = {
-        'vehiclePollutionList': vehiclePollutionList
+        'vehiclePollutionList': vehiclePollutionList,
+        'vehicleData':vehicleData
     }
     return render(request, 'vehicle/vehicle_pollution_list.html', context)
 
@@ -652,16 +665,15 @@ def vehiclePollutiondelete(request, id):
     vehiclePollutionData.is_deleted = True
     vehiclePollutionData.deleted_by = request.user
     vehiclePollutionData.save()
-    vehiclePollutionList = VehiclePollution.objects.filter(is_deleted=False)  # Filter non-deleted items
     messages.success(request, "Vehicle Pollution Details Deleted Successfully..!!")
-    return render(request, 'vehicle/vehicle_pollution_list.html', {'vehiclePollutionList': vehiclePollutionList})
+    return redirect('vehicle_pollution_list')
 
 
 ##################################### Vehicle Tax ###################################################
 ################# Vehicle Tax Add
-def VehicleTaxAdd(request):
+def VehicleTaxAdd(request,vehicle_id):
     vehicleData = Vehicle.objects.all()
-
+    vehicleId = get_object_or_404(Vehicle, vehicle_id=vehicle_id)
     if request.method == "POST":
         vehiclenewId = request.POST['vehicle_id']
         vehicleTaxFromDate = request.POST['vehicle_tax_from_Date']
@@ -670,7 +682,7 @@ def VehicleTaxAdd(request):
         vehicleEnvironmentTax = request.POST['vehicle_environment_tax']
         vehicleProfessionalTax = request.POST['vehicle_professional_tax']
 
-        vehicleId = get_object_or_404(Vehicle, vehicle_id=vehiclenewId)
+
 
         try:
 
@@ -689,12 +701,14 @@ def VehicleTaxAdd(request):
             vehicleTaxDetailAdd.save()
 
             messages.success(request, "Vehicle Tax Detail Added.")
-            return redirect('vehicle_tax_list')  # Redirect to a success page or the same page
+            # return redirect('vehicle_tax_list')  # Redirect to a success page or the same page
+            return redirect('vehicle_detail_list')
 
         except IntegrityError as e:
             messages.error(request, str(e))
     vehicleTaxTypes = ['Private', 'Transport']
     context = {
+        'vehicleId': vehicleId,
         'vehicleData': vehicleData,
         'vehicleTaxTypes' : vehicleTaxTypes,
     }
@@ -704,10 +718,12 @@ def VehicleTaxAdd(request):
 
 ################# Vehicle Tax List
 def VehicleTaxList(request):
+    vehicleData = Vehicle.objects.all()
     vehicleTaxList = VehicleTax.objects.filter(is_deleted=False).order_by('-tax_id')
 
     context = {
-        'vehicleTaxList': vehicleTaxList
+        'vehicleTaxList': vehicleTaxList,
+        'vehicleData': vehicleData,
     }
     return render(request, 'vehicle/vehicle_tax_list.html', context)
 
@@ -757,6 +773,5 @@ def vehicleTaxdelete(request, id):
     vehicleTaxData.is_deleted = True
     vehicleTaxData.deleted_by = request.user
     vehicleTaxData.save()
-    vehicleTaxList = VehicleTax.objects.filter(is_deleted=False)  # Filter non-deleted items
     messages.success(request, "Vehicle Tax Details Deleted Successfully..!!")
-    return render(request, 'vehicle/vehicle_tax_list.html', {'vehicleTaxList': vehicleTaxList})
+    return redirect('vehicle_tax_list')

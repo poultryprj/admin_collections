@@ -19,7 +19,7 @@ urlpatterns = [
 
 
 # =====================================Fitness=============================================
-    path('vehicle_fitness_add/', views.VehicleFitnessAdd, name='vehicle_fitness_add'),
+    path('vehicle_fitness_add/<int:vehicle_id>/', views.VehicleFitnessAdd, name='vehicle_fitness_add'),
     path('vehicle_fitness_list/', views.VehicleFitnessList, name='vehicle_fitness_list'),
     path('vehicle_fitness_edit/<int:id>/', views.VehicleFitnessEdit, name='vehicle_fitness_edit'),
 
@@ -31,7 +31,7 @@ urlpatterns = [
     path('show_vehicle_details/<int:id>/', views.ShowVehicleDetail, name='show_vehicle_details'),
 
 # =========================================Vehicle insurance================================================
-    path('vehicle_insurance_add/', views.VehicleInsuranceAdd, name='vehicle_insurance_add'),
+    path('vehicle_insurance_add/<int:vehicle_id>/', views.VehicleInsuranceAdd, name='vehicle_insurance_add'),
 
     path('vehicle_insurance_company_add/', views.VehicleInsuranceCompanyAdd, name='vehicle_insurance_company_add'),  ##dropdown
     path('vehicle_insurance_company_list/', views.VehicleInsuranceCompanyAddList, name='vehicle_insurance_company_list'), ##dropdown
@@ -43,7 +43,7 @@ urlpatterns = [
 
 # ======================================= Vehicle Permit ===================================================
 
-    path('vehicle_permit_add/', views.VehiclePermitAdd, name='vehicle_permit_add'),
+    path('vehicle_permit_add/<int:vehicle_id>/', views.VehiclePermitAdd, name='vehicle_permit_add'),
     path('vehicle_permit_list/', views.VehiclePermitList, name='vehicle_permit_list'),
     path('vehicle_permit_edit/<int:id>/', views.VehiclePermitEdit, name='vehicle_permit_edit'),
     path('vehicle_permit_update/', views.vehiclePermitUpdate, name='vehicle_permit_update'),
@@ -51,7 +51,7 @@ urlpatterns = [
 
 # ======================================= Vehicle Pollution =========================================================
 
-    path('vehicle_pollution_add/', views.VehiclePollutionAdd, name='vehicle_pollution_add'),
+    path('vehicle_pollution_add/<int:vehicle_id>/', views.VehiclePollutionAdd, name='vehicle_pollution_add'),
     path('vehicle_pollution_list/', views.VehiclePollutionList, name='vehicle_pollution_list'),
     path('vehicle_pollution_edit/<int:id>/', views.VehiclePollutionEdit, name='vehicle_pollution_edit'),
     path('vehicle_pollution_update/', views.vehiclePollutionUpdate, name='vehicle_pollution_update'),
@@ -59,7 +59,7 @@ urlpatterns = [
 
 # ======================================= Vehicle Tax =========================================================
 
-    path('vehicle_tax_add/', views.VehicleTaxAdd, name='vehicle_tax_add'),
+    path('vehicle_tax_add/<int:vehicle_id>/', views.VehicleTaxAdd, name='vehicle_tax_add'),
     path('vehicle_tax_list/', views.VehicleTaxList, name='vehicle_tax_list'),
     path('vehicle_tax_edit/<int:id>/', views.VehicleTaxEdit, name='vehicle_tax_edit'),
     path('vehicle_tax_update/', views.vehicleTaxUpdate, name='vehicle_tax_update'),

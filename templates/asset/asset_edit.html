@@ -35,11 +35,14 @@
                                     <input type="text" class="form-control" name="asset_id" value="{{assetData.asset_id}}" readonly>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="row">
 
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
                                     <label>Asset Name</label>
-                                    <input type="text" class="form-control" name="asset_name" value="{{assetData.asset_name}}">
+                                    <input type="text" class="form-control" name="asset_name" placeholder="Add Asset Name" value="{{assetData.asset_name}}">
                                 </div>
                             </div>
 
@@ -50,32 +53,6 @@
                                         {% for asset in assetTypes %}
                                             <option value="{{ asset }}" {% if assetData.asset_types == asset %} selected {% endif %}>
                                                 {{ asset }}
-                                            </option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <div class="col-12 col-sm-6" id="slowly_finished_product_div" style="display: {% if assetData.asset_types == 'Slowly_Finished_Product' %}block{% else %}none{% endif %}">
-                                <div class="form-group">
-                                    <label>Slowly Finished Products</label>
-                                    <select class="form-control form-select" name="slowly_finished_product" required>
-                                        {% for product in slowly_finished_product_types %}
-                                            <option value="{{ product }}" {% if assetData.slowly_finished_product == product %} selected {% endif %}>
-                                                {{ product }}
-                                            </option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <div class="col-12 col-sm-6" id="long_lasting_product_div" style="display: {% if assetData.asset_types == 'Long_Lasting_Products' %}block{% else %}none{% endif %}">
-                                <div class="form-group">
-                                    <label>Long Lasting Products</label>
-                                    <select class="form-control form-select" name="long_lasting_products" required>
-                                        {% for product in long_lasting_products_types %}
-                                            <option value="{{ product }}" {% if assetData.long_lasting_products == product %} selected {% endif %}>
-                                                {{ product }}
                                             </option>
                                         {% endfor %}
                                     </select>
@@ -93,30 +70,5 @@
     </div>
 </div>
 
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var assetTypesSelect = document.getElementById('asset_types');
-        var slowlyFinishedProductDiv = document.getElementById('slowly_finished_product_div');
-        var longLastingProductDiv = document.getElementById('long_lasting_product_div');
-
-        assetTypesSelect.addEventListener('change', function () {
-            if (this.value === 'Slowly_Finished_Product') {
-                slowlyFinishedProductDiv.style.display = 'block';
-                longLastingProductDiv.style.display = 'none';
-            } else if (this.value === 'Long_Lasting_Products') {
-                slowlyFinishedProductDiv.style.display = 'none';
-                longLastingProductDiv.style.display = 'block';
-            } else {
-                slowlyFinishedProductDiv.style.display = 'none';
-                longLastingProductDiv.style.display = 'none';
-            }
-        });
-
-        // Trigger change event on page load to initially show/hide based on the selected asset type
-        var event = new Event('change');
-        assetTypesSelect.dispatchEvent(event);
-    });
-</script>
 
 {% endblock content %}

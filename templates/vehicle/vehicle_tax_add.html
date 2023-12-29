@@ -22,14 +22,14 @@
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-body">
-                    <form action="{% url 'vehicle_tax_add' %}" method="POST">
+                    <form action="{% url 'vehicle_tax_add' vehicleId %}" method="POST">
                         {% csrf_token %}
                         <div class="row">
                             <div class="col-12">
                                 <h5 class="form-title"><span>Vehicle Tax Details</span></h5>
                             </div>
 
-
+                        {% comment %} 
                             <div class="col-12 col-sm-6 mb-3">
                                 <label>Vehicle Id</label>
                                 <div class="input-group">
@@ -41,9 +41,16 @@
                                         {% endfor %}
                                     </select>
                                 </div>
+                            </div> {% endcomment %}
+
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group mb-3"> 
+                                    <label class="mb-2">Vehicle ID</label> 
+                                    <input type="text" class="form-control" name="vehicle_id" value="{{vehicleId}}" readonly>
+                                </div>
                             </div>
-
-
+                        </div>
+                        <div class="row">
                             <div class="col-12 col-sm-6">
                                 <div class="form-group mb-3"> <!-- Added mb-3 class for bottom margin -->
                                     <label class="mb-2">Vehicle Tax From Date</label> <!-- Added mb-2 class for bottom margin -->
@@ -72,14 +79,14 @@
                             </div> 
 
 
-                            <div class="col-12 col-sm-6">
+                            <div class="col-12 col-sm-3">
                                 <div class="form-group">
                                     <label>Vehicle Environment Tax</label>
                                     <input type="text" class="form-control" name="vehicle_environment_tax" placeholder="Enter Vehicle Environment Tax" required>
                                 </div>
                             </div>        
                             
-                            <div class="col-12 col-sm-6">
+                            <div class="col-12 col-sm-3">
                                 <div class="form-group">
                                     <label>Vehicle Professional Tax</label>
                                     <input type="text" class="form-control" name="vehicle_professional_tax" placeholder="Enter Vehicle Professional Tax" required>
