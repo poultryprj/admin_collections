@@ -15,7 +15,7 @@ from django.utils import timezone
 from django.contrib.auth.models import Group
 from django.db.models import Sum
 from django.db.models import Max
-
+from django.db.models import F
 
 @api_view(['GET'])
 def ShopModelListView(request):
@@ -750,30 +750,52 @@ def IssueProductsByDateDriverVechicle(request):
         }, status=status.HTTP_404_NOT_FOUND)
 
 
-
-@api_view(['GET'])  
+@api_view(['GET'])
 def ApproveCollection(request):
     collection_date = request.data.get('collection_date')
     cashier_id = request.data.get('cashierId')
 
     if collection_date and cashier_id:
         try:
-            collection_instances = Collection.objects.filter(collection_date=collection_date, cashierId=cashier_id)
+            
+            collection_instances = Collection.objects.filter(
+                collection_date=collection_date,
+                cashierId=cashier_id,
+                collections_status='0'  
+            )
 
+            if not collection_instances.exists():
+                return Response({
+                    "message_text": "No pending collections found for the given criteria.",
+                    "message_code": 404,
+                    "message_data": []
+                }, status=status.HTTP_404_NOT_FOUND)
+
+         
+            fanalize_data = []
             cashier_user = User.objects.get(pk=cashier_id)
 
             for collection_instance in collection_instances:
+                collection_instance.collections_status = '1'
+                collection_instance.fanialize_by = cashier_user
+                collection_instance.save()
 
-                if collection_instance.collections_status == "0":
-                    collection_instance.collections_status = 1
-                    collection_instance.fanialize_by = cashier_user 
+                shop_id = collection_instance.shopId.shop_name
+                amount = collection_instance.total_amount
+                collection_status = collection_instance.collections_status
 
-                    collection_instance.save()  
+
+                data = {
+                    "Shop Name":shop_id,
+                    "Amount": amount,
+                    "Finalize Status" : collection_status
+                }
+                fanalize_data.append(data)
 
             response_data = {
                 "message_text": "Success",
                 "message_code": 1000,
-                "message_data": "Collection approved successfully.",
+                "message_data":fanalize_data
             }
             return Response(response_data, status=status.HTTP_200_OK)
 
@@ -783,11 +805,13 @@ def ApproveCollection(request):
                 "message_code": 999,
                 "message_data": "Collection not found.",
             }, status=status.HTTP_404_NOT_FOUND)
-        
+
         except User.DoesNotExist:
             return Response({'message': 'Cashier not found.'}, status=status.HTTP_404_NOT_FOUND)
 
     return Response({'message': 'Invalid or missing parameters.'}, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 
 
@@ -802,7 +826,7 @@ def GetShopCollections(request):
         shopId=shop_id,
         cashierId=cashier_id,
         collection_date=collection_date,
-        collections_status='0'
+        collections_status='0'  
     )
 
     if not collections.exists():
@@ -823,7 +847,7 @@ def GetShopCollections(request):
         }
         return Response(response_data, status=status.HTTP_404_NOT_FOUND)
 
-    payment_modes_amounts = collection_modes.values('payment_mode').annotate(total_amount=Sum('payment_amount'))
+    payment_modes_amounts = collection_modes.values('payment_mode', ).annotate(total_amount=Sum('payment_amount'), collection_status=F('collectionId__collections_status'))
 
     response_data = {
         "message_text": "Success",
