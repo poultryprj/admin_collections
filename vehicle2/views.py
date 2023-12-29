@@ -189,7 +189,8 @@ def VehicleFitnessAdd(request, vehicle_id):
                     )
                     vehicleFitnessDetaildAdd.save()
                     messages.success(request, "Vehicle Fitness Details Added...")
-                    return redirect('vehicle_fitness_list')
+                    # return redirect('vehicle_fitness_list')
+                    return redirect('vehicle_detail_list')
             except IntegrityError as e:
                 messages.error(request, str(e))
         else:
@@ -375,7 +376,8 @@ def VehicleInsuranceAdd(request, vehicle_id):
             vehicleInsuranceDetailAdd.save()
 
             messages.success(request, "Vehicle Insurance Detail Added.")
-            return redirect('vehicle_insurance_list')  # Redirect to a success page or the same page
+            # return redirect('vehicle_insurance_list')  # Redirect to a success page or the same page
+            return redirect('vehicle_detail_list')
 
         except IntegrityError as e:
             messages.error(request, str(e))
@@ -501,7 +503,8 @@ def VehiclePermitAdd(request, vehicle_id):
             vehicleInsuranceDetailAdd.save()
 
             messages.success(request, "Vehicle Permit Detail Added...")
-            return redirect('vehicle_permit_list')  # Redirect to a success page or the same page
+            # return redirect('vehicle_permit_list')  # Redirect to a success page or the same page
+            return redirect('vehicle_detail_list')
 
         except IntegrityError as e:
             messages.error(request, str(e))
@@ -598,7 +601,8 @@ def VehiclePollutionAdd(request, vehicle_id):
             vehiclePollutionDetailAdd.save()
 
             messages.success(request, "Vehicle Pollution Detail Added.")
-            return redirect('vehicle_pollution_list')
+            # return redirect('vehicle_pollution_list')
+            return redirect('vehicle_detail_list')
         except IntegrityError as e:
             messages.error(request, str(e))
 
@@ -697,7 +701,8 @@ def VehicleTaxAdd(request,vehicle_id):
             vehicleTaxDetailAdd.save()
 
             messages.success(request, "Vehicle Tax Detail Added.")
-            return redirect('vehicle_tax_list')  # Redirect to a success page or the same page
+            # return redirect('vehicle_tax_list')  # Redirect to a success page or the same page
+            return redirect('vehicle_detail_list')
 
         except IntegrityError as e:
             messages.error(request, str(e))
