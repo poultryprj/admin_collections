@@ -117,6 +117,7 @@ class VehiclePermit(models.Model):
     
     def __str__(self):
         return str(self.permit_id)
+    
 
 class VehiclePollution(models.Model):
     pollution_id = models.AutoField(primary_key=True)
@@ -153,3 +154,28 @@ class VehicleTax(models.Model):
     
     def __str__(self):
         return str(self.tax_id)
+    
+
+
+
+
+class VehicleRunning(models.Model):
+    vehicle_running_id = models.AutoField(primary_key=True)
+    vehicleId = models.ForeignKey(Vehicle,on_delete=models.SET_NULL, null=True)
+    datetime = models.DateTimeField(null=True)
+    driverId = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    latitude = models.DecimalField(max_digits=20, decimal_places=5, null=True)
+    longitude = models.DecimalField(max_digits=20, decimal_places=5, null=True)
+    kilometer = models.DecimalField(max_digits=10, decimal_places=5)
+    status = models.CharField(max_length=5, null=True, blank=True)
+    remark = models.TextField(blank=True, null=True)
+    created_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='VehicleRunning_created_by')
+    last_modified_on = models.DateTimeField(auto_now=True)
+    last_modified_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='VehicleRunning_last_modified_by')
+    is_deleted = models.BooleanField(default=False)
+    deleted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='VehicleRunning_deleted_by')
+
+
+    def __str__(self):
+        return f"{self.vehicleId} - {self.datetime}"

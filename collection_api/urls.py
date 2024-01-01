@@ -39,9 +39,11 @@ urlpatterns = [
     path('issue-products_api/', views.IssueProductsByDate, name='issue-products-by-date'),
 
     path('issue-products_by_date_driver_vehicle_api/', views.IssueProductsByDateDriverVechicle, name='issue-products_by_date_driver_vehicle/'),
+
     #################################### Skip Shop ############################################
      
     path('skip_shop_add/', views.SkipShopAdd, name="skip_shop_add"),
+
     path('skip_shop_view/', views.SkipShopListView, name="skip_shop_view"),
 
 #################################### Complaint ############################################
@@ -55,6 +57,18 @@ urlpatterns = [
     path('approve_collection_api/', views.ApproveCollection, name='approve_collection'),  
 
     path('get_shop_collections_mode_api/', views.GetShopCollections, name='get_shop_collections_mode'),
+
+
+    #  Add Product Recieve API's
+    path('add_product_recieve_api/', views.AddProductReceive, name='add_product_recieve'),
+
+    #  Add Product Issue API's
+    path('add_product_issue_api/', views.AddProductIssue, name='add_product_issue'),
+
+    #  Add Vehicle Running API's
+    path('add_vehicle_running_api/', views.AddVehicleRunning, name='add_vehicle_running'),
+
+
 ]
 
 

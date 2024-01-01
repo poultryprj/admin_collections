@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import InsuranceCompany, Vehicle, VehicleInsurance, VehiclePermit, VehiclePollution, VehicleTax, Vendor, VehicleMakeBy, VehicleModel, VehicleType, Fitness
+from .models import InsuranceCompany, Vehicle, VehicleInsurance, VehiclePermit, VehiclePollution, VehicleRunning, VehicleTax, Vendor, VehicleMakeBy, VehicleModel, VehicleType, Fitness
 # Register your models here.
 
 
@@ -139,6 +139,20 @@ class VehicleTaxAdmin(admin.ModelAdmin):
         'vehicle_tax_type', 'vehicle_environment_tax', 'vehicle_professional_tax',
     )
 
+
+
+class VehicleRunningAdmin(admin.ModelAdmin):
+    list_display = ('vehicle_running_id', 'vehicleId', 'datetime', 'driverId', 'latitude', 'longitude', 'kilometer', 'status')  
+
+    search_fields = ('vehicleId__name', 'driverId__username')  
+    
+    list_filter = ('status',)  
+
+    list_display_links = (
+        'vehicle_running_id', 'vehicleId', 'datetime', 'driverId', 'latitude', 'longitude', 'kilometer', 'status')
+
+
+
 admin.site.register(VehicleMakeBy,VehicleMakeByModelAdmin)
 admin.site.register(VehicleModel,VehicleModelAdmin)
 admin.site.register(VehicleType,VehicleTypeModelAdmin)
@@ -150,3 +164,4 @@ admin.site.register(InsuranceCompany,InsuranceCompanyAdmin)
 admin.site.register(VehiclePermit,VehiclePermitAdmin)
 admin.site.register(VehiclePollution,VehiclePollutionAdmin)
 admin.site.register(VehicleTax,VehicleTaxAdmin)
+admin.site.register(VehicleRunning,VehicleRunningAdmin)
