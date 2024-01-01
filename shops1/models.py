@@ -223,10 +223,13 @@ class ProductRecieve(models.Model):
     last_modified_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='product_received_last_modified')
     is_deleted = models.BooleanField(default=False)
     deleted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='product_received_deleted')
-    delete_reason = models.CharField(max_length=150)
+    delete_reason = models.CharField(max_length=150, null=True, blank=True)
 
     def __str__(self):
         return str(self.product_record_id)
+
+
+
 
 
 class ProductIssue(models.Model):
@@ -251,6 +254,8 @@ class ProductIssue(models.Model):
     last_modified_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='ProductIssue_last_modified')
     is_deleted = models.BooleanField(default=False)
     deleted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='ProductIssue_deleted')
+
+    
 
 class ShopProductRequest(models.Model):
     request_id = models.AutoField(primary_key=True)

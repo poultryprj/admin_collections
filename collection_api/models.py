@@ -2,6 +2,8 @@ from django.db import models
 from shops1.models import ShopModel
 from django.contrib.auth.models import User
 
+from vehicle2.models import Vehicle
+
 # Create your models here.
 
 class Collection(models.Model):
@@ -42,6 +44,7 @@ class SkipShop(models.Model):
     last_modified_on = models.DateTimeField(auto_now=True)
     last_modified_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='SkipShop_last_modified_by')
 
+
 class Complaint(models.Model):
     complaint_id = models.AutoField(primary_key=True)
     complaint_date = models.DateField(null=True)
@@ -55,3 +58,8 @@ class Complaint(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='Complaint_created_by')
     last_modified_on = models.DateTimeField(auto_now=True)
     last_modified_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='Complaint_last_modified_by')
+
+
+
+
+

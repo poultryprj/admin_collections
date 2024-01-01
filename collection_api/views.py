@@ -6,8 +6,8 @@ from routes.models import RouteModel
 from shops1.models import ProductIssue, ProductRecieve, ShopBalance, ShopRoute
 from user.models import UserModel
 from vehicle2.models import Vehicle
-from .models import Collection, Complaint, ShopModel, CollectionMode, SkipShop
-from .serializers import CollectionSerializer, ComplaintSerializer, ProductIssueSerializer, ProductRecieveSerializer, ShopModelSerializer, CollectionModeSerializer, SkipShopSerializer, VehicleSerializer
+from .models import Collection, Complaint, ShopModel, CollectionMode, SkipShop 
+from .serializers import CollectionSerializer, ComplaintSerializer, ProductIssueSerializer, ProductRecieveSerializer, ShopModelSerializer, CollectionModeSerializer, SkipShopSerializer, VehicleRunningSerializer, VehicleSerializer
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
@@ -16,6 +16,7 @@ from django.contrib.auth.models import Group
 from django.db.models import Sum
 from django.db.models import Max
 from django.db.models import F
+from rest_framework.exceptions import ValidationError
 from rest_framework.views import APIView
 from .serializers import ShopProductRequestSerializer
 
@@ -219,36 +220,42 @@ def RoutesList(request):
             "message_data": [],
         }, status=status.HTTP_400_BAD_REQUEST)
 
-    
+ 
 @api_view(['POST'])
 def UserLogin(request):
     if request.method == 'POST':
         user_mobile_number = request.data.get('user_mobile_number', None)
         user_pin = request.data.get('user_pin', None)
+        user_role = request.data.get('user_role', None)  
 
-        if not user_mobile_number or not user_pin:
+        if not user_mobile_number or not user_pin or not user_role:
             return Response({
-                "message": "Invalid input. Both username and password are required."
+                "message": "Invalid input. User mobile number, pin, and user role are required."
             }, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             user = authenticate(username=user_mobile_number, password=user_pin)
            
             if user is not None:
-                # Authentication successful, return user data
-                response_data = { 
-                    "message_text": "Success",
-                    "message_code": 1000,
-                    "message_data": {
-                        "user_id":user.id,
-                        "user_mobile_number": user.username,
-                        "first_name":user.first_name,
-                        "last_name":user.last_name,
-
+                if Group.objects.filter(name=user_role, user=user).exists():
+                    response_data = { 
+                        "message_text": "Success",
+                        "message_code": 1000,
+                        "message_data": {
+                            "user_id": user.id,
+                            "user_mobile_number": user.username,
+                            "first_name": user.first_name,
+                            "last_name": user.last_name,
+                            "user_role": user_role  
+                        }
                     }
-                }
-                
-                return Response(response_data, status=status.HTTP_200_OK)
+                    return Response(response_data, status=status.HTTP_200_OK)
+                else:
+                    return Response({
+                        "message_text": f"User role '{user_role}' does not exist for the given username.",
+                        "message_code": 999,
+                        "message_data": {}
+                    }, status=status.HTTP_401_UNAUTHORIZED)
             else:
                 return Response({
                     "message_text": "Failure",
@@ -258,56 +265,13 @@ def UserLogin(request):
 
         except Exception as e:
             return Response({
-                    "message_text": "Failure",
-                    "message_code": 999,
-                    "message_data": {}
-                }, status=status.HTTP_401_UNAUTHORIZED)
+                "message_text": "Failure",
+                "message_code": 999,
+                "message_data": {}
+            }, status=status.HTTP_401_UNAUTHORIZED)
     else:
         return Response({'message': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-
-# @api_view(['GET'])
-# def GetShopsUnderRoute(request, route_id):
-#     try:
-#         shop_routes = ShopRoute.objects.filter(route_id=route_id)
-        
-#         if not shop_routes.exists():
-#             return Response({
-#                 "message_text": "Failure",
-#                 "message_code": 999,
-#                 "message_data": []
-#             }, status=404)
-        
-#         shops_under_route = shop_routes.select_related('shop_id')
-#         shop_ids = [shop.shop_id_id for shop in shops_under_route]
-
-#         shops = ShopModel.objects.filter(shop_id__in=shop_ids)
-       
-
-#         shops_data = []
-#         for shop in shops:
-#             shop_data = {
-#                 'shopcode': shop.shop_code,
-#                 'shopname': shop.shop_name,
-#             }
-#             shops_data.append(shop_data)
-
-
-#         response_data = {
-#             "message_text": "Success",
-#             "message_code": 1000,
-#             "message_data": shops_data,
-#         }
-
-#         return Response(response_data, status=status.HTTP_200_OK)
-    
-#     except Exception as e:
-#         response_data = {
-#             "message_text": str(e),
-#             "message_code": 999,
-#             "message_data": {},
-#         }
-#         return Response(response_data, status=500)
 
 
 
@@ -551,7 +515,7 @@ def ComplaintListView(request):
 @api_view(['GET'])
 def UserListByGroup(request):
     try:
-        group_name = request.data.get('group_name', 'all')
+        group_name = request.query_params.get('group_name', 'all')  # Use query_params for GET request
         print(group_name)
         if group_name == 'all':
             users = User.objects.all()
@@ -560,11 +524,13 @@ def UserListByGroup(request):
         
         users_data = []
         for user in users:
+            user_groups = list(user.groups.values_list('name', flat=True))  # Fetch user's group names
             user_data = {
                 "user_id": user.id,
                 "user_mobile_number": user.username,
                 "first_name": user.first_name,
                 "last_name": user.last_name,
+                "user_roles": user_groups,  # Include user roles in the response
             }
             users_data.append(user_data)
 
@@ -859,6 +825,83 @@ def GetShopCollections(request):
     return Response(response_data, status=status.HTTP_200_OK)
 
 
+@api_view(['POST'])
+def AddProductReceive(request):
+    try:
+        serializer = ProductRecieveSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+
+            response_data = {
+            "message_text": "Success",
+            "message_code": 1000,
+            "message_data":serializer.data
+            }
+            return Response(response_data, status=status.HTTP_201_CREATED)
+        
+    except ValidationError as e:
+        return Response({
+                "message_text": "Failure",
+                "message_code": 999,
+                "message_data": str(e),
+            }, status=status.HTTP_400_BAD_REQUEST)
+       
+    except Exception as e:
+        return Response({"message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+
+
+
+@api_view(['POST'])
+def AddProductIssue(request):
+    try:
+        serializer = ProductIssueSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+
+            response_data = {
+            "message_text": "Success",
+            "message_code": 1000,
+            "message_data":serializer.data
+            }
+            return Response(response_data, status=status.HTTP_201_CREATED)
+        
+    except ValidationError as e:
+       return Response({
+                "message_text": "Failure",
+                "message_code": 999,
+                "message_data": str(e),
+            }, status=status.HTTP_400_BAD_REQUEST)
+    
+    except Exception as e:
+        return Response({"message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+
+
+@api_view(['POST'])
+def AddVehicleRunning(request):
+    try:
+        serializer = VehicleRunningSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+
+            response_data = {
+            "message_text": "Success",
+            "message_code": 1000,
+            "message_data":serializer.data
+            }
+            return Response(response_data, status=status.HTTP_201_CREATED)
+        
+    except ValidationError as e:
+          return Response({
+                "message_text": "Failure",
+                "message_code": 999,
+                "message_data": str(e),
+            }, status=status.HTTP_400_BAD_REQUEST)
+    
+    except Exception as e:
+        return Response({"message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+=======
 ########### Shop App API ##############
 
 @api_view(['POST'])
@@ -898,3 +941,4 @@ def GetProductIssuesByDate(request):
         data[shop_id][product_id].append(serialized_data)
 
     return Response(data, status=status.HTTP_200_OK)     ### in the output shopId first key AND second key product_typeId
+
