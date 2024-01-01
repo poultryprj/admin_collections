@@ -33,7 +33,6 @@ def ShopModelListView(request):
         }
         return Response(response_data, status=status.HTTP_200_OK)
 
-
 @api_view(['POST'])
 def CollectionsAddView(request):
     if request.method == 'POST':
@@ -73,8 +72,6 @@ def CollectionsAddView(request):
                 "message_code": 996,
                 "message_data": str(e),
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
 
 @api_view(['GET'])
 def CollectionView(request):
@@ -189,7 +186,6 @@ def CollectionModeGet(request, collection_id):
 
 
 # *********************************************************** All Route List ***********************************************
-
 @api_view(['GET'])
 def RoutesList(request):
     if request.method == 'GET':
@@ -220,7 +216,6 @@ def RoutesList(request):
             "message_data": [],
         }, status=status.HTTP_400_BAD_REQUEST)
 
- 
 @api_view(['POST'])
 def UserLogin(request):
     if request.method == 'POST':
@@ -271,9 +266,6 @@ def UserLogin(request):
             }, status=status.HTTP_401_UNAUTHORIZED)
     else:
         return Response({'message': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-
-
 
 @api_view(['GET'])
 def GetShopsUnderRoute(request, route_id):
@@ -348,7 +340,6 @@ def GetShopsUnderRoute(request, route_id):
         }
         return Response(response_data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
 ########################################### SkipShop ########################################################
 ########## skip shop add ###########
 @api_view(['POST'])
@@ -386,7 +377,6 @@ def SkipShopAdd(request):
                 "message_code": 996,
                 "message_data": str(e),
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
 
 ############## Skip Shop View Data By Cashier Id ####################
 @api_view(['GET'])
@@ -428,8 +418,6 @@ def SkipShopListView(request):
                 "message_data": []
             }, status=status.HTTP_400_BAD_REQUEST)
 
-
-
 ########################################### Complaint ########################################################
 ########## Complaint Add ###########
 @api_view(['POST'])
@@ -467,7 +455,6 @@ def ComplaintAdd(request):
                 "message_code": 996,
                 "message_data": str(e),
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
 
 ############## Complaint List View by cashier Id ####################
 @api_view(['GET'])
@@ -510,8 +497,6 @@ def ComplaintListView(request):
             }, status=status.HTTP_400_BAD_REQUEST)
 
 # ****************************************************************
-
-
 @api_view(['GET'])
 def UserListByGroup(request):
     try:
@@ -548,7 +533,6 @@ def UserListByGroup(request):
         }, status=status.HTTP_404_NOT_FOUND)
 
 
-
 @api_view(['GET'])
 def GroupList(request):
     groups = Group.objects.all()
@@ -567,7 +551,6 @@ def GroupList(request):
     "message_data": groups_data,
 }
     return Response(response_data, status=status.HTTP_200_OK)
-
 
 
 @api_view(['GET'])
@@ -598,9 +581,6 @@ def vehicleList(request):
                 "message_data": []
             }, status=status.HTTP_404_NOT_FOUND)
 
-
-
-
 @api_view(['GET'])
 def ReceivedProductsByDate(request):
     date = request.data.get('date')
@@ -608,7 +588,6 @@ def ReceivedProductsByDate(request):
     try:
         products = ProductRecieve.objects.filter(recieved_date=date)
         serializer = ProductRecieveSerializer(products, many=True)
-        # total_amount = products.aggregate(Sum('amount'))['amount__sum']
 
         products_data = []
         for product in products:
@@ -626,10 +605,6 @@ def ReceivedProductsByDate(request):
             "message_text": "Success",
             "message_code": 1000,
             "message_data": products_data
-            # {
-            #     "products": 
-            #     # "total_amount": total_amount,
-            # },
         }
         return Response(response_data, status=status.HTTP_200_OK)
     except ProductRecieve.DoesNotExist:
@@ -671,9 +646,6 @@ def IssueProductsByDate(request):
             "message_code": 999,
             "message_data": "No products issued on this date",
         }, status=status.HTTP_404_NOT_FOUND)
-
-
-
 
 
 @api_view(['GET'])
@@ -778,11 +750,6 @@ def ApproveCollection(request):
             return Response({'message': 'Cashier not found.'}, status=status.HTTP_404_NOT_FOUND)
 
     return Response({'message': 'Invalid or missing parameters.'}, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-
-
 
 @api_view(['GET'])
 def GetShopCollections(request):
@@ -901,7 +868,7 @@ def AddVehicleRunning(request):
     
     except Exception as e:
         return Response({"message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-=======
+
 ########### Shop App API ##############
 
 @api_view(['POST'])
