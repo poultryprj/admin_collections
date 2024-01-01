@@ -251,3 +251,25 @@ class ProductIssue(models.Model):
     last_modified_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='ProductIssue_last_modified')
     is_deleted = models.BooleanField(default=False)
     deleted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='ProductIssue_deleted')
+
+class ShopProductRequest(models.Model):
+    request_id = models.AutoField(primary_key=True)
+    shopId = models.ForeignKey(ShopModel, on_delete=models.SET_NULL, null=True)
+    product_request_date_time = models.DateTimeField(null=True)
+    productId = models.ForeignKey(ProductMaster,on_delete=models.SET_NULL, null=True)
+    quantity = models.IntegerField(default=0)
+    weight = models.DecimalField(max_digits=20, decimal_places=2,null=True)
+    status = models.CharField(max_length=100,default="Rejected") #Status Approved / Rejected
+    delivery_date_time = models.DateTimeField(null=True)
+    driverId = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    created_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='ShopProductRequest_created_by')
+    last_modified_on = models.DateTimeField(auto_now=True)
+    last_modified_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='ShopProductRequest_last_modified')
+    is_deleted = models.BooleanField(default=False)
+    deleted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='ShopProductRequest_deleted')
+    
+    def __str__(self):
+        return str(self.request_id)
+
+
