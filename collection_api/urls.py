@@ -49,10 +49,8 @@ urlpatterns = [
 #################################### Complaint ############################################
 
     path('complaint_add/', views.ComplaintAdd, name="complaint_add"),
+
     path('complaint_view/', views.ComplaintListView, name="complaint_view"),
-
-
-
 
     path('approve_collection_api/', views.ApproveCollection, name='approve_collection'),  
 
@@ -68,7 +66,9 @@ urlpatterns = [
     #  Add Vehicle Running API's
     path('add_vehicle_running_api/', views.AddVehicleRunning, name='add_vehicle_running'),
 
-
+################################### Shop App API ###########################################
+    path('create_shop_product_request/', views.CreateShopProductRequest, name="create_shop_product_request"),
+    path('product_issues/', views.GetProductIssuesByDate, name='product_issues'),
 ]
 
 
