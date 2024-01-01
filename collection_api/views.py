@@ -7,7 +7,7 @@ from shops1.models import ProductIssue, ProductRecieve, ShopBalance, ShopRoute
 from user.models import UserModel
 from vehicle2.models import Vehicle
 from .models import Collection, Complaint, ShopModel, CollectionMode, SkipShop
-from .serializers import CollectionSerializer, ComplaintSerializer, ProductRecieveSerializer, ShopModelSerializer, CollectionModeSerializer, SkipShopSerializer, VehicleSerializer
+from .serializers import CollectionSerializer, ComplaintSerializer, ProductIssueSerializer, ProductRecieveSerializer, ShopModelSerializer, CollectionModeSerializer, SkipShopSerializer, VehicleSerializer
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
@@ -16,6 +16,8 @@ from django.contrib.auth.models import Group
 from django.db.models import Sum
 from django.db.models import Max
 from django.db.models import F
+from rest_framework.views import APIView
+from .serializers import ShopProductRequestSerializer
 
 @api_view(['GET'])
 def ShopModelListView(request):
@@ -855,3 +857,44 @@ def GetShopCollections(request):
         "message_data":payment_modes_amounts
     }
     return Response(response_data, status=status.HTTP_200_OK)
+
+
+########### Shop App API ##############
+
+@api_view(['POST'])
+def CreateShopProductRequest(request):
+    try:
+        serializer = ShopProductRequestSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    except Exception as e:
+        return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def GetProductIssuesByDate(request):
+    issue_date = request.query_params.get('issue_date')
+    if not issue_date:
+        return Response("Issue date parameter is missing.", status=status.HTTP_400_BAD_REQUEST)
+
+    product_issues = ProductIssue.objects.filter(issue_date=issue_date)
+    if not product_issues.exists():
+        return Response("No data found for the given issue date.", status=status.HTTP_404_NOT_FOUND)
+
+    # Group data shopID-wise and then product-wise
+    data = {}
+    for issue in product_issues:
+        shop_id = issue.shopId_id
+        product_id = issue.product_typeId_id
+
+        if shop_id not in data:
+            data[shop_id] = {}
+
+        if product_id not in data[shop_id]:
+            data[shop_id][product_id] = []
+
+        serialized_data = ProductIssueSerializer(issue).data
+        data[shop_id][product_id].append(serialized_data)
+
+    return Response(data, status=status.HTTP_200_OK)     ### in the output shopId first key AND second key product_typeId

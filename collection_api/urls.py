@@ -47,14 +47,16 @@ urlpatterns = [
 #################################### Complaint ############################################
 
     path('complaint_add/', views.ComplaintAdd, name="complaint_add"),
+
     path('complaint_view/', views.ComplaintListView, name="complaint_view"),
-
-
-
 
     path('approve_collection_api/', views.ApproveCollection, name='approve_collection'),  
 
     path('get_shop_collections_mode_api/', views.GetShopCollections, name='get_shop_collections_mode'),
+
+################################### Shop App API ###########################################
+    path('create_shop_product_request/', views.CreateShopProductRequest, name="create_shop_product_request"),
+    path('product_issues/', views.GetProductIssuesByDate, name='product_issues'),
 ]
 
 

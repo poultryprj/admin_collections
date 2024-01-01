@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ProductIssue, ProductRecieve, ShopBalance, ShopFlexibleRate, ShopModel, ShopOwner, ShopRoute, ProductTypes, ProductCategories, ProductMaster, Associations, ShopProductRates
+from .models import ProductIssue, ProductRecieve, ShopBalance, ShopFlexibleRate, ShopModel, ShopOwner, ShopProductRequest, ShopRoute, ProductTypes, ProductCategories, ProductMaster, Associations, ShopProductRates
 
 
 from .models import ProductRecieve, ShopBalance, ShopFlexibleRate, ShopModel, ShopOwner, ShopRoute, ProductTypes, ProductCategories, ProductMaster, Associations, ShopProductRates
@@ -117,6 +117,12 @@ class ProductIssueAdmin(admin.ModelAdmin):
     list_display_links = ('product_issue_id', 'issue_date', 'shopId', 'paper_rate', 'boiler_size', 'issue_birds', 'birds_weight', 'daily_rate', 'issue_amount', 'vehicleId', 'driverId','entry_source', 'latitude', 'longtitude', 'product_typeId')
 
 
+class ShopProductRequestAdmin(admin.ModelAdmin):
+    list_display = ('request_id', 'shopId', 'product_request_date_time', 'productId', 'quantity', 'weight', 'status', 'delivery_date_time', 'driverId', 'created_on', 'created_by', 'last_modified_on', 'last_modified_by', 'is_deleted', 'deleted_by')
+    
+    search_fields = ('request_id', 'status', 'created_on')  # Add more fields for search if needed
+    
+    list_display_links = ('request_id', 'shopId', 'product_request_date_time')  # Add more links if needed
 
 
 admin.site.register(ShopOwner, ShopOwnerModelAdmin)
@@ -131,3 +137,4 @@ admin.site.register(ShopBalance,ShopBalanceAdmin)
 admin.site.register(ShopFlexibleRate,ShopFlexibleRateAdmin)
 admin.site.register(ProductRecieve,ProductRecieveModelAdmin)
 admin.site.register(ProductIssue,ProductIssueAdmin)
+admin.site.register(ShopProductRequest, ShopProductRequestAdmin)
