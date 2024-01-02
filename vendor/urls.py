@@ -41,4 +41,6 @@ urlpatterns = [
 
     path('vendor_credit_balance_edit/<int:id>', views.VendorCreditBalanceEdit, name='vendor_credit_balance_edit'),
 
+    path('vendor_credit_balance_delete/<int:id>', views.VendorCreditBalanceDelete, name='vendor_credit_balance_delete'),
+
 ]

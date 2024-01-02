@@ -371,3 +371,13 @@ def VendorCreditBalanceEdit(request,id):
 
     return render(request, 'vendor/vendor_credit_balance_edit.html', context)
 
+
+def VendorCreditBalanceDelete(request,id):
+    vendorCreditBalanceDelete = VendorCreditBalance.objects.get(vendor_credit_balance_id = id)
+    vendorCreditBalanceDelete.is_deleted = True
+
+    messages.success(request, "Credit Balance Deleted Successfully..")
+    return redirect('vendor_credit_balance_list')
+
+
+
