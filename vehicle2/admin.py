@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import InsuranceCompany, Vehicle, VehicleInsurance, VehiclePermit, VehiclePollution, VehicleRunning, VehicleTax, Vendor, VehicleMakeBy, VehicleModel, VehicleType, Fitness
+from .models import InsuranceCompany, Vehicle, VehicleInsurance, VehiclePermit, VehiclePollution, VehicleRunning, VehicleTax, VehicleMakeBy, VehicleModel, VehicleType, Fitness
 # Register your models here.
 
 
@@ -157,7 +157,7 @@ admin.site.register(VehicleMakeBy,VehicleMakeByModelAdmin)
 admin.site.register(VehicleModel,VehicleModelAdmin)
 admin.site.register(VehicleType,VehicleTypeModelAdmin)
 admin.site.register(Vehicle,VehicleModelAdmin)
-admin.site.register(Vendor,VendorModelAdmin)
+# admin.site.register('vendor1.Vendor',VendorModelAdmin)
 admin.site.register(Fitness,FitnessAdmin)
 admin.site.register(VehicleInsurance,VehicleInsuranceAdmin)
 admin.site.register(InsuranceCompany,InsuranceCompanyAdmin)

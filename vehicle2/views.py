@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from account import models
 from shops1.models import ProductMaster, ProductTypes
 from user.models import UserModel
-from vehicle2.models import Vehicle, VehicleMakeBy, VehicleModel, VehicleType, Vendor
+from vehicle2.models import Vehicle, VehicleMakeBy, VehicleModel, VehicleType
 from django.contrib import messages
 from .models import Fitness, InsuranceCompany,VehicleInsurance, VehiclePermit, VehiclePollution, VehicleTax
 from django.db import IntegrityError

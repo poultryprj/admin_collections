@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from routes.models import RouteModel
 from user.models import UserModel
-from vehicle2.models import Vehicle, Vendor
+from vehicle2.models import Vehicle
 
 # Create your models here.
 
@@ -23,7 +23,8 @@ class ShopOwner(models.Model):
     def __str__(self):
         return self.owner_name
     
-
+    class Meta:
+        db_table = "ShopOwner"
 
 
 class ShopModel(models.Model):
@@ -46,31 +47,9 @@ class ShopModel(models.Model):
 
     def __str__(self):
         return self.shop_name
-    
 
-# class ShopInfo(models.Model):
-#     id = models.AutoField(primary_key=True)
-#     shopCode = models.IntegerField()
-#     route_id = models.IntegerField(null=True)
-#     shopName = models.CharField(max_length=100)
-#     shopAddress = models.CharField(max_length=500)
-#     shopMobile = models.TextField()
-#     shopAltContact = models.CharField(max_length=20)
-#     shopOwner = models.CharField(max_length=255)
-#     shopDistance = models.CharField(max_length=20)
-#     shopDetails = models.TextField()
-#     creditLimit = models.FloatField()
-#     active = models.CharField(max_length=50)
-#     shop_lat = models.CharField(max_length=100, null=True)
-#     shop_lang = models.CharField(max_length=100, null=True)
-#     createdById = models.SmallIntegerField()
-#     lastModifiedById = models.SmallIntegerField()
-#     createdOn = models.IntegerField()
-#     lastModifiedOn = models.IntegerField()
-#     isDeleted = models.IntegerField(default=0)
-
-    
-
+    class Meta:
+        db_table = "ShopModel"
 
 class ShopRoute(models.Model):
     shop_route_id  = models.AutoField(primary_key=True)
@@ -78,7 +57,8 @@ class ShopRoute(models.Model):
     shop_id = models.ForeignKey(ShopModel, on_delete=models.SET_NULL, null=True)
     shop_order = models.CharField(max_length=10, null=True)
 
-
+    class Meta:
+        db_table = "ShopRoute"
 
 
 class ProductTypes(models.Model):
@@ -87,12 +67,9 @@ class ProductTypes(models.Model):
 
     def __str__(self):
         return self.product_type
-    
+
     class Meta:
-        verbose_name = "Product Type"
-        verbose_name_plural = "Product Types"
-
-
+        db_table = "ProductTypes"
 
 
 class ProductCategories(models.Model):  
@@ -103,10 +80,7 @@ class ProductCategories(models.Model):
         return self.product_category
     
     class Meta:
-        verbose_name = "Product Category"
-        verbose_name_plural = "Product Categories"
-
-
+        db_table = "ProductCategories"
 
 class ProductMaster(models.Model):
     product_id = models.AutoField(primary_key=True)
@@ -125,6 +99,8 @@ class ProductMaster(models.Model):
     def __str__(self):
         return self.product_name
 
+    class Meta:
+        db_table = "ProductMaster"
 
 class Associations(models.Model):
     association_id = models.IntegerField(primary_key=True)
@@ -133,6 +109,9 @@ class Associations(models.Model):
 
     def __str__(self):
         return self.association_name   
+    
+    class Meta:
+        db_table = "Associations"
 
 
 
@@ -151,9 +130,8 @@ class ShopProductRates(models.Model):
     is_deleted = models.BooleanField(default=False)
     deleted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='shop_product_rates_deleted')
 
-
-#  ==============================================
-
+    class Meta:
+        db_table = "ShopProductRates"
     
 
 class ShopBalance(models.Model):
@@ -172,7 +150,8 @@ class ShopBalance(models.Model):
     is_deleted = models.BooleanField(default=False)
     deleted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='shop_balance_deleted')
 
-
+    class Meta:
+        db_table = "ShopBalance"
 
 
 class ShopFlexibleRate(models.Model):
@@ -194,11 +173,13 @@ class ShopFlexibleRate(models.Model):
     is_deleted = models.BooleanField(default=False)
     deleted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='shop_flexible_rate_deleted')
 
+    class Meta:
+        db_table = "ShopFlexibleRate"
 
 class ProductRecieve(models.Model):
     product_record_id = models.AutoField(primary_key=True)
     recieved_date = models.DateField(null=True)
-    vendorId = models.ForeignKey(Vendor,on_delete=models.SET_NULL, null=True)
+    vendorId = models.ForeignKey('vendor1.Vendor',on_delete=models.SET_NULL, null=True)
     product_typeId = models.ForeignKey(ProductTypes,on_delete=models.SET_NULL, null=True)
     productId = models.ForeignKey(ProductMaster,on_delete=models.SET_NULL, null=True)
     paper_rate = models.DecimalField(max_digits=10 ,decimal_places = 2)
@@ -228,9 +209,8 @@ class ProductRecieve(models.Model):
     def __str__(self):
         return str(self.product_record_id)
 
-
-
-
+    class Meta:
+        db_table = "ProductRecieve"
 
 class ProductIssue(models.Model):
     product_issue_id = models.AutoField(primary_key=True)
@@ -255,7 +235,8 @@ class ProductIssue(models.Model):
     is_deleted = models.BooleanField(default=False)
     deleted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='ProductIssue_deleted')
 
-    
+    class Meta:
+        db_table = "ProductIssue"
 
 class ShopProductRequest(models.Model):
     request_id = models.AutoField(primary_key=True)
@@ -277,4 +258,5 @@ class ShopProductRequest(models.Model):
     def __str__(self):
         return str(self.request_id)
 
-
+    class Meta:
+        db_table = "ShopProductRequest"

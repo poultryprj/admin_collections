@@ -3,15 +3,14 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from user.models import UserModel
-from vehicle2.models import Vehicle, Vendor
+from vehicle2.models import Vehicle
 from .models import  Associations, ProductIssue, ProductRecieve, ShopBalance, ShopFlexibleRate, ShopModel, ShopOwner, ShopProductRates, ShopRoute, ProductTypes, ProductCategories, ProductMaster
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from user.models import UserModel
-
-from vehicle2.models import Vehicle, Vendor
+from vendor1.models import Vendor
 from .models import  Associations, ProductRecieve, ShopBalance, ShopFlexibleRate, ShopModel, ShopOwner, ShopProductRates, ShopRoute, ProductTypes, ProductCategories, ProductMaster
 from routes.models import RouteModel
 from django.core.exceptions import ValidationError

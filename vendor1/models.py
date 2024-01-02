@@ -2,10 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from shops1.models import ProductTypes
 
-
-# Create your models here.
-
-
 class Vendor(models.Model):
     vendor_id = models.AutoField(primary_key=True)
     vendor_name = models.CharField(max_length=250)
@@ -26,13 +22,13 @@ class Vendor(models.Model):
     def __str__(self):
         return self.vendor_name
     
-
-
-
+    class Meta:
+        db_table = "Vendor"
+    
 class VendorProduct(models.Model):
     vender_product_id = models.AutoField(primary_key=True)
-    vendorId = models.ForeignKey(Vendor, on_delete=models.SET_NULL,null=True)
-    productId = models.ForeignKey(ProductTypes, on_delete=models.SET_NULL,null=True)
+    vendorId = models.ForeignKey('vendor1.Vendor', on_delete=models.SET_NULL,null=True)
+    productId = models.ForeignKey('shops1.ProductTypes', on_delete=models.SET_NULL,null=True)
     product_rate = models.FloatField()
     product_tcs = models.IntegerField(default=0)
     product_tds = models.IntegerField(default=0)
@@ -43,8 +39,8 @@ class VendorProduct(models.Model):
     is_deleted = models.BooleanField(default=False)
     deleted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='VendorProduct_deleted')
 
-   
-
+    class Meta:
+        db_table = "VendorProduct"
 
 
 class VendorOpeningBalance(models.Model):
@@ -63,7 +59,8 @@ class VendorOpeningBalance(models.Model):
     is_deleted = models.BooleanField(default=False)
     deleted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='VendorOpeningBalance_deleted')
 
-
+    class Meta:
+        db_table = "VendorOpeningBalance"
 
 
 class VendorCreditBalance(models.Model):
@@ -74,6 +71,5 @@ class VendorCreditBalance(models.Model):
     credit_date = models.DateField()
     is_deleted = models.BooleanField(default=False)
 
-
-
-
+    class Meta:
+        db_table = "VendorCreditBalance"

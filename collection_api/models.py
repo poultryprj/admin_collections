@@ -19,7 +19,8 @@ class Collection(models.Model):
     fanialize_on = models.DateTimeField(auto_now=True)
     fanialize_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
-
+    class Meta:
+        db_table = "Collection"
 
 class CollectionMode(models.Model):
     collection_mode_id = models.AutoField(primary_key=True)
@@ -28,7 +29,8 @@ class CollectionMode(models.Model):
     payment_amount = models.FloatField()
     upload_image = models.FileField(blank=True, null=True, upload_to=f'collection/all_collections/', max_length=2000)
 
-
+    class Meta:
+        db_table = "CollectionMode"
 
 class SkipShop(models.Model):
     skip_shop_id = models.AutoField(primary_key=True)
@@ -44,6 +46,8 @@ class SkipShop(models.Model):
     last_modified_on = models.DateTimeField(auto_now=True)
     last_modified_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='SkipShop_last_modified_by')
 
+    class Meta:
+        db_table = "SkipShop"
 
 class Complaint(models.Model):
     complaint_id = models.AutoField(primary_key=True)
@@ -59,7 +63,8 @@ class Complaint(models.Model):
     last_modified_on = models.DateTimeField(auto_now=True)
     last_modified_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='Complaint_last_modified_by')
 
-
+    class Meta:
+        db_table = "Complaint"
 
 
 

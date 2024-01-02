@@ -20,3 +20,6 @@ class RouteModel(models.Model):
 
     def __str__(self):
         return self.route_name   
+    
+    class Meta:
+        db_table = "RouteModel"

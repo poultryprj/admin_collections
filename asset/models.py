@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from vehicle2.models import Vendor
+# from vehicle2.models import Vendor
 from django.contrib.auth.models import Group
 
 # Create your models here.
@@ -19,12 +19,15 @@ class Assets(models.Model):
 
     def __str__(self):
         return str(self.asset_id)
+    
+    class Meta:
+        db_table = "Assets"
 
 
 class AssetPurchase(models.Model):
     asset_purchase_id = models.AutoField(primary_key=True)
     purchase_on = models.DateTimeField()
-    vendor_Id = models.ForeignKey(Vendor, on_delete=models.SET_NULL, null=True)   #Vendor FK
+    vendor_Id = models.ForeignKey('vendor1.Vendor', on_delete=models.SET_NULL, null=True)   #Vendor FK
     asset_Id = models.ForeignKey(Assets, on_delete=models.SET_NULL, null=True)   #Assets FK
     quantity = models.IntegerField()
     weight = models.DecimalField(max_digits=30,decimal_places=2)
@@ -40,6 +43,9 @@ class AssetPurchase(models.Model):
 
     def __str__(self):
         return str(self.asset_purchase_id)
+
+    class Meta:
+        db_table = "AssetPurchase"
 
 class AssetDistribution(models.Model):
     asset_distribution_id = models.AutoField(primary_key=True)
@@ -60,6 +66,9 @@ class AssetDistribution(models.Model):
     def __str__(self):
         return str(self.asset_distribution_id)
 
+    class Meta:
+        db_table = "AssetDistribution"
+
 class AssetStock(models.Model):
     stock_id = models.AutoField(primary_key=True)
     asset_Id = models.ForeignKey(Assets, on_delete=models.SET_NULL, null=True)
@@ -74,3 +83,6 @@ class AssetStock(models.Model):
 
     def __str__(self):
         return str(self.stock_id)
+
+    class Meta:
+        db_table = "AssetStock"

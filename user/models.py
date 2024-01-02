@@ -10,6 +10,8 @@ class UserRole(models.Model):
     def __str__(self):
         return self.user_role_name
 
+    class Meta:
+        db_table = "UserRole"
 
 class UserModel(models.Model):
     user_id = models.AutoField(primary_key=True)
@@ -26,6 +28,8 @@ class UserModel(models.Model):
     is_deleted = models.BooleanField(default=False)
     deleted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='user_model_deleted')
 
-
     def __str__(self):
         return self.user_name
+    
+    class Meta:
+        db_table = "UserModel"
