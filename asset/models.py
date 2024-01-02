@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-# from vehicle2.models import Vendor
 from django.contrib.auth.models import Group
 
 # Create your models here.
@@ -27,7 +26,7 @@ class Assets(models.Model):
 class AssetPurchase(models.Model):
     asset_purchase_id = models.AutoField(primary_key=True)
     purchase_on = models.DateTimeField()
-    vendor_Id = models.ForeignKey('vendor1.Vendor', on_delete=models.SET_NULL, null=True)   #Vendor FK
+    vendor_Id = models.ForeignKey('vendor.Vendor', on_delete=models.SET_NULL, null=True)   #Vendor FK
     asset_Id = models.ForeignKey(Assets, on_delete=models.SET_NULL, null=True)   #Assets FK
     quantity = models.IntegerField()
     weight = models.DecimalField(max_digits=30,decimal_places=2)

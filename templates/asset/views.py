@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from user.models import UserRole
-from vehicle2.models import Vendor
+from vehicle.models import Vendor
 from .models import AssetPurchase, AssetStock, Assets, Vendor, AssetDistribution
 from datetime import datetime
 from django.contrib.auth.models import Group

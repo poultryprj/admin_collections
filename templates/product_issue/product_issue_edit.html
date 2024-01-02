@@ -110,9 +110,9 @@
                                     <label>Driver Name</label>
                                     <select class="form-control form-select" name="driver_id" required>
                                         <option disabled >------- Select Driver Name -------</option>
-                                        <option value="{{productIssueEdit.driverId.user_id}}">{{productIssueEdit.driverId}} </option>
+                                        <option value="{{productIssueEdit.driverId.id}}">{{productIssueEdit.driverId}} </option>
                                         {% for i in userModelData %}
-                                            <option value="{{i.user_id}}" {% if productIssueEdit.driverId.user_id == i.user_id %} style="display:none" {% endif %}>{{ i.user_name }} </option>
+                                            <option value="{{i.id}}" {% if productIssueEdit.driverId.id == i.id %} style="display:none" {% endif %}>{{ i.first_name }} {{ i.last_name }} </option>
                                         {% endfor %}
                                     </select>
                                 </div>
