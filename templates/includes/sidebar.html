@@ -11,14 +11,14 @@
                     <a href="{% url 'Index' %}"><i class="fas fa-house-user"></i> <span>Dashboard</span></a>
                 </li>
                
-                <li class="submenu {% active_link 'user_list || add_user ' %} ">
+                {% comment %} <li class="submenu {% active_link 'user_list || add_user ' %} ">
                     <a href="#"><i class="fa-solid fa-user"></i><span> Users</span> <span class="menu-arrow"></span></a>
                     <ul>
                         <li ><a  href="{% url 'user_list' %}" class="{% active_link 'user_list' %}">User List</a>
                         </li>
                         <li ><a href="{% url 'add_user' %}" class="{% active_link 'add_user' %}">User Add</a></li>
                     </ul>
-                </li>
+                </li> {% endcomment %}
 
 
                 

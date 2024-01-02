@@ -2,10 +2,10 @@ import datetime
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
 from django.shortcuts import render, redirect
-from user.models import UserRole
-from vendor1.models import Vendor
+from vendor.models import Vendor
 from .models import AssetPurchase, AssetStock, Assets, AssetDistribution
 from datetime import datetime
+from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
