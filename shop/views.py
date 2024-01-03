@@ -73,7 +73,7 @@ def ShopAdd(request):
         shopAdd.save()
 
         messages.success(request, "Shop Name {} Add in the database.".format(shopName))
-        return redirect('shop_list')
+        return redirect('shop_add')
     
     return render(request, 'shops/shop_add.html', context={'shopOwnerData': shopOwnerData})
 
