@@ -53,11 +53,12 @@
                                     <select class="form-control form-select" placeholder="Enter Shop Area" name="shop_area" required>
                                         <option disabled>------- Select Shop Area -------</option>
                                         <option value="{{shopEdit.shop_area}}">{{ shopEdit.shop_area }}</option>
-                                        <option value="area 1" {% if shopEdit.shop_area == "area 1" %} style="display: none;" {% endif %}>area 1</option>
-                                        <option value="area 2" {% if shopEdit.shop_area == "area 2" %} style="display: none;" {% endif %}>area 2</option>
-                                        <option value="area 3" {% if shopEdit.shop_area == "area 3" %} style="display: none;" {% endif %}>area 3</option>
-                                        <option value="area 4" {% if shopEdit.shop_area == "area 4" %} style="display: none;" {% endif %}>area 4</option>
-                                        <option value="area 5" {% if shopEdit.shop_area == "area 5" %} style="display: none;" {% endif %}>area 5</option>
+                                        <option value="Katraj" {% if shopEdit.shop_area == "Katraj" %} style="display: none;" {% endif %}>Katraj</option>
+                                        <option value="Kalepadal" {% if shopEdit.shop_area == "Kalepadal" %} style="display: none;" {% endif %}>Kalepadal</option>
+                                        <option value="Yerwada" {% if shopEdit.shop_area == "Yerwada" %} style="display: none;" {% endif %}>Yerwada</option>
+                                        <option value="Chinchwad" {% if shopEdit.shop_area == "Chinchwad" %} style="display: none;" {% endif %}>Chinchwad</option>
+                                        <option value="Marketyard" {% if shopEdit.shop_area == "Marketyard" %} style="display: none;" {% endif %}>Marketyard</option>
+                                        <option value="Wagholi" {% if shopEdit.shop_area == "Wagholi" %} style="display: none;" {% endif %}>Wagholi</option>
                                     </select>
                                 </div>
                             </div>
@@ -122,11 +123,9 @@
                                     <select class="form-control form-select" placeholder="Enter Shop Type" name="shop_type"  required>
                                         <option disabled>------- Select Shop Type -------</option>
                                         <option value="{{shopEdit.shop_type}}">{{shopEdit.shop_type}}</option>
-                                        <option value="shop type 1" {% if shopEdit.shop_type == "shop type 1" %} style="display: none;" {% endif %}>shop type 1</option>
+                                        <option value="Chicken Shop" {% if shopEdit.shop_type == "Chicken Shop" %} style="display: none;" {% endif %}>Chicken Shop</option>
                                         <option value="shop type 2" {% if shopEdit.shop_type == "shop type 2" %} style="display: none;" {% endif %}>shop type 2</option>
-                                        <option value="shop type 3" {% if shopEdit.shop_type == "shop type 3" %} style="display: none;" {% endif %}>shop type 3</option>
-                                        <option value="shop type 4" {% if shopEdit.shop_type == "shop type 4" %} style="display: none;" {% endif %}>shop type 4</option>
-                                        <option value="shop type 5" {% if shopEdit.shop_type == "shop type 5" %} style="display: none;" {% endif %}>shop type 5</option>
+                                        
                                     
                                     </select>
                                 </div>
