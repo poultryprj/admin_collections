@@ -150,7 +150,9 @@ def CollectionModeAdd(request):
                 message = f"Your OTP for the transaction is: {otp}"
                 
                 # Assuming the shop owner's number is fetched dynamically
-                shop_owner_number = "8000097325"
+
+                shop_owner_number = ShopModelData.shop_ownerId.owner_contactNo
+                print(shop_owner_number)
                 
                 # Construct the WhatsApp message URL with parameters
                 whatsapp_url = f"https://wts.vision360solutions.co.in/api/sendText?token=63944323e575be8d4fc95a50&phone={shop_owner_number}&Text={message}"
