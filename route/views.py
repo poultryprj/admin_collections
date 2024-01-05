@@ -55,7 +55,7 @@ def RouteUpdate(request):
         routeStartPoint = request.POST['route_start_point']
         routeEndPoint = request.POST['route_end_point']
         routeAreas = request.POST['route_areas']
-        user = request.user.username
+        
 
         routeUpdate = get_object_or_404(RouteModel, route_id=routeId)
         
@@ -69,7 +69,7 @@ def RouteUpdate(request):
             routeUpdate.route_start_point = routeStartPoint
             routeUpdate.route_end_point = routeEndPoint
             routeUpdate.route_areas = routeAreas
-            routeUpdate.last_modified_by = user
+            routeUpdate.last_modified_by = request.user
             routeUpdate.save()
 
             messages.success(request, "Route ID {} updated in the database.".format(routeId))

@@ -24,27 +24,20 @@
         <div class="col-sm-12">
             <div class="card w-50 mx-auto">
                 <div class="card-body">
-                    <form action="{% url 'shoproute_list' %}" method="GET" >
-                        <div class="row mx-auto">
-                            <div class="col-12 ">
-                                <h5 class="form-title"><span>Search Shops</span></h5>
+                    <form action="{% url 'shoproute_list' %}" method="GET">
+                        <div class="col-12 col-sm-12">
+                            <div class="form-group">
+                                <label>Select a route:</label>
+                                <select class="form-control" name="route_id" required>
+                                    <option value="">-- Select a route --</option>
+                                    {% for i in routes %}
+                                        <option value="{{ i.route_id }}" {% if selected_route and i.route_id == selected_route.route_id %}selected{% endif %}>{{ i.route_name }}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
-                            <div class="col-12 col-sm-12">
-                                <div class="form-group">
-                                    <label>Select a route:</label>
-                                    <select class="form-control" placeholder="Enter Shop Type" name="route_id" required>
-                                         <option value="">-- Select a route --</option>
-                                        {% for i in routes  %}
-                                        
-                                        <option value="{{i.route_id}}">{{i.route_name}}</option>
-                                        {% endfor %}
-                                      
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <button type="submit" class="btn btn-primary">Show Shop</button>
-                            </div>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">Show Shop</button>
                         </div>
                     </form>
                 </div>
