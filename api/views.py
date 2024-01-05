@@ -1,9 +1,8 @@
-
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from route.models import RouteModel
-from shop.models import ProductIssue, ProductRecieve, ShopBalance, ShopRoute
+from shop.models import ProductIssue, ProductRecieve, ShopBalance, ShopOwner, ShopRoute
 from vehicle.models import Vehicle
 from .models import Collection, Complaint, ShopModel, CollectionMode, SkipShop 
 from .serializers import CollectionSerializer, ComplaintSerializer, ProductIssueSerializer, ProductRecieveSerializer, ShopModelSerializer, CollectionModeSerializer, SkipShopSerializer, VehicleRunningSerializer, VehicleSerializer
@@ -18,6 +17,8 @@ from django.db.models import F
 from rest_framework.exceptions import ValidationError
 from rest_framework.views import APIView
 from .serializers import ShopProductRequestSerializer
+import random
+import requests
 
 @api_view(['GET'])
 def ShopModelListView(request):
@@ -109,8 +110,8 @@ def CollectionView(request):
                 "message_code": 998,
                 "message_data": []
             }, status=status.HTTP_400_BAD_REQUEST)
-        
 
+########## Collection Mode Add With OTP DATA SAVE in DATABASE        
 @api_view(['POST'])
 def CollectionModeAdd(request):
     if request.method == 'POST':
@@ -129,25 +130,52 @@ def CollectionModeAdd(request):
                     payment_amount=payment_amount
                 )
                 
-                # Generate the custom filename
                 ShopModelData = ShopModel.objects.first() 
                 
                 current_datetime = timezone.now()
                 original_photo_name = upload_image.name
                 custom_filename = f"{payment_mode}_{user_id}_{ShopModelData.shop_id}_{current_datetime.strftime('%Y%m%d_%H%M%S')}_{original_photo_name}"
                 
-                # Save the file with the custom filename in the specified folder within the bucket
                 file_content = ContentFile(upload_image.read())
                 collection_mode.upload_image.save(custom_filename, file_content)
                 
-                response_data = {
-                    "message_text": "Success",
-                    "message_code": 1000,
-                    "message_data": {
-                        "file_url": collection_mode.upload_image.url  # Assuming you need to retrieve the uploaded file URL
+                # Generate 4-digit OTP
+                otp = ''.join(random.choices('0123456789', k=4))
+
+                # Save the OTP in the CollectionMode model
+                collection_mode.OTP = otp
+                collection_mode.save()
+                
+                # Construct the message with OTP
+                message = f"Your OTP for the transaction is: {otp}"
+                
+                # Assuming the shop owner's number is fetched dynamically
+                shop_owner_number = "8000097325"
+                
+                # Construct the WhatsApp message URL with parameters
+                whatsapp_url = f"https://wts.vision360solutions.co.in/api/sendText?token=63944323e575be8d4fc95a50&phone={shop_owner_number}&Text={message}"
+                
+                # Make an HTTP GET request to send the WhatsApp message
+                response = requests.get(whatsapp_url)
+
+                if response.status_code == 200:
+                    # Formulate your response data
+                    serialized_data = CollectionModeSerializer(collection_mode).data
+                    response_data = {
+                        "message_text": "Success",
+                        "message_code": 1000,
+                        "message_data": {
+                            "file_url": serialized_data['upload_image'],  
+                            "otp": otp
+                        }
                     }
-                }
-                return Response(response_data, status=status.HTTP_201_CREATED)
+                    return Response(response_data, status=status.HTTP_201_CREATED)
+                else:
+                    return Response({
+                        "message_text": "Failed to send WhatsApp message",
+                        "message_code": 998,
+                        "message_data": "Failed to send OTP to shop owner",
+                    }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             else:
                 return Response({
                     "message_text": "Validation error",
@@ -155,6 +183,38 @@ def CollectionModeAdd(request):
                     "message_data": "Invalid data provided",
                 }, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
+            return Response({
+                "message_text": "An error occurred",
+                "message_code": 996,
+                "message_data": str(e),
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+########## OTP VErification 
+@api_view(['POST'])
+def OTPVerification(request):
+    if request.method == 'POST':
+        try:
+            collection_id = request.data.get('collection_id')
+            OTP = request.data.get('OTP')
+            collection_data = CollectionMode.objects.filter(collectionId=collection_id, OTP=OTP)
+            
+            if collection_data.exists():
+                response_data = {
+                    "message_text": "Success",
+                    "message_code": 1000,
+                    "message_data": f"Your OTP : {OTP} Is Verifified Successful..!!"
+                }
+                return Response(response_data, status=status.HTTP_200_OK)
+            else:
+                return Response({
+                    "message_text": "Failure",
+                    "message_code": 997,
+                    "message_data": "Invalid OTP or collection ID",
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+        except Exception as e:
+            print(e)
             return Response({
                 "message_text": "An error occurred",
                 "message_code": 996,

@@ -28,6 +28,7 @@ class CollectionMode(models.Model):
     payment_mode = models.CharField(max_length=100)
     payment_amount = models.FloatField()
     upload_image = models.FileField(blank=True, null=True, upload_to=f'collection/all_collections/', max_length=2000)
+    OTP = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
         db_table = "CollectionMode"
