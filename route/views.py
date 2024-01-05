@@ -82,6 +82,6 @@ def RouteUpdate(request):
 def RouteDelete(request ,id):
     routedelete = RouteModel.objects.get(route_id=id)
     routedelete.is_deleted = True
-    routedelete.deleted_by=request.user.username
+    routedelete.deleted_by=request.user
     routedelete.save()
     return redirect('route_list')

@@ -189,14 +189,14 @@ def ShopOwnerUpdate(request):
         ownerContact = request.POST['owner_contact']
         ownerAltContact = request.POST['owner_alt_contact']
 
-        user = request.user.username
+       
  
         ownerUpdate = ShopOwner.objects.get(owner_id=ownerId)
 
         ownerUpdate.owner_name = ownerName
         ownerUpdate.owner_contactNo = ownerContact
         ownerUpdate.owner_alternateNo = ownerAltContact
-        ownerUpdate.last_modified_by = user
+        ownerUpdate.last_modified_by = request.user
         ownerUpdate.save()
 
         messages.success(request, "Shop Owner:  {} Update in the database.".format(ownerName))
@@ -208,7 +208,7 @@ def ShopOwnerDelete(request,id):
     shopOwnerDelete = ShopOwner.objects.get(owner_id=id)
 
     shopOwnerDelete.is_deleted = True
-    shopOwnerDelete.deleted_by=request.user.username
+    shopOwnerDelete.deleted_by= request.user
     shopOwnerDelete.save()
     return redirect('shop_owner_list')
 
@@ -369,7 +369,7 @@ def ProductAdd(request):
         productAdd = ProductMaster(
             product_name=productName,
             product_value_on=productValue,
-            created_by=request.user
+            created_by= request.user
         )
 
         productType = ProductTypes.objects.get(product_type_id=productTypeId)
@@ -414,7 +414,7 @@ def ProductUpdate(request):
         productTypeId = request.POST['product_typeId']
         productCategoryId = request.POST['product_categoryId']   
         productValue = request.POST['product_value'] 
-        user = request.user
+        user =  request.user
 
         productType = ProductTypes.objects.get(product_type_id=productTypeId)
         productCategory = ProductCategories.objects.get(product_category_id=productCategoryId)
@@ -436,7 +436,7 @@ def ProductDelete(request,id):
     productDelete = ProductMaster.objects.get(product_id=id)
 
     productDelete.is_deleted = True
-    productDelete.deleted_by = request.user
+    productDelete.deleted_by =  request.user
     productDelete.save()
     
     return redirect('product_list')
@@ -478,8 +478,8 @@ def ProductRateAdd(request):
             rate_margin = rateMargin,
             flexible_yn = flexibleRate,
             flexible_formula = flexibleFormula,
-            created_by = request.user,
-            last_modified_by = request.user
+            created_by =  request.user,
+            last_modified_by =  request.user
         )
         shopProductRateAdd.save()
 
