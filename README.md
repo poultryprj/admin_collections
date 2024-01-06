@@ -1,4 +1,8 @@
-Certainly! Below is a `README.md` file that provides information about the provided Django models, their relationships, and examples to use the endpoints with Postman.
+### USE FOR TESTING PLEASE
+```
+whatsapp_url = f"https://wts.vision360solutions.co.in/api/sendText?token=63944323e575be8d4fc95a50&phone={shop_owner_number}&Text={message}"
+
+```
 
 ```markdown
 # Django Models Documentation
