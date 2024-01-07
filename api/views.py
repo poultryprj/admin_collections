@@ -19,6 +19,8 @@ from rest_framework.views import APIView
 from .serializers import ShopProductRequestSerializer
 import random
 import requests
+from datetime import datetime
+import string
 
 @api_view(['GET'])
 def ShopModelListView(request):
@@ -112,6 +114,7 @@ def CollectionView(request):
             }, status=status.HTTP_400_BAD_REQUEST)
 
 ############################ Send OTP to ShopOwner's Mobile No.
+
 @api_view(['POST'])
 def SendOTP(request):
     if request.method == 'POST':
@@ -125,16 +128,26 @@ def SendOTP(request):
             if user_id and collection_id:
                 collection = Collection.objects.get(pk=collection_id)
                 
-                # Generate 4-digit OTP
-                otp = ''.join(random.choices('0123456789', k=4))
+                while True:
+                    # Generate 4-digit OTP using current date and time
+                    current_time = datetime.now().strftime("%Y%m%d%H%M%S")
+                    random_digits = ''.join(random.choices('0123456789', k=2))
+                    otp_attempt = current_time[-2:] + random_digits
 
-                # Save the OTP in the CollectionMode model
+                    # Check if the generated OTP already exists
+                    existing_otp = CollectionMode.objects.filter(OTP=otp_attempt).exists()
+                    if not existing_otp:
+                        otp = otp_attempt
+                        break
+
+                # Save the unique OTP in the CollectionMode model
                 collection_mode = CollectionMode.objects.create(
                     collectionId=collection,
                     payment_mode='',  # Placeholder for payment mode
                     payment_amount=0.0,  # Placeholder for payment amount
                     OTP=otp
                 )
+
                 shopName = collection.shopId.shop_name
                 shopOwnerName = collection.shopId.shop_ownerId.owner_name
                 collectionDate = collection.collection_date
@@ -145,10 +158,9 @@ def SendOTP(request):
                 # Assuming the shop owner's number is fetched dynamically
                 shop_owner_number = collection.shopId.shop_ownerId.owner_contactNo
                 
-                
                 # Construct the WhatsApp message URL with parameters
-                whatsapp_url = f"https://wts.vision360solutions.co.in/api/sendText?token=63944323e575be8d4fc95a50&phone={shop_owner_number}&Text={message}" #USE FOR TESTING PLEASE DO NOT DELETE
-                # whatsapp_url=f"https://wts.vision360solutions.co.in/api/sendtext?token=63944323e575be8d4fc95a50&phone=91{shop_owner_number}&message={message}"
+                #whatsapp_url = f"https://wts.vision360solutions.co.in/api/sendText?token=63944323e575be8d4fc95a50&phone={shop_owner_number}&Text={message}" #USE FOR TESTING PLEASE DO NOT DELETE
+                whatsapp_url=f"https://wts.vision360solutions.co.in/api/sendtext?token=63944323e575be8d4fc95a50&phone=91{shop_owner_number}&message={message}"
                 # Make an HTTP GET request to send the WhatsApp message
                 response = requests.get(whatsapp_url)
 
@@ -159,10 +171,9 @@ def SendOTP(request):
                         "message_data": {
                             "collection_mode_id": collection_mode.collection_mode_id,
                             "otp": otp,
-                            "payment_mode":PAYMENT_MODES,
+                            "payment_mode": PAYMENT_MODES,
                             "payment_amount": PAYMENT__AMOUNT,
                             "message": message
-                            
                         }
                     }
                     return Response(response_data, status=status.HTTP_201_CREATED)
