@@ -23,8 +23,8 @@ urlpatterns = [
     path('collections_view/',views.CollectionView, name='collections_view'),
 
     
-    path('send_whatsapp_otp/',views.SendOTP, name='send_whatsapp_otp'),
-    path('verifiy_otp_and_save_collection_data/',views.OTPVerification, name='verifiy_otp_and_save_collection_data'),
+    path('collection_mode_add/',views.CollectionModeAdd, name='collection_mode_add'),
+    path('otp_verification/', views.OTPVerification, name='otp_verification'),
 
     path('otp_verification/', views.OTPVerification, name='otp_verification'),
     path('collection_mode_get/<int:collection_id>/', views.CollectionModeGet, name='collection_mode_get'),

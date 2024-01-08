@@ -113,67 +113,65 @@ def CollectionView(request):
                 "message_data": []
             }, status=status.HTTP_400_BAD_REQUEST)
 
-############################ Send OTP to ShopOwner's Mobile No.
 
+########## Collection Mode Add With OTP DATA SAVE in DATABASE        
 @api_view(['POST'])
-def SendOTP(request):
+def CollectionModeAdd(request):
     if request.method == 'POST':
         try:
             user_id = request.data.get('user_id')
             collection_id = request.data.get('collectionId')
+            payment_mode = request.data.get('payment_mode')
+            payment_amount = request.data.get('payment_amount')
+            upload_image = request.FILES.get('upload_image')
 
-            PAYMENT_MODES = request.data.get('payment_mode')
-            PAYMENT__AMOUNT = request.data.get('payment_amount')
-
-            if user_id and collection_id:
+            if collection_id and payment_mode and payment_amount and upload_image:
                 collection = Collection.objects.get(pk=collection_id)
-                
-                while True:
-                    # Generate 4-digit OTP using current date and time
-                    current_time = datetime.now().strftime("%Y%m%d%H%M%S")
-                    random_digits = ''.join(random.choices('0123456789', k=2))
-                    otp_attempt = current_time[-2:] + random_digits
-
-                    # Check if the generated OTP already exists
-                    existing_otp = CollectionMode.objects.filter(OTP=otp_attempt).exists()
-                    if not existing_otp:
-                        otp = otp_attempt
-                        break
-
-                # Save the unique OTP in the CollectionMode model
-                collection_mode = CollectionMode.objects.create(
+                collection_mode = CollectionMode(
                     collectionId=collection,
-                    payment_mode='',  # Placeholder for payment mode
-                    payment_amount=0.0,  # Placeholder for payment amount
-                    OTP=otp
+                    payment_mode=payment_mode,
+                    payment_amount=payment_amount
                 )
+                
+                ShopModelData = ShopModel.objects.first() 
+                
+                current_datetime = timezone.now()
+                original_photo_name = upload_image.name
+                custom_filename = f"{payment_mode}_{user_id}_{ShopModelData.shop_id}_{current_datetime.strftime('%Y%m%d_%H%M%S')}_{original_photo_name}"
+                
+                file_content = ContentFile(upload_image.read())
+                collection_mode.upload_image.save(custom_filename, file_content)
+                
+                # Generate 4-digit OTP
+                otp = ''.join(random.choices('0123456789', k=4))
 
-                shopName = collection.shopId.shop_name
-                shopOwnerName = collection.shopId.shop_ownerId.owner_name
-                collectionDate = collection.collection_date
-
+                # Save the OTP in the CollectionMode model
+                collection_mode.OTP = otp
+                collection_mode.save()
+                
                 # Construct the message with OTP
-                message = f"{shopOwnerName} has received the amount INR *{PAYMENT__AMOUNT}* On {collectionDate} for Shop {shopName}. Please share OTP *{otp}* with the Cashier to confirm the transaction."
-
+                message = f"Your OTP for the transaction is: {otp}"
+                
                 # Assuming the shop owner's number is fetched dynamically
-                shop_owner_number = collection.shopId.shop_ownerId.owner_contactNo
+
+                shop_owner_number = ShopModelData.shop_ownerId.owner_contactNo
+                print(shop_owner_number)
                 
                 # Construct the WhatsApp message URL with parameters
-                #whatsapp_url = f"https://wts.vision360solutions.co.in/api/sendText?token=63944323e575be8d4fc95a50&phone={shop_owner_number}&Text={message}" #USE FOR TESTING PLEASE DO NOT DELETE
-                whatsapp_url=f"https://wts.vision360solutions.co.in/api/sendtext?token=63944323e575be8d4fc95a50&phone=91{shop_owner_number}&message={message}"
+                whatsapp_url = f"https://wts.vision360solutions.co.in/api/sendText?token=63944323e575be8d4fc95a50&phone={shop_owner_number}&Text={message}"
+                
                 # Make an HTTP GET request to send the WhatsApp message
                 response = requests.get(whatsapp_url)
 
                 if response.status_code == 200:
+                    # Formulate your response data
+                    serialized_data = CollectionModeSerializer(collection_mode).data
                     response_data = {
                         "message_text": "Success",
                         "message_code": 1000,
                         "message_data": {
-                            "collection_mode_id": collection_mode.collection_mode_id,
-                            "otp": otp,
-                            "payment_mode": PAYMENT_MODES,
-                            "payment_amount": PAYMENT__AMOUNT,
-                            "message": message
+                            "file_url": serialized_data['upload_image'],  
+                            "otp": otp
                         }
                     }
                     return Response(response_data, status=status.HTTP_201_CREATED)
@@ -197,64 +195,31 @@ def SendOTP(request):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-############################## Verify OTP And Save Data
+########## OTP VErification 
 @api_view(['POST'])
 def OTPVerification(request):
     if request.method == 'POST':
         try:
-            collection_mode_id = request.data.get('collection_mode_id')
+            collection_id = request.data.get('collection_id')
             OTP = request.data.get('OTP')
-
-            if not CollectionMode.objects.filter(collection_mode_id=collection_mode_id).exists():
+            collection_data = CollectionMode.objects.filter(collectionId=collection_id, OTP=OTP)
+            
+            if collection_data.exists():
+                response_data = {
+                    "message_text": "Success",
+                    "message_code": 1000,
+                    "message_data": f"Your OTP : {OTP} Is Verifified Successful..!!"
+                }
+                return Response(response_data, status=status.HTTP_200_OK)
+            else:
                 return Response({
                     "message_text": "Failure",
                     "message_code": 997,
-                    "message_data": "Invalid Collection Mode ID",
-                }, status=status.HTTP_400_BAD_REQUEST)
-
-            if collection_mode_id and OTP:
-                collection_mode = CollectionMode.objects.filter(collection_mode_id=collection_mode_id, OTP=OTP).first()
-
-                if collection_mode:
-                    collection = collection_mode.collectionId
-                    cashier_user_id = collection.cashierId_id  # Accessing the User ID through the ForeignKey field
-                    
-                    collection_mode.payment_mode = request.data.get('payment_mode', collection_mode.payment_mode)
-                    collection_mode.payment_amount = request.data.get('payment_amount', collection_mode.payment_amount)
-
-                    upload_image = request.FILES.get('upload_image')
-                    if upload_image:
-                        # Handle image upload if provided
-                        current_datetime = timezone.now()
-                        original_photo_name = upload_image.name
-                        custom_filename = f"{collection_mode.payment_mode}_{cashier_user_id}_{collection.shopId.shop_id}_{current_datetime.strftime('%Y%m%d_%H%M%S')}_{original_photo_name}"
-                        file_content = ContentFile(upload_image.read())
-                        collection_mode.upload_image.save(custom_filename, file_content)
-
-                    # Save changes to the CollectionMode instance
-                    collection_mode.save()
-
-                    response_data = {
-                        "message_text": "Success",
-                        "message_code": 1000,
-                        "message_data": "Data saved/updated successfully"
-                    }
-                    return Response(response_data, status=status.HTTP_200_OK)
-                else:
-                    return Response({
-                        "message_text": "Failure",
-                        "message_code": 997,
-                        "message_data": "Invalid OTP",
-                    }, status=status.HTTP_400_BAD_REQUEST)
-
-            else:
-                return Response({
-                    "message_text": "Validation error",
-                    "message_code": 997,
-                    "message_data": "Invalid data provided",
+                    "message_data": "Invalid OTP or collection ID",
                 }, status=status.HTTP_400_BAD_REQUEST)
 
         except Exception as e:
+            print(e)
             return Response({
                 "message_text": "An error occurred",
                 "message_code": 996,
@@ -800,7 +765,7 @@ def ApproveCollection(request):
             collection_instances = Collection.objects.filter(
                 collection_date=collection_date,
                 cashierId=cashier_id,
-                collections_status='0'  
+                collections_status='1'  
             )
 
             if not collection_instances.exists():
@@ -815,7 +780,7 @@ def ApproveCollection(request):
             cashier_user = User.objects.get(pk=cashier_id)
 
             for collection_instance in collection_instances:
-                collection_instance.collections_status = '1'
+                collection_instance.collections_status = '3'
                 collection_instance.fanialize_by = cashier_user
                 collection_instance.save()
 
