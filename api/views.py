@@ -23,7 +23,6 @@ from datetime import datetime
 import string
 from django.db import transaction
 
-
 @api_view(['GET'])
 def ShopModelListView(request):
     if request.method == 'GET':
@@ -208,40 +207,67 @@ def CollectionModeAdd(request):
 
 
 ########## OTP VErification 
-from django.db import transaction
-
 @api_view(['POST'])
 def OTPVerification(request):
     if request.method == 'POST':
         try:
             collection_id = request.data.get('collection_id')
             OTP = request.data.get('OTP')
+            
+            # Check for Collection ID existence
+            collection = Collection.objects.filter(collection_id=collection_id).first()
+            if not collection:
+                return Response({
+                    "message_text": "Failure",
+                    "message_code": 997,
+                    "message_data": "Invalid Collection ID",
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            # Check for OTP existence
             collection_data = CollectionMode.objects.filter(collectionId=collection_id, OTP=OTP)
             
             # Perform the status update within a transaction
             with transaction.atomic():
-                collection = Collection.objects.select_for_update().get(collection_id=collection_id)
                 if collection_data.exists():
                     # If OTP verification is successful, set collections_status to '1'
                     collection.collections_status = '1'
+                    message = f"Your OTP : {OTP} Has Been Verified Successfully..!!"
                 else:
                     # If OTP verification failed, set collections_status to '2'
                     collection.collections_status = '2'
+                    message = f"Verification failed for OTP: {OTP}"
                 collection.save()
 
-            if collection_data.exists():
-                response_data = {
-                    "message_text": "Success",
-                    "message_code": 1000,
-                    "message_data": f"Your OTP : {OTP} Is Verified Successfully..!!"
-                }
-                return Response(response_data, status=status.HTTP_200_OK)
-            else:
-                return Response({
-                    "message_text": "Failure",
-                    "message_code": 997,
-                    "message_data": "Invalid OTP or collection ID",
-                }, status=status.HTTP_400_BAD_REQUEST)
+                # Fetch necessary details for the WhatsApp message
+                shopName = collection.shopId.shop_name
+                shopOwnerName = collection.shopId.shop_ownerId.owner_name
+                collectionDate = collection.collection_date
+                payment_amount = collection.total_amount
+                
+                # Construct the message with OTP
+                message += f" {shopOwnerName}, you have received an amount of INR *{payment_amount}* on {collectionDate} for Shop {shopName}."
+                
+                # Assuming the shop owner's number is fetched dynamically
+                shop_owner_number = collection.shopId.shop_ownerId.owner_contactNo
+                
+                # Construct the WhatsApp message URL with parameters
+                whatsapp_url = f"https://wts.vision360solutions.co.in/api/sendText?token=63944323e575be8d4fc95a50&phone={shop_owner_number}&Text={message}"
+                
+                # Make an HTTP GET request to send the WhatsApp message
+                response = requests.get(whatsapp_url)
+
+                if response.status_code == 200:
+                    return Response({
+                        "message_text": "Success",
+                        "message_code": 1000,
+                        "message_data": message,
+                    }, status=status.HTTP_200_OK)
+                else:
+                    return Response({
+                        "message_text": "Failed to send WhatsApp message",
+                        "message_code": 999,
+                        "message_data": "Failed to send OTP verification status to shop owner",
+                    }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         except Exception as e:
             print(e)
