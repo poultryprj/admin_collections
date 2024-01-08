@@ -114,7 +114,6 @@ def CollectionView(request):
                 "message_data": []
             }, status=status.HTTP_400_BAD_REQUEST)
 
-
 ########## Collection Mode Add With OTP DATA SAVE in DATABASE        
 @api_view(['POST'])
 def CollectionModeAdd(request):
@@ -149,8 +148,6 @@ def CollectionModeAdd(request):
                 
                 # Generate and check for a unique OTP
                 otp = generate_otp()
-                while CollectionMode.objects.filter(OTP=otp).exists():
-                    otp = generate_otp()
                 
                 # Save the unique OTP in the CollectionMode model
                 collection_mode.OTP = otp
@@ -158,18 +155,21 @@ def CollectionModeAdd(request):
 
                 shopName = collection.shopId.shop_name
                 shopOwnerName = collection.shopId.shop_ownerId.owner_name
-                shopOwnerId = collection.shopId.shop_ownerId
-                collectionDate = collection.collection_date
-                
+
+                if shopOwnerName == "":
+                    shopOwnerName = "Shop Owner"
+                # shopOwnerId = collection.shopId.shop_ownerId
+                collectionDate = collection.collection_date.strftime('%d/%m/%Y')
+
                 # Construct the message with OTP
-                message = f"{shopOwnerName} has received the amount INR *{payment_amount}* On {collectionDate} for Shop {shopName}. Please share OTP *{otp}* with the Cashier to confirm the transaction."
+                message = f"""Subject: Kukudku Chicken Transaction Alert\n\nDear {shopOwnerName},\n\nTransaction Details:\n\nDate: {collectionDate}\nCashier: {collection.cashierId.first_name} (ID: {collection.cashierId.id})\nShop: *{shopName}* \nPaid Amount: *{payment_amount}* \n\nhas been done for your account.\nPlease share the OTP *{otp}* for approval.\n\nPlease note by sharing this OTP you are accepting the transaction\n\nIf you require assistance, please contact our Customer Support.\n\nThank you,\nKukudku Chicken Team"""
                 
                 # Assuming the shop owner's number is fetched dynamically
                 shop_owner_number = ShopModelData.shop_ownerId.owner_contactNo
                 
                 # Construct the WhatsApp message URL with parameters
-                whatsapp_url = f"https://wts.vision360solutions.co.in/api/sendText?token=63944323e575be8d4fc95a50&phone={shop_owner_number}&Text={message}" # For testing purpose do not delete
-                #whatsapp_url=f"https://wts.vision360solutions.co.in/api/sendtext?token=63944323e575be8d4fc95a50&phone=91{shop_owner_number}&message={message}" # Final Working API
+                #whatsapp_url = f"https://wts.vision360solutions.co.in/api/sendText?token=63944323e575be8d4fc95a50&phone={shop_owner_number}&Text={message}" # For testing purpose do not delete
+                whatsapp_url=f"https://wts.vision360solutions.co.in/api/sendtext?token=63944323e575be8d4fc95a50&phone=91{shop_owner_number}&message={message}" # Final Working API
                 
                 # Make an HTTP GET request to send the WhatsApp message
                 response = requests.get(whatsapp_url)
@@ -182,7 +182,8 @@ def CollectionModeAdd(request):
                         "message_code": 1000,
                         "message_data": {
                             "file_url": serialized_data['upload_image'],  
-                            "otp": otp
+                            "otp": otp,
+                            # "message": message
                         }
                     }
                     return Response(response_data, status=status.HTTP_201_CREATED)
@@ -204,7 +205,6 @@ def CollectionModeAdd(request):
                 "message_code": 996,
                 "message_data": str(e),
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
 
 ########## OTP VErification 
 @api_view(['POST'])
@@ -231,28 +231,29 @@ def OTPVerification(request):
                 if collection_data.exists():
                     # If OTP verification is successful, set collections_status to '1'
                     collection.collections_status = '1'
-                    message = f"Your OTP : {OTP} Has Been Verified Successfully..!!"
+                    message = f"OTP is Verified. transaction approved."
                 else:
                     # If OTP verification failed, set collections_status to '2'
                     collection.collections_status = '2'
-                    message = f"Verification failed for OTP: {OTP}"
+                    message = f"OTP failed. Please try again or cancel the transaction."
                 collection.save()
 
                 # Fetch necessary details for the WhatsApp message
-                shopName = collection.shopId.shop_name
-                shopOwnerName = collection.shopId.shop_ownerId.owner_name
-                collectionDate = collection.collection_date
-                payment_amount = collection.total_amount
+                # shopName = collection.shopId.shop_name
+                # shopOwnerName = collection.shopId.shop_ownerId.owner_name
+                # collectionDate = collection.collection_date
+                # payment_amount = collection.total_amount
                 
                 # Construct the message with OTP
-                message += f" {shopOwnerName}, you have received an amount of INR *{payment_amount}* on {collectionDate} for Shop {shopName}."
+                # message += f" {shopOwnerName}, you have received an amount of INR *{payment_amount}* on {collectionDate} for Shop {shopName}."
                 
                 # Assuming the shop owner's number is fetched dynamically
                 shop_owner_number = collection.shopId.shop_ownerId.owner_contactNo
                 
                 # Construct the WhatsApp message URL with parameters
-                whatsapp_url = f"https://wts.vision360solutions.co.in/api/sendText?token=63944323e575be8d4fc95a50&phone={shop_owner_number}&Text={message}"
-                
+                #whatsapp_url = f"https://wts.vision360solutions.co.in/api/sendText?token=63944323e575be8d4fc95a50&phone={shop_owner_number}&Text={message}" # For testing Purpose do not delete
+                whatsapp_url=f"https://wts.vision360solutions.co.in/api/sendtext?token=63944323e575be8d4fc95a50&phone=91{shop_owner_number}&message={message}" # Final Working API
+
                 # Make an HTTP GET request to send the WhatsApp message
                 response = requests.get(whatsapp_url)
 
@@ -266,7 +267,7 @@ def OTPVerification(request):
                     return Response({
                         "message_text": "Failed to send WhatsApp message",
                         "message_code": 999,
-                        "message_data": "Failed to send OTP verification status to shop owner",
+                        "message_data": message,
                     }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         except Exception as e:

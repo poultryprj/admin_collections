@@ -45,7 +45,7 @@ class ShopModel(models.Model):
 
 
     def __str__(self):
-        return f"{self.shop_code} -- {self.shop_name} "
+        return f"{self.shop_name} ({self.shop_code}) "
 
     class Meta:
         db_table = "ShopModel"
