@@ -21,6 +21,8 @@ import random
 import requests
 from datetime import datetime
 import string
+from django.db import transaction
+
 
 @api_view(['GET'])
 def ShopModelListView(request):
@@ -142,23 +144,33 @@ def CollectionModeAdd(request):
                 file_content = ContentFile(upload_image.read())
                 collection_mode.upload_image.save(custom_filename, file_content)
                 
-                # Generate 4-digit OTP
-                otp = ''.join(random.choices('0123456789', k=4))
-
-                # Save the OTP in the CollectionMode model
+                # Function to generate a 4-digit OTP
+                def generate_otp():
+                    return f"{random.randint(1000, 9999)}"
+                
+                # Generate and check for a unique OTP
+                otp = generate_otp()
+                while CollectionMode.objects.filter(OTP=otp).exists():
+                    otp = generate_otp()
+                
+                # Save the unique OTP in the CollectionMode model
                 collection_mode.OTP = otp
                 collection_mode.save()
+
+                shopName = collection.shopId.shop_name
+                shopOwnerName = collection.shopId.shop_ownerId.owner_name
+                shopOwnerId = collection.shopId.shop_ownerId
+                collectionDate = collection.collection_date
                 
                 # Construct the message with OTP
-                message = f"Your OTP for the transaction is: {otp}"
+                message = f"{shopOwnerName} has received the amount INR *{payment_amount}* On {collectionDate} for Shop {shopName}. Please share OTP *{otp}* with the Cashier to confirm the transaction."
                 
                 # Assuming the shop owner's number is fetched dynamically
-
                 shop_owner_number = ShopModelData.shop_ownerId.owner_contactNo
-                print(shop_owner_number)
                 
                 # Construct the WhatsApp message URL with parameters
-                whatsapp_url = f"https://wts.vision360solutions.co.in/api/sendText?token=63944323e575be8d4fc95a50&phone={shop_owner_number}&Text={message}"
+                whatsapp_url = f"https://wts.vision360solutions.co.in/api/sendText?token=63944323e575be8d4fc95a50&phone={shop_owner_number}&Text={message}" # For testing purpose do not delete
+                #whatsapp_url=f"https://wts.vision360solutions.co.in/api/sendtext?token=63944323e575be8d4fc95a50&phone=91{shop_owner_number}&message={message}" # Final Working API
                 
                 # Make an HTTP GET request to send the WhatsApp message
                 response = requests.get(whatsapp_url)
@@ -196,6 +208,8 @@ def CollectionModeAdd(request):
 
 
 ########## OTP VErification 
+from django.db import transaction
+
 @api_view(['POST'])
 def OTPVerification(request):
     if request.method == 'POST':
@@ -204,11 +218,22 @@ def OTPVerification(request):
             OTP = request.data.get('OTP')
             collection_data = CollectionMode.objects.filter(collectionId=collection_id, OTP=OTP)
             
+            # Perform the status update within a transaction
+            with transaction.atomic():
+                collection = Collection.objects.select_for_update().get(collection_id=collection_id)
+                if collection_data.exists():
+                    # If OTP verification is successful, set collections_status to '1'
+                    collection.collections_status = '1'
+                else:
+                    # If OTP verification failed, set collections_status to '2'
+                    collection.collections_status = '2'
+                collection.save()
+
             if collection_data.exists():
                 response_data = {
                     "message_text": "Success",
                     "message_code": 1000,
-                    "message_data": f"Your OTP : {OTP} Is Verifified Successful..!!"
+                    "message_data": f"Your OTP : {OTP} Is Verified Successfully..!!"
                 }
                 return Response(response_data, status=status.HTTP_200_OK)
             else:

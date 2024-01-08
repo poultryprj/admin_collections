@@ -26,7 +26,6 @@ urlpatterns = [
     path('collection_mode_add/',views.CollectionModeAdd, name='collection_mode_add'),
     path('otp_verification/', views.OTPVerification, name='otp_verification'),
 
-    path('otp_verification/', views.OTPVerification, name='otp_verification'),
     path('collection_mode_get/<int:collection_id>/', views.CollectionModeGet, name='collection_mode_get'),
 
 
