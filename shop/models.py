@@ -244,7 +244,7 @@ class ShopProductRequest(models.Model):
     productId = models.ForeignKey(ProductMaster,on_delete=models.SET_NULL, null=True)
     quantity = models.IntegerField(default=0)
     weight = models.DecimalField(max_digits=20, decimal_places=2,null=True)
-    status = models.CharField(max_length=100,default="Rejected") #Status Approved / Rejected
+    status = models.IntegerField(default=0) #Status of ordered Approved insert 0,approved 1, delivered 2,cancelled 3 
     delivery_date_time = models.DateTimeField(null=True)
     driverId = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     created_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
