@@ -1025,3 +1025,20 @@ def GetProductIssuesByDate(request):
 
     return Response(data, status=status.HTTP_200_OK)     ### in the output shopId first key AND second key product_typeId
 
+@api_view(['GET'])
+def DateWiseShowProductsDetails(request):
+    shop_id = request.data.get('shop_id')
+    date = request.data.get('date')
+    try:
+        if shop_id and date:
+            issueProductData = ProductIssue.objects.filter(shopId=shop_id, issue_date=date)
+            serializer = ProductIssueSerializer(issueProductData, many=True)
+            response_data = {
+            "message_text": "Success",
+            "message_code": 1000,
+            "message_data":serializer.data
+            }
+            return Response(response_data, status=status.HTTP_201_CREATED)
+
+    except Exception as e:
+        print(e)

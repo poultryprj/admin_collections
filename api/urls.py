@@ -73,6 +73,10 @@ urlpatterns = [
 ################################### Shop App API ###########################################
     path('create_shop_product_request/', views.CreateShopProductRequest, name="create_shop_product_request"),
     path('product_issues/', views.GetProductIssuesByDate, name='product_issues'),
+
+################################### Date Wise Received Product #############################
+    path('date_wise_show_products_details/', views.DateWiseShowProductsDetails, name='date_wise_show_products_details'),
+
 ]
 
 
